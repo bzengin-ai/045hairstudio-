@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>045 Berber Shop - Randevu Al</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Graffiti Decorations -->
+    <div class="graffiti-left">045</div>
+    <div class="graffiti-right">045</div>
+    <div class="graffiti-top">045</div>
+    <div class="graffiti-bottom">045</div>
+
+    <!-- Graffiti Drips -->
+    <div class="graffiti-drip graffiti-drip-1">045</div>
+    <div class="graffiti-drip graffiti-drip-2">045</div>
+    <div class="graffiti-drip graffiti-drip-3">045</div>
+    <div class="graffiti-drip graffiti-drip-4">045</div>
+
+    <!-- Graffiti Corners -->
+    <div class="graffiti-corner graffiti-corner-tl">045</div>
+    <div class="graffiti-corner graffiti-corner-tr">045</div>
+    <div class="graffiti-corner graffiti-corner-bl">045</div>
+    <div class="graffiti-corner graffiti-corner-br">045</div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">✂</span>
+                <h1>045 BERBER SHOP</h1>
+            </div>
+            <p class="tagline">Profesyonel Erkek Kuaförü</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-text">Berber Seç</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-text">Tarih & Saat</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-text">Bilgiler</span>
+                </div>
+                <div class="step" data-step="4">
+                    <span class="step-number">4</span>
+                    <span class="step-text">Onay</span>
+                </div>
+            </div>
+
+            <!-- Step 1: Berber Seçimi -->
+            <section class="form-step active" id="step1">
+                <h2>Berberinizi Seçin</h2>
+                <div class="barber-grid">
+                    <div class="barber-card" data-barber-id="1">
+                        <div class="barber-avatar">
+                            <span>👨‍💼</span>
+                        </div>
+                        <h3>Muhammet</h3>
+                        <span class="barber-role patron">Patron</span>
+                        <p class="barber-exp">15 Yıl Deneyim</p>
+                    </div>
+                    <div class="barber-card" data-barber-id="2">
+                        <div class="barber-avatar">
+                            <span>👨</span>
+                        </div>
+                        <h3>Cengo</h3>
+                        <span class="barber-role usta">Usta Berber</span>
+                        <p class="barber-exp">8 Yıl Deneyim</p>
+                    </div>
+                    <div class="barber-card" data-barber-id="3">
+                        <div class="barber-avatar">
+                            <span>👨</span>
+                        </div>
+                        <h3>Rio</h3>
+                        <span class="barber-role usta">Usta Berber</span>
+                        <p class="barber-exp">5 Yıl Deneyim</p>
+                    </div>
+                    <div class="barber-card" data-barber-id="4">
+                        <div class="barber-avatar">
+                            <span>👨</span>
+                        </div>
+                        <h3>Ahmet</h3>
+                        <span class="barber-role usta">Usta Berber</span>
+                        <p class="barber-exp">3 Yıl Deneyim</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Tarih ve Saat Seçimi -->
+            <section class="form-step" id="step2">
+                <h2>Tarih ve Saat Seçin</h2>
+
+                <!-- Görünüm Seçici -->
+                <div class="view-selector">
+                    <button class="view-btn active" data-view="weekly">Haftalık</button>
+                    <button class="view-btn" data-view="monthly">Aylık</button>
+                </div>
+
+                <!-- Haftalık Görünüm -->
+                <div class="calendar-view weekly-view active">
+                    <div class="week-nav">
+                        <button class="nav-btn prev-week">&lt;</button>
+                        <span class="week-title">Bu Hafta</span>
+                        <button class="nav-btn next-week">&gt;</button>
+                    </div>
+                    <div class="days-grid" id="weekDays">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                </div>
+
+                <!-- Aylık Görünüm -->
+                <div class="calendar-view monthly-view">
+                    <div class="month-nav">
+                        <button class="nav-btn prev-month">&lt;</button>
+                        <span class="month-title">Ocak 2026</span>
+                        <button class="nav-btn next-month">&gt;</button>
+                    </div>
+                    <div class="month-grid" id="monthDays">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                </div>
+
+                <!-- Saat Seçimi -->
+                <div class="time-selection" id="timeSelection" style="display: none;">
+                    <h3>Saat Seçin - <span id="selectedDate"></span></h3>
+                    <div class="time-slots" id="timeSlots">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                </div>
+
+                <button class="btn-back" id="backToStep1">Geri</button>
+            </section>
+
+            <!-- Step 3: Müşteri Bilgileri -->
+            <section class="form-step" id="step3">
+                <h2>Bilgilerinizi Girin</h2>
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label for="customerName">Ad Soyad</label>
+                        <input type="text" id="customerName" placeholder="Adınız Soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Telefon Numarası</label>
+                        <input type="tel" id="customerPhone" placeholder="05XX XXX XX XX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNote">Not (İsteğe Bağlı)</label>
+                        <textarea id="customerNote" placeholder="Eklemek istediğiniz bir not varsa yazabilirsiniz..."></textarea>
+                    </div>
+                </form>
+                <div class="btn-group">
+                    <button class="btn-back" id="backToStep2">Geri</button>
+                    <button class="btn-next" id="goToStep4">Devam Et</button>
+                </div>
+            </section>
+
+            <!-- Step 4: Onay -->
+            <section class="form-step" id="step4">
+                <h2>Randevu Özeti</h2>
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-label">Berber:</span>
+                        <span class="summary-value" id="summaryBarber">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Tarih:</span>
+                        <span class="summary-value" id="summaryDate">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Saat:</span>
+                        <span class="summary-value" id="summaryTime">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Ad Soyad:</span>
+                        <span class="summary-value" id="summaryName">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Telefon:</span>
+                        <span class="summary-value" id="summaryPhone">-</span>
+                    </div>
+                    <div class="summary-item" id="summaryNoteContainer" style="display: none;">
+                        <span class="summary-label">Not:</span>
+                        <span class="summary-value" id="summaryNote">-</span>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-back" id="backToStep3">Geri</button>
+                    <button class="btn-confirm" id="confirmBooking">Randevuyu Onayla</button>
+                </div>
+            </section>
+
+            <!-- Başarı Mesajı -->
+            <section class="form-step" id="successStep">
+                <div class="success-message">
+                    <div class="success-icon">✓</div>
+                    <h2>Randevunuz Alındı!</h2>
+                    <p>Randevu bilgileriniz berberinize iletildi.</p>
+                    <p class="success-info">Herhangi bir değişiklik için sizi arayabiliriz.</p>
+                    <button class="btn-new" id="newBooking">Yeni Randevu Al</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>www.045berbershop.com</p>
+            <p class="footer-info">Çalışma Saatleri: 09:00 - 21:00 (Pazar Kapalı)</p>
+        </div>
+    </footer>
+
+    <!-- Öneri Modalı -->
+    <div class="modal-overlay" id="suggestionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bu Saat Dolu</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-info">
+                    <strong id="modalBarberName">Mehmet</strong> icin
+                    <strong id="modalTime">14:00</strong> saati dolu.
+                </p>
+                <div class="suggestion-section" id="suggestionSection">
+                    <p class="suggestion-title">Ayni saatte musait berberler:</p>
+                    <div class="suggestion-list" id="suggestionList">
+                        <!-- JS ile doldurulacak -->
+                    </div>
+                </div>
+                <div class="no-suggestion" id="noSuggestion" style="display: none;">
+                    <p>Bu saatte musait berber bulunmuyor.</p>
+                    <p class="hint">Baska bir saat secmeyi deneyin.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-close" id="btnSelectOther">Baska Saat Sec</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli - 045 Berber Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(ellipse at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Graffiti */
+        .graffiti-left {
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            letter-spacing: 10px;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 0, 255, 0.12);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .graffiti-right {
+            position: fixed;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            letter-spacing: 10px;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(0, 255, 255, 0.12);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .graffiti-corner {
+            position: fixed;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 5px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(255, 0, 255, 0.2); transform: rotate(-5deg); }
+        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(0, 255, 255, 0.2); transform: rotate(5deg); }
+        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(255, 0, 128, 0.15); transform: rotate(5deg); }
+        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(138, 43, 226, 0.2); transform: rotate(-5deg); }
+
+        @media (max-width: 768px) {
+            .graffiti-left, .graffiti-right { display: none; }
+            .graffiti-corner { font-size: 1.2rem; }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Login */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-screen.hidden { display: none; }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo span {
+            font-size: 4rem;
+            filter: drop-shadow(0 0 20px #ff00ff);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { filter: drop-shadow(0 0 15px #ff00ff); }
+            50% { filter: drop-shadow(0 0 30px #00ffff); }
+        }
+
+        .login-logo h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 6px;
+            margin-top: 15px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: neonShift 3s linear infinite;
+        }
+
+        @keyframes neonShift {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .login-logo p {
+            color: #ff0066;
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+            font-weight: 600;
+        }
+
+        .login-form {
+            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            padding: 35px;
+            border-radius: 20px;
+            border: 2px solid #ff0066;
+            box-shadow: 0 0 40px rgba(255, 0, 102, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ff0066;
+            margin-bottom: 10px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #333;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff0066;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(90deg, #ff0066, #ff00ff, #00ffff);
+            background-size: 200% auto;
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 0, 102, 0.4);
+            animation: btnGlow 3s linear infinite;
+        }
+
+        @keyframes btnGlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 0, 102, 0.5);
+        }
+
+        .error-message {
+            color: #ff0066;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            text-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
+        }
+
+        /* Panel */
+        .panel-screen {
+            display: none;
+            padding-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-screen.active { display: block; }
+
+        /* Header */
+        .panel-header {
+            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #ff0066;
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.2);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-badge span {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 15px #ff0066);
+        }
+
+        .admin-badge h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-badge p {
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .btn-logout {
+            padding: 12px 20px;
+            border: 2px solid #ff0066;
+            border-radius: 12px;
+            background: transparent;
+            color: #ff0066;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ff0066;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-box {
+            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
+            padding: 18px 12px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        }
+
+        .stat-box .num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-box .txt {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Date Selector */
+        .date-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .date-nav {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #ff00ff;
+            border-radius: 50%;
+            background: transparent;
+            color: #ff00ff;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .date-nav:hover {
+            background: #ff00ff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .current-date {
+            text-align: center;
+        }
+
+        .current-date .day {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .current-date .full-date {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* Filter */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-btn {
+            padding: 12px 18px;
+            border: 2px solid #333;
+            border-radius: 25px;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(90deg, #ff00ff, #8b00ff);
+            border-color: #ff00ff;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        /* Barber Section */
+        .barber-section {
+            margin-bottom: 25px;
+        }
+
+        .barber-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+
+        .barber-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        .barber-info h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .barber-info p {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .barber-count {
+            margin-left: auto;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            color: #000;
+        }
+
+        /* Appointment Cards */
+        .appointment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 20px;
+        }
+
+        .apt-card {
+            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid #ff00ff;
+            transition: all 0.3s ease;
+        }
+
+        .apt-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+        }
+
+        .apt-card.bekliyor { border-left-color: #f39c12; }
+        .apt-card.onaylandi { border-left-color: #00ff88; }
+        .apt-card.iptal { border-left-color: #ff0066; opacity: 0.5; }
+
+        .apt-time {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #00ffff;
+            min-width: 60px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .apt-info { flex: 1; }
+
+        .apt-info .name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .apt-info .phone {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .apt-info .phone a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+
+        .apt-status {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .apt-status.bekliyor { background: linear-gradient(90deg, #f39c12, #e67e22); color: #000; }
+        .apt-status.onaylandi { background: linear-gradient(90deg, #00ff88, #00ffff); color: #000; }
+        .apt-status.iptal { background: linear-gradient(90deg, #ff0066, #ff00ff); color: #fff; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.3));
+        }
+
+        .empty-state p {
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Today Button */
+        .btn-today {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            border: 2px solid #333;
+            border-radius: 12px;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-today:hover {
+            border-color: #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Scrollbar */
+        .filter-row::-webkit-scrollbar { height: 4px; }
+        .filter-row::-webkit-scrollbar-thumb { background: #ff00ff; border-radius: 2px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 40px;
+            border-radius: 15px;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 1000;
+        }
+
+        .toast.success {
+            background: linear-gradient(90deg, #00ff88, #00ffff);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .toast.error {
+            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Graffiti -->
+    <div class="graffiti-left">045</div>
+    <div class="graffiti-right">045</div>
+    <div class="graffiti-corner graffiti-corner-tl">045</div>
+    <div class="graffiti-corner graffiti-corner-tr">045</div>
+    <div class="graffiti-corner graffiti-corner-bl">045</div>
+    <div class="graffiti-corner graffiti-corner-br">045</div>
+
+    <!-- Login -->
+    <div class="login-screen" id="loginScreen">
+        <div class="container">
+            <div class="login-logo">
+                <span>👑</span>
+                <h1>045 BERBER SHOP</h1>
+                <p>PATRON PANELI</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label>Kullanici Adi</label>
+                    <input type="text" id="username" placeholder="muhammet" required>
+                </div>
+                <div class="form-group">
+                    <label>Sifre</label>
+                    <input type="password" id="password" placeholder="****" required>
+                </div>
+                <button type="submit" class="btn-login">GIRIS YAP</button>
+                <p class="error-message" id="errorMessage">Sadece patron giris yapabilir!</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Panel -->
+    <div class="panel-screen" id="panelScreen">
+        <div class="container">
+            <!-- Header -->
+            <div class="panel-header">
+                <div class="header-top">
+                    <div class="admin-badge">
+                        <span>👑</span>
+                        <div>
+                            <h2 id="adminName">MUHAMMET</h2>
+                            <p>Patron Paneli</p>
+                        </div>
+                    </div>
+                    <button class="btn-logout" id="btnLogout">CIKIS</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="num" id="todayTotal">0</div>
+                        <div class="txt">Bugun</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="num" id="pendingTotal">0</div>
+                        <div class="txt">Bekleyen</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="num" id="allTotal">0</div>
+                        <div class="txt">Toplam</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Selector -->
+            <div class="date-selector">
+                <button class="date-nav" id="prevDay">&lt;</button>
+                <div class="current-date">
+                    <div class="day" id="dayName">PAZARTESI</div>
+                    <div class="full-date" id="fullDate">6 Ocak 2026</div>
+                </div>
+                <button class="date-nav" id="nextDay">&gt;</button>
+            </div>
+
+            <!-- Filter -->
+            <div class="filter-row">
+                <button class="filter-btn active" data-filter="all">TUMU</button>
+                <button class="filter-btn" data-filter="1">MUHAMMET</button>
+                <button class="filter-btn" data-filter="2">CENGO</button>
+                <button class="filter-btn" data-filter="3">RIO</button>
+                <button class="filter-btn" data-filter="4">AHMET</button>
+            </div>
+
+            <!-- Appointments -->
+            <div id="appointmentsContainer"></div>
+
+            <button class="btn-today" id="btnToday">BUGUNE DON</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:4000/api';
+
+        let currentUser = null;
+        let selectedDate = new Date();
+        let currentFilter = 'all';
+        let allAppointments = [];
+
+        const barbers = [
+            { id: 1, name: 'Muhammet', role: 'Patron', icon: '👨‍💼' },
+            { id: 2, name: 'Cengo', role: 'Usta Berber', icon: '👨' },
+            { id: 3, name: 'Rio', role: 'Usta Berber', icon: '👨' },
+            { id: 4, name: 'Ahmet', role: 'Usta Berber', icon: '👨' }
+        ];
+
+        const dayNames = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma', 'Cumartesi'];
+        const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
+                            'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('adminUser');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                if (currentUser.role === 'patron') {
+                    showPanel();
+                }
+            }
+
+            initLoginForm();
+            initDateNavigation();
+            initFilter();
+            initLogout();
+        });
+
+        function initLoginForm() {
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const response = await fetch(`${API_URL}/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    if (response.ok) {
+                        const user = await response.json();
+                        if (user.role === 'patron') {
+                            currentUser = user;
+                            localStorage.setItem('adminUser', JSON.stringify(currentUser));
+                            showPanel();
+                        } else {
+                            document.getElementById('errorMessage').style.display = 'block';
+                        }
+                    } else {
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                } catch (error) {
+                    if (username === 'muhammet' && password === '1234') {
+                        currentUser = { id: 1, name: 'Muhammet', role: 'patron' };
+                        localStorage.setItem('adminUser', JSON.stringify(currentUser));
+                        showPanel();
+                    } else {
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                }
+            });
+        }
+
+        function showPanel() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('panelScreen').classList.add('active');
+            document.getElementById('adminName').textContent = currentUser.name.toUpperCase();
+
+            updateDateDisplay();
+            loadStats();
+            loadAppointments();
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/admin/stats`);
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('todayTotal').textContent = stats.today;
+                    document.getElementById('pendingTotal').textContent = stats.pending;
+                    document.getElementById('allTotal').textContent = stats.total;
+                }
+            } catch (error) {
+                console.log('API baglantisi yok');
+            }
+        }
+
+        async function loadAppointments() {
+            const dateStr = formatDate(selectedDate);
+
+            try {
+                const url = currentFilter === 'all'
+                    ? `${API_URL}/admin/appointments?date=${dateStr}`
+                    : `${API_URL}/admin/appointments?date=${dateStr}&barberId=${currentFilter}`;
+
+                const response = await fetch(url);
+                if (response.ok) {
+                    allAppointments = await response.json();
+                    renderAppointments();
+                }
+            } catch (error) {
+                allAppointments = [];
+                renderAppointments();
+            }
+        }
+
+        function renderAppointments() {
+            const container = document.getElementById('appointmentsContainer');
+
+            if (allAppointments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📅</div>
+                        <p>Bu gun icin randevu yok</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (currentFilter === 'all') {
+                let html = '';
+                barbers.forEach(barber => {
+                    const barberApts = allAppointments.filter(a => a.barberId === barber.id);
+                    if (barberApts.length > 0) {
+                        html += `
+                            <div class="barber-section">
+                                <div class="barber-header">
+                                    <div class="barber-avatar">${barber.icon}</div>
+                                    <div class="barber-info">
+                                        <h4>${barber.name.toUpperCase()}</h4>
+                                        <p>${barber.role}</p>
+                                    </div>
+                                    <span class="barber-count">${barberApts.length} RANDEVU</span>
+                                </div>
+                                <div class="appointment-list">
+                                    ${barberApts.map(apt => renderAppointmentCard(apt)).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                container.innerHTML = html;
+            } else {
+                const barber = barbers.find(b => b.id === parseInt(currentFilter));
+                container.innerHTML = `
+                    <div class="barber-section">
+                        <div class="barber-header">
+                            <div class="barber-avatar">${barber.icon}</div>
+                            <div class="barber-info">
+                                <h4>${barber.name.toUpperCase()}</h4>
+                                <p>${barber.role}</p>
+                            </div>
+                            <span class="barber-count">${allAppointments.length} RANDEVU</span>
+                        </div>
+                        <div class="appointment-list">
+                            ${allAppointments.map(apt => renderAppointmentCard(apt)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderAppointmentCard(apt) {
+            return `
+                <div class="apt-card ${apt.status}">
+                    <div class="apt-time">${apt.time}</div>
+                    <div class="apt-info">
+                        <div class="name">${apt.customerName}</div>
+                        <div class="phone">
+                            <a href="tel:${apt.customerPhone}">${apt.customerPhone}</a>
+                        </div>
+                    </div>
+                    <span class="apt-status ${apt.status}">${getStatusText(apt.status)}</span>
+                </div>
+            `;
+        }
+
+        function initDateNavigation() {
+            document.getElementById('prevDay').addEventListener('click', () => {
+                selectedDate.setDate(selectedDate.getDate() - 1);
+                updateDateDisplay();
+                loadAppointments();
+            });
+
+            document.getElementById('nextDay').addEventListener('click', () => {
+                selectedDate.setDate(selectedDate.getDate() + 1);
+                updateDateDisplay();
+                loadAppointments();
+            });
+
+            document.getElementById('btnToday').addEventListener('click', () => {
+                selectedDate = new Date();
+                updateDateDisplay();
+                loadAppointments();
+            });
+        }
+
+        function updateDateDisplay() {
+            document.getElementById('dayName').textContent = dayNames[selectedDate.getDay()].toUpperCase();
+            document.getElementById('fullDate').textContent =
+                `${selectedDate.getDate()} ${monthNames[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
+        }
+
+        function initFilter() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    loadAppointments();
+                });
+            });
+        }
+
+        function initLogout() {
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                localStorage.removeItem('adminUser');
+                currentUser = null;
+                document.getElementById('panelScreen').classList.remove('active');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('errorMessage').style.display = 'none';
+            });
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getStatusText(status) {
+            const texts = { 'bekliyor': 'BEKLIYOR', 'onaylandi': 'ONAYLANDI', 'iptal': 'IPTAL' };
+            return texts[status] || status;
+        }
+    </script>
+</body>
+</html>
