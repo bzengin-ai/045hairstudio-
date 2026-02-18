@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Paneli - 045 Berber Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Admin Paneli - 045 Hair Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,27 +13,12 @@
         }
 
         body {
-            font-family: 'Oswald', 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+            font-family: 'Montserrat', sans-serif;
+            background: #0f0f0f;
             min-height: 100vh;
-            color: #fff;
+            color: #e8e0d5;
             position: relative;
             overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                radial-gradient(ellipse at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
         }
 
         /* Graffiti */
@@ -42,11 +27,11 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%) rotate(-90deg);
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 6rem;
             letter-spacing: 10px;
             color: transparent;
-            -webkit-text-stroke: 2px rgba(255, 0, 255, 0.12);
+            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
             pointer-events: none;
             z-index: 0;
         }
@@ -56,28 +41,28 @@
             right: 10px;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 6rem;
             letter-spacing: 10px;
             color: transparent;
-            -webkit-text-stroke: 2px rgba(0, 255, 255, 0.12);
+            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
             pointer-events: none;
             z-index: 0;
         }
 
         .graffiti-corner {
             position: fixed;
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 2rem;
             letter-spacing: 5px;
             pointer-events: none;
             z-index: 0;
         }
 
-        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(255, 0, 255, 0.2); transform: rotate(-5deg); }
-        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(0, 255, 255, 0.2); transform: rotate(5deg); }
-        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(255, 0, 128, 0.15); transform: rotate(5deg); }
-        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(138, 43, 226, 0.2); transform: rotate(-5deg); }
+        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
+        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(201, 169, 110, 0.12); transform: rotate(5deg); }
+        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(201, 169, 110, 0.10); transform: rotate(5deg); }
+        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
 
         @media (max-width: 768px) {
             .graffiti-left, .graffiti-right { display: none; }
@@ -112,47 +97,31 @@
 
         .login-logo span {
             font-size: 4rem;
-            filter: drop-shadow(0 0 20px #ff00ff);
-            animation: iconPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { filter: drop-shadow(0 0 15px #ff00ff); }
-            50% { filter: drop-shadow(0 0 30px #00ffff); }
+            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.3));
         }
 
         .login-logo h1 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 2.5rem;
             letter-spacing: 6px;
             margin-top: 15px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: neonShift 3s linear infinite;
-        }
-
-        @keyframes neonShift {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            color: #c9a96e;
         }
 
         .login-logo p {
-            color: #ff0066;
+            color: #8a8070;
             font-size: 1.1rem;
             letter-spacing: 5px;
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
             font-weight: 600;
         }
 
         .login-form {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 35px;
             border-radius: 20px;
-            border: 2px solid #ff0066;
-            box-shadow: 0 0 40px rgba(255, 0, 102, 0.3);
+            border: 1px solid #2a2520;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .form-group {
@@ -161,9 +130,9 @@
 
         .form-group label {
             display: block;
-            color: #ff0066;
+            color: #c9a96e;
             margin-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -171,19 +140,19 @@
         .form-group input {
             width: 100%;
             padding: 18px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 15px;
-            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
-            color: #fff;
-            font-family: 'Oswald', sans-serif;
+            background: #1a1a1a;
+            color: #e8e0d5;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #ff0066;
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+            border-color: #c9a96e;
+            box-shadow: 0 0 15px rgba(201, 169, 110, 0.15);
         }
 
         .btn-login {
@@ -191,33 +160,26 @@
             padding: 18px;
             border: none;
             border-radius: 15px;
-            background: linear-gradient(90deg, #ff0066, #ff00ff, #00ffff);
-            background-size: 200% auto;
-            color: #fff;
-            font-family: 'Bebas Neue', sans-serif;
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            color: #0f0f0f;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.3rem;
+            font-weight: 700;
             letter-spacing: 4px;
             cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 0, 102, 0.4);
-            animation: btnGlow 3s linear infinite;
-        }
-
-        @keyframes btnGlow {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            transition: all 0.3s ease;
         }
 
         .btn-login:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(255, 0, 102, 0.5);
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
         }
 
         .error-message {
-            color: #ff0066;
+            color: #c0392b;
             text-align: center;
             margin-top: 15px;
             display: none;
-            text-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
         }
 
         /* Panel */
@@ -232,12 +194,11 @@
 
         /* Header */
         .panel-header {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 25px;
             border-radius: 20px;
             margin-bottom: 20px;
-            border: 2px solid #ff0066;
-            box-shadow: 0 0 30px rgba(255, 0, 102, 0.2);
+            border: 1px solid #2a2520;
         }
 
         .header-top {
@@ -255,42 +216,39 @@
 
         .admin-badge span {
             font-size: 2rem;
-            filter: drop-shadow(0 0 15px #ff0066);
+            filter: drop-shadow(0 0 10px rgba(201, 169, 110, 0.3));
         }
 
         .admin-badge h2 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.5rem;
             letter-spacing: 3px;
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #c9a96e;
         }
 
         .admin-badge p {
             font-size: 0.75rem;
-            color: #888;
+            color: #8a8070;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .btn-logout {
             padding: 12px 20px;
-            border: 2px solid #ff0066;
+            border: 2px solid #8a6840;
             border-radius: 12px;
             background: transparent;
-            color: #ff0066;
+            color: #c9a96e;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 2px;
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
 
         .btn-logout:hover {
-            background: #ff0066;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
         }
 
         /* Stats */
@@ -301,30 +259,27 @@
         }
 
         .stat-box {
-            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
+            background: linear-gradient(145deg, #1a1a1a 0%, #0f0f0f 100%);
             padding: 18px 12px;
             border-radius: 15px;
             text-align: center;
-            border: 1px solid #333;
+            border: 1px solid #2a2520;
             transition: all 0.3s ease;
         }
 
         .stat-box:hover {
-            border-color: #ff00ff;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+            border-color: #c9a96e;
         }
 
         .stat-box .num {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 2.5rem;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #c9a96e;
         }
 
         .stat-box .txt {
             font-size: 0.7rem;
-            color: #888;
+            color: #8a8070;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -334,29 +289,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
-            border: 1px solid #333;
+            border: 1px solid #2a2520;
         }
 
         .date-nav {
             width: 45px;
             height: 45px;
-            border: 2px solid #ff00ff;
+            border: 2px solid #c9a96e;
             border-radius: 50%;
             background: transparent;
-            color: #ff00ff;
+            color: #c9a96e;
             cursor: pointer;
             font-size: 1.3rem;
             transition: all 0.3s ease;
         }
 
         .date-nav:hover {
-            background: #ff00ff;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
         }
 
         .current-date {
@@ -364,16 +318,15 @@
         }
 
         .current-date .day {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.6rem;
             letter-spacing: 3px;
-            color: #00ffff;
-            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            color: #e8e0d5;
         }
 
         .current-date .full-date {
             font-size: 0.85rem;
-            color: #888;
+            color: #8a8070;
         }
 
         /* Filter */
@@ -387,12 +340,12 @@
 
         .filter-btn {
             padding: 12px 18px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 25px;
             background: transparent;
-            color: #888;
+            color: #8a8070;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
             letter-spacing: 1px;
             white-space: nowrap;
@@ -400,15 +353,15 @@
         }
 
         .filter-btn:hover {
-            border-color: #ff00ff;
-            color: #ff00ff;
+            border-color: #c9a96e;
+            color: #c9a96e;
         }
 
         .filter-btn.active {
-            background: linear-gradient(90deg, #ff00ff, #8b00ff);
-            border-color: #ff00ff;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            border-color: #c9a96e;
+            color: #0f0f0f;
+            font-weight: 700;
         }
 
         /* Barber Section */
@@ -422,44 +375,44 @@
             gap: 12px;
             margin-bottom: 15px;
             padding: 15px;
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             border-radius: 15px;
-            border: 1px solid #333;
+            border: 1px solid #2a2520;
         }
 
         .barber-avatar {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
         }
 
         .barber-info h4 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             letter-spacing: 2px;
-            color: #fff;
+            color: #e8e0d5;
         }
 
         .barber-info p {
             font-size: 0.75rem;
-            color: #888;
+            color: #8a8070;
             text-transform: uppercase;
         }
 
         .barber-count {
             margin-left: auto;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
             padding: 8px 15px;
             border-radius: 20px;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
-            color: #000;
+            color: #0f0f0f;
+            font-weight: 700;
         }
 
         /* Appointment Cards */
@@ -471,50 +424,50 @@
         }
 
         .apt-card {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             border-radius: 12px;
             padding: 15px;
             display: flex;
             align-items: center;
             gap: 15px;
-            border-left: 4px solid #ff00ff;
+            border-left: 4px solid #c9a96e;
             transition: all 0.3s ease;
         }
 
         .apt-card:hover {
             transform: translateX(5px);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .apt-card.bekliyor { border-left-color: #f39c12; }
-        .apt-card.onaylandi { border-left-color: #00ff88; }
-        .apt-card.iptal { border-left-color: #ff0066; opacity: 0.5; }
+        .apt-card.onaylandi { border-left-color: #c9a96e; }
+        .apt-card.iptal { border-left-color: #c0392b; opacity: 0.5; }
 
         .apt-time {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.4rem;
             letter-spacing: 2px;
-            color: #00ffff;
+            color: #e8e0d5;
             min-width: 60px;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
 
         .apt-info { flex: 1; }
 
         .apt-info .name {
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             letter-spacing: 1px;
             margin-bottom: 3px;
+            color: #e8e0d5;
         }
 
         .apt-info .phone {
             font-size: 0.85rem;
-            color: #888;
+            color: #8a8070;
         }
 
         .apt-info .phone a {
-            color: #00ffff;
+            color: #c9a96e;
             text-decoration: none;
         }
 
@@ -528,8 +481,8 @@
         }
 
         .apt-status.bekliyor { background: linear-gradient(90deg, #f39c12, #e67e22); color: #000; }
-        .apt-status.onaylandi { background: linear-gradient(90deg, #00ff88, #00ffff); color: #000; }
-        .apt-status.iptal { background: linear-gradient(90deg, #ff0066, #ff00ff); color: #fff; }
+        .apt-status.onaylandi { background: linear-gradient(135deg, #c9a96e, #b8944a); color: #0f0f0f; }
+        .apt-status.iptal { background: #c0392b; color: #fff; }
 
         /* Empty State */
         .empty-state {
@@ -541,11 +494,11 @@
         .empty-state .icon {
             font-size: 4rem;
             margin-bottom: 15px;
-            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.3));
+            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.2));
         }
 
         .empty-state p {
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
@@ -556,12 +509,12 @@
             width: 100%;
             padding: 15px;
             margin-top: 25px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 12px;
             background: transparent;
-            color: #888;
+            color: #8a8070;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -569,14 +522,13 @@
         }
 
         .btn-today:hover {
-            border-color: #00ffff;
-            color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: #c9a96e;
+            color: #c9a96e;
         }
 
         /* Scrollbar */
         .filter-row::-webkit-scrollbar { height: 4px; }
-        .filter-row::-webkit-scrollbar-thumb { background: #ff00ff; border-radius: 2px; }
+        .filter-row::-webkit-scrollbar-thumb { background: #c9a96e; border-radius: 2px; }
 
         /* Toast */
         .toast {
@@ -586,22 +538,22 @@
             transform: translateX(-50%);
             padding: 18px 40px;
             border-radius: 15px;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 2px;
             text-transform: uppercase;
             z-index: 1000;
         }
 
         .toast.success {
-            background: linear-gradient(90deg, #00ff88, #00ffff);
-            color: #000;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
+            box-shadow: 0 5px 25px rgba(201, 169, 110, 0.3);
         }
 
         .toast.error {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
-            box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+            box-shadow: 0 5px 25px rgba(192, 57, 43, 0.3);
         }
     </style>
 </head>
@@ -619,13 +571,13 @@
         <div class="container">
             <div class="login-logo">
                 <span>👑</span>
-                <h1>045 BERBER SHOP</h1>
+                <h1>045 HAIR STUDIO</h1>
                 <p>PATRON PANELI</p>
             </div>
             <form class="login-form" id="loginForm">
                 <div class="form-group">
                     <label>Kullanici Adi</label>
-                    <input type="text" id="username" placeholder="muhammet" required>
+                    <input type="text" id="username" placeholder="muhammed" required>
                 </div>
                 <div class="form-group">
                     <label>Sifre</label>
@@ -646,7 +598,7 @@
                     <div class="admin-badge">
                         <span>👑</span>
                         <div>
-                            <h2 id="adminName">MUHAMMET</h2>
+                            <h2 id="adminName">MUHAMMED</h2>
                             <p>Patron Paneli</p>
                         </div>
                     </div>
@@ -682,7 +634,7 @@
             <!-- Filter -->
             <div class="filter-row">
                 <button class="filter-btn active" data-filter="all">TUMU</button>
-                <button class="filter-btn" data-filter="1">MUHAMMET</button>
+                <button class="filter-btn" data-filter="1">MUHAMMED</button>
                 <button class="filter-btn" data-filter="2">CENGO</button>
                 <button class="filter-btn" data-filter="3">RIO</button>
                 <button class="filter-btn" data-filter="4">AHMET</button>
@@ -704,7 +656,7 @@
         let allAppointments = [];
 
         const barbers = [
-            { id: 1, name: 'Muhammet', role: 'Patron', icon: '👨‍💼' },
+            { id: 1, name: 'Muhammed', role: 'Patron', icon: '👨‍💼' },
             { id: 2, name: 'Cengo', role: 'Usta Berber', icon: '👨' },
             { id: 3, name: 'Rio', role: 'Usta Berber', icon: '👨' },
             { id: 4, name: 'Ahmet', role: 'Usta Berber', icon: '👨' }
@@ -756,8 +708,8 @@
                         document.getElementById('errorMessage').style.display = 'block';
                     }
                 } catch (error) {
-                    if (username === 'muhammet' && password === '1234') {
-                        currentUser = { id: 1, name: 'Muhammet', role: 'patron' };
+                    if (username === 'muhammed' && password === '1234') {
+                        currentUser = { id: 1, name: 'Muhammed', role: 'patron' };
                         localStorage.setItem('adminUser', JSON.stringify(currentUser));
                         showPanel();
                     } else {

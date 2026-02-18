@@ -33,7 +33,7 @@ function loadDatabase() {
     // Varsayilan veritabani
     const defaultDB = {
         barbers: [
-            { id: 1, name: 'Muhammet', role: 'patron', username: 'muhammet', password: '1234', experience: '15 Yil' },
+            { id: 1, name: 'Muhammed', role: 'patron', username: 'muhammed', password: '1234', experience: '15 Yil' },
             { id: 2, name: 'Cengo', role: 'berber', username: 'cengo', password: '1234', experience: '8 Yil' },
             { id: 3, name: 'Rio', role: 'berber', username: 'rio', password: '1234', experience: '5 Yil' },
             { id: 4, name: 'Ahmet', role: 'berber', username: 'ahmet', password: '1234', experience: '3 Yil' }
@@ -298,7 +298,7 @@ app.listen(PORT, () => {
     console.log(`  Admin:    http://localhost:${PORT}/admin`);
     console.log('');
     console.log('Giris Bilgileri:');
-    console.log('  Muhammet: muhammet / 1234');
+    console.log('  Muhammed: muhammed / 1234');
     console.log('  Cengo:    cengo / 1234');
     console.log('  Rio:      rio / 1234');
     console.log('  Ahmet:    ahmet / 1234');

@@ -11,7 +11,7 @@ let currentMonth = new Date();
 
 // Berber bilgileri
 const barbers = [
-    { id: 1, name: 'Muhammet', role: 'Patron' },
+    { id: 1, name: 'Muhammed', role: 'Patron' },
     { id: 2, name: 'Cengo', role: 'Usta Berber' },
     { id: 3, name: 'Rio', role: 'Usta Berber' },
     { id: 4, name: 'Ahmet', role: 'Usta Berber' }

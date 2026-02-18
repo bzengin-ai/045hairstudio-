@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Berber Paneli - 045 Berber Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Berber Paneli - 045 Hair Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,27 +13,12 @@
         }
 
         body {
-            font-family: 'Oswald', 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+            font-family: 'Montserrat', sans-serif;
+            background: #0f0f0f;
             min-height: 100vh;
-            color: #fff;
+            color: #e8e0d5;
             position: relative;
             overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                radial-gradient(ellipse at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
         }
 
         /* Graffiti Decorations */
@@ -42,11 +27,11 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%) rotate(-90deg);
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 6rem;
             letter-spacing: 10px;
             color: transparent;
-            -webkit-text-stroke: 2px rgba(255, 0, 255, 0.12);
+            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
             pointer-events: none;
             z-index: 0;
             user-select: none;
@@ -57,11 +42,11 @@
             right: 10px;
             top: 50%;
             transform: translateY(-50%) rotate(90deg);
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 6rem;
             letter-spacing: 10px;
             color: transparent;
-            -webkit-text-stroke: 2px rgba(0, 255, 255, 0.12);
+            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
             pointer-events: none;
             z-index: 0;
             user-select: none;
@@ -69,7 +54,7 @@
 
         .graffiti-corner {
             position: fixed;
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 2rem;
             letter-spacing: 5px;
             pointer-events: none;
@@ -77,10 +62,10 @@
             user-select: none;
         }
 
-        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(255, 0, 255, 0.2); transform: rotate(-5deg); }
-        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(0, 255, 255, 0.2); transform: rotate(5deg); }
-        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(255, 0, 128, 0.15); transform: rotate(5deg); }
-        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(138, 43, 226, 0.2); transform: rotate(-5deg); }
+        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
+        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(201, 169, 110, 0.12); transform: rotate(5deg); }
+        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(201, 169, 110, 0.10); transform: rotate(5deg); }
+        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
 
         @media (max-width: 768px) {
             .graffiti-left, .graffiti-right { display: none; }
@@ -117,47 +102,30 @@
 
         .login-logo span {
             font-size: 4rem;
-            filter: drop-shadow(0 0 20px #ff00ff);
-            animation: iconPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { filter: drop-shadow(0 0 15px #ff00ff); }
-            50% { filter: drop-shadow(0 0 30px #00ffff); }
+            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.3));
         }
 
         .login-logo h1 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 2.5rem;
             letter-spacing: 6px;
             margin-top: 15px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: neonShift 3s linear infinite;
-        }
-
-        @keyframes neonShift {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            color: #c9a96e;
         }
 
         .login-logo p {
-            color: #00ffff;
+            color: #8a8070;
             font-size: 1rem;
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .login-form {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 35px;
             border-radius: 20px;
-            border: 2px solid #ff00ff;
-            box-shadow: 0 0 40px rgba(255, 0, 255, 0.2);
+            border: 1px solid #2a2520;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .form-group {
@@ -166,9 +134,9 @@
 
         .form-group label {
             display: block;
-            color: #ff00ff;
+            color: #c9a96e;
             margin-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -177,11 +145,11 @@
         .form-group input {
             width: 100%;
             padding: 18px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 15px;
-            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
-            color: #fff;
-            font-family: 'Oswald', sans-serif;
+            background: #1a1a1a;
+            color: #e8e0d5;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
             letter-spacing: 1px;
             transition: all 0.3s ease;
@@ -189,8 +157,8 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            border-color: #c9a96e;
+            box-shadow: 0 0 15px rgba(201, 169, 110, 0.15);
         }
 
         .btn-login {
@@ -198,35 +166,27 @@
             padding: 18px;
             border: none;
             border-radius: 15px;
-            background: linear-gradient(90deg, #ff00ff, #8b00ff, #00ffff);
-            background-size: 200% auto;
-            color: #fff;
-            font-family: 'Bebas Neue', sans-serif;
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            color: #0f0f0f;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.3rem;
+            font-weight: 700;
             letter-spacing: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
-            animation: btnGlow 3s linear infinite;
-        }
-
-        @keyframes btnGlow {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
         }
 
         .btn-login:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
         }
 
         .error-message {
-            color: #ff0066;
+            color: #c0392b;
             text-align: center;
             margin-top: 15px;
             font-size: 0.9rem;
             display: none;
-            text-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
         }
 
         /* Panel Ekrani */
@@ -242,42 +202,38 @@
 
         /* Header */
         .panel-header {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 20px;
             border-radius: 20px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid #ff00ff;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
+            border: 1px solid #2a2520;
         }
 
         .user-info h2 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.5rem;
             letter-spacing: 3px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #c9a96e;
         }
 
         .user-info p {
             font-size: 0.8rem;
-            color: #888;
+            color: #8a8070;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .btn-logout {
             padding: 12px 20px;
-            border: 2px solid #ff0066;
+            border: 2px solid #8a6840;
             border-radius: 12px;
             background: transparent;
-            color: #ff0066;
+            color: #c9a96e;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -285,9 +241,8 @@
         }
 
         .btn-logout:hover {
-            background: #ff0066;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
         }
 
         /* Tarih Secici */
@@ -295,29 +250,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
-            border: 1px solid #333;
+            border: 1px solid #2a2520;
         }
 
         .date-nav {
             width: 45px;
             height: 45px;
-            border: 2px solid #ff00ff;
+            border: 2px solid #c9a96e;
             border-radius: 50%;
             background: transparent;
-            color: #ff00ff;
+            color: #c9a96e;
             cursor: pointer;
             font-size: 1.3rem;
             transition: all 0.3s ease;
         }
 
         .date-nav:hover {
-            background: #ff00ff;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
         }
 
         .current-date {
@@ -325,16 +279,15 @@
         }
 
         .current-date .day {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.8rem;
             letter-spacing: 3px;
-            color: #00ffff;
-            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            color: #e8e0d5;
         }
 
         .current-date .full-date {
             font-size: 0.85rem;
-            color: #888;
+            color: #8a8070;
             letter-spacing: 1px;
         }
 
@@ -347,31 +300,27 @@
         }
 
         .stat-card {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            border: 1px solid #333;
+            border: 1px solid #2a2520;
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            border-color: #ff00ff;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+            border-color: #c9a96e;
         }
 
         .stat-card .number {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 3rem;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #c9a96e;
         }
 
         .stat-card .label {
             font-size: 0.8rem;
-            color: #888;
+            color: #8a8070;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -385,11 +334,10 @@
         }
 
         .section-title h3 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.5rem;
             letter-spacing: 3px;
-            color: #ff00ff;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+            color: #c9a96e;
         }
 
         .appointment-list {
@@ -399,16 +347,16 @@
         }
 
         .appointment-card {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             border-radius: 15px;
             padding: 20px;
-            border-left: 4px solid #ff00ff;
+            border-left: 4px solid #c9a96e;
             transition: all 0.3s ease;
         }
 
         .appointment-card:hover {
             transform: translateX(5px);
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .appointment-card.bekliyor {
@@ -416,11 +364,11 @@
         }
 
         .appointment-card.onaylandi {
-            border-left-color: #00ff88;
+            border-left-color: #c9a96e;
         }
 
         .appointment-card.iptal {
-            border-left-color: #ff0066;
+            border-left-color: #c0392b;
             opacity: 0.5;
         }
 
@@ -432,11 +380,10 @@
         }
 
         .appointment-time {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.8rem;
             letter-spacing: 2px;
-            color: #00ffff;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            color: #e8e0d5;
         }
 
         .appointment-status {
@@ -454,17 +401,17 @@
         }
 
         .appointment-status.onaylandi {
-            background: linear-gradient(90deg, #00ff88, #00ffff);
-            color: #000;
+            background: linear-gradient(135deg, #c9a96e, #b8944a);
+            color: #0f0f0f;
         }
 
         .appointment-status.iptal {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
         }
 
         .appointment-customer {
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
             letter-spacing: 1px;
             margin-bottom: 5px;
@@ -474,26 +421,22 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #888;
+            color: #8a8070;
             font-size: 0.9rem;
         }
 
         .appointment-phone a {
-            color: #00ffff;
+            color: #c9a96e;
             text-decoration: none;
             transition: all 0.3s ease;
-        }
-
-        .appointment-phone a:hover {
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .appointment-note {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #333;
+            border-top: 1px solid #2a2520;
             font-size: 0.85rem;
-            color: #888;
+            color: #8a8070;
             font-style: italic;
         }
 
@@ -509,7 +452,7 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -517,30 +460,32 @@
         }
 
         .btn-call {
-            background: linear-gradient(90deg, #00ff88, #00ffff);
-            color: #000;
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            color: #0f0f0f;
+            font-weight: 700;
         }
 
         .btn-call:hover {
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 5px 20px rgba(201, 169, 110, 0.3);
         }
 
         .btn-confirm {
-            background: linear-gradient(90deg, #3498db, #00ffff);
-            color: #000;
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            color: #0f0f0f;
+            font-weight: 700;
         }
 
         .btn-confirm:hover {
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 5px 20px rgba(201, 169, 110, 0.3);
         }
 
         .btn-cancel {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
         }
 
         .btn-cancel:hover {
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            box-shadow: 0 5px 20px rgba(192, 57, 43, 0.3);
         }
 
         /* Bos durum */
@@ -553,11 +498,11 @@
         .empty-state .icon {
             font-size: 4rem;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.3));
+            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.2));
         }
 
         .empty-state p {
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
@@ -568,12 +513,12 @@
             width: 100%;
             padding: 15px;
             margin-top: 25px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 12px;
             background: transparent;
-            color: #888;
+            color: #8a8070;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -581,22 +526,21 @@
         }
 
         .btn-today:hover {
-            border-color: #00ffff;
-            color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: #c9a96e;
+            color: #c9a96e;
         }
 
         /* Acil Iptal Butonu */
         .btn-urgent-cancel {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 0, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(192, 57, 43, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
         }
 
         /* Modal */
@@ -620,12 +564,12 @@
         }
 
         .modal-content {
-            background: linear-gradient(145deg, #1a1030 0%, #0d0d1a 100%);
+            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
             border-radius: 25px;
             width: 100%;
             max-width: 400px;
-            border: 2px solid #ff0066;
-            box-shadow: 0 0 50px rgba(255, 0, 102, 0.4);
+            border: 1px solid #c9a96e;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
             animation: modalSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -639,33 +583,32 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 25px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #2a2520;
         }
 
         .modal-header h3 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.5rem;
             letter-spacing: 3px;
-            color: #ff0066;
-            text-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+            color: #c0392b;
         }
 
         .modal-close {
             width: 40px;
             height: 40px;
-            border: 2px solid #ff0066;
+            border: 2px solid #8a8070;
             border-radius: 50%;
             background: transparent;
-            color: #ff0066;
+            color: #8a8070;
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .modal-close:hover {
-            background: #ff0066;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            background: #c9a96e;
+            border-color: #c9a96e;
+            color: #0f0f0f;
         }
 
         .modal-body {
@@ -673,7 +616,7 @@
         }
 
         .modal-customer-info {
-            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
+            background: #1a1a1a;
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
@@ -681,11 +624,11 @@
 
         .modal-customer-info p {
             margin-bottom: 10px;
-            color: #888;
+            color: #8a8070;
         }
 
         .modal-customer-info strong {
-            color: #00ffff;
+            color: #c9a96e;
         }
 
         .modal-customer-info .phone-link {
@@ -694,29 +637,29 @@
             gap: 10px;
             margin-top: 12px;
             padding: 15px;
-            background: linear-gradient(90deg, #00ff88, #00ffff);
+            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
             border-radius: 12px;
-            color: #000;
+            color: #0f0f0f;
             text-decoration: none;
             justify-content: center;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 600;
             letter-spacing: 1px;
             transition: all 0.3s ease;
         }
 
         .modal-customer-info .phone-link:hover {
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 5px 20px rgba(201, 169, 110, 0.3);
         }
 
         .modal-note-input {
             width: 100%;
             padding: 18px;
-            border: 2px solid #333;
+            border: 2px solid #2a2520;
             border-radius: 15px;
-            background: linear-gradient(145deg, #0d0d1a 0%, #1a1030 100%);
-            color: #fff;
-            font-family: 'Oswald', sans-serif;
+            background: #1a1a1a;
+            color: #e8e0d5;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             min-height: 120px;
             resize: vertical;
@@ -725,15 +668,15 @@
 
         .modal-note-input:focus {
             outline: none;
-            border-color: #ff0066;
-            box-shadow: 0 0 20px rgba(255, 0, 102, 0.2);
+            border-color: #c9a96e;
+            box-shadow: 0 0 15px rgba(201, 169, 110, 0.15);
         }
 
         .modal-note-label {
             display: block;
-            color: #ff0066;
+            color: #c9a96e;
             margin-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -750,7 +693,7 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -758,23 +701,23 @@
         }
 
         .btn-modal-cancel {
-            background: #1a1030;
-            border: 2px solid #333;
-            color: #888;
+            background: #1a1a1a;
+            border: 2px solid #2a2520;
+            color: #8a8070;
         }
 
         .btn-modal-cancel:hover {
-            border-color: #ff00ff;
-            color: #ff00ff;
+            border-color: #c9a96e;
+            color: #c9a96e;
         }
 
         .btn-modal-confirm {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
         }
 
         .btn-modal-confirm:hover {
-            box-shadow: 0 0 25px rgba(255, 0, 102, 0.5);
+            box-shadow: 0 5px 20px rgba(192, 57, 43, 0.3);
         }
 
         /* Toast */
@@ -786,7 +729,7 @@
             padding: 18px 40px;
             border-radius: 15px;
             color: #fff;
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -795,15 +738,15 @@
         }
 
         .toast.success {
-            background: linear-gradient(90deg, #00ff88, #00ffff);
-            color: #000;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            background: #c9a96e;
+            color: #0f0f0f;
+            box-shadow: 0 5px 25px rgba(201, 169, 110, 0.3);
         }
 
         .toast.error {
-            background: linear-gradient(90deg, #ff0066, #ff00ff);
+            background: #c0392b;
             color: #fff;
-            box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+            box-shadow: 0 5px 25px rgba(192, 57, 43, 0.3);
         }
 
         @keyframes slideUp {
@@ -826,7 +769,7 @@
         <div class="container">
             <div class="login-logo">
                 <span>✂️</span>
-                <h1>045 BERBER SHOP</h1>
+                <h1>045 HAIR STUDIO</h1>
                 <p>Berber Paneli</p>
             </div>
             <form class="login-form" id="loginForm">
@@ -912,7 +855,7 @@
                             <span>WHATSAPP</span>
                         </a>
                     </div>
-                    <p id="modalPhoneDisplay" style="text-align: center; margin-top: 10px; color: #00ffff; font-size: 1.1rem;"></p>
+                    <p id="modalPhoneDisplay" style="text-align: center; margin-top: 10px; color: #c9a96e; font-size: 1.1rem;"></p>
                 </div>
                 <label class="modal-note-label">Iptal Sebebi (Not):</label>
                 <textarea class="modal-note-input" id="cancelNote" placeholder="Iptal sebebini yazin..."></textarea>
@@ -970,7 +913,7 @@
                     }
                 } catch (error) {
                     const demoUsers = {
-                        'muhammet': { id: 1, name: 'Muhammet', role: 'patron' },
+                        'muhammed': { id: 1, name: 'Muhammed', role: 'patron' },
                         'cengo': { id: 2, name: 'Cengo', role: 'berber' },
                         'rio': { id: 3, name: 'Rio', role: 'berber' },
                         'ahmet': { id: 4, name: 'Ahmet', role: 'berber' }
@@ -1070,7 +1013,7 @@
                         <a href="tel:${apt.customerPhone}">${apt.customerPhone}</a>
                     </div>
                     ${apt.note ? `<div class="appointment-note">"${apt.note}"</div>` : ''}
-                    ${apt.cancelNote ? `<div class="appointment-note" style="color: #ff0066;">Iptal Notu: "${apt.cancelNote}"</div>` : ''}
+                    ${apt.cancelNote ? `<div class="appointment-note" style="color: #c0392b;">Iptal Notu: "${apt.cancelNote}"</div>` : ''}
                     <div class="appointment-actions">
                         <button class="btn-action btn-call" onclick="callCustomer('${apt.customerPhone}')">
                             ARA
@@ -1140,7 +1083,7 @@
             const cleanPhone = currentModalData.phone.replace(/\D/g, '');
             const whatsappPhone = cleanPhone.startsWith('0') ? '9' + cleanPhone : cleanPhone;
 
-            let message = `Merhaba ${currentModalData.customerName}, 045 Berber Shop'tan ariyoruz. ${currentModalData.time} saatindeki randevunuz iptal edilmistir.`;
+            let message = `Merhaba ${currentModalData.customerName}, 045 Hair Studio'dan ariyoruz. ${currentModalData.time} saatindeki randevunuz iptal edilmistir.`;
 
             if (note) {
                 message += ` Sebep: ${note}`;
