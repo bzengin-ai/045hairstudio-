@@ -7,7 +7,7 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
-    <meta name="theme-color" content="#0f0f0f">
+    <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="045 Studio">
@@ -70,39 +70,18 @@
             <!-- Step 1: Berber Seçimi -->
             <section class="form-step active" id="step1">
                 <h2>Berberinizi Seçin</h2>
-                <div class="barber-grid">
-                    <div class="barber-card" data-barber-id="1">
-                        <div class="barber-avatar">
-                            <span>👨‍💼</span>
-                        </div>
-                        <h3>Muhammed</h3>
-                        <span class="barber-role patron">Patron</span>
-                        <p class="barber-exp"></p>
+                <div class="barber-grid" id="barberGrid">
+                    <!-- JS ile doldurulacak -->
+                </div>
+
+                <!-- Berber Galeri Bölümü -->
+                <div class="barber-gallery-section" id="barberGallerySection" style="display: none;">
+                    <h3 class="gallery-title" id="galleryTitle">Galeri</h3>
+                    <div class="barber-gallery" id="barberGallery">
+                        <!-- JS ile doldurulacak -->
                     </div>
-                    <div class="barber-card" data-barber-id="2">
-                        <div class="barber-avatar">
-                            <span>👨</span>
-                        </div>
-                        <h3>Cengo</h3>
-                        <span class="barber-role usta">Usta Berber</span>
-                        <p class="barber-exp"></p>
-                    </div>
-                    <div class="barber-card" data-barber-id="3">
-                        <div class="barber-avatar">
-                            <span>👨</span>
-                        </div>
-                        <h3>Rio</h3>
-                        <span class="barber-role usta">Usta Berber</span>
-                        <p class="barber-exp"></p>
-                    </div>
-                    <div class="barber-card" data-barber-id="4">
-                        <div class="barber-avatar">
-                            <span>👨</span>
-                        </div>
-                        <h3>Ahmet</h3>
-                        <span class="barber-role usta">Usta Berber</span>
-                        <p class="barber-exp"></p>
-                    </div>
+                    <button class="btn-book-barber" id="btnBookBarber">RANDEVU AL</button>
+                    <button class="btn-back-gallery" id="btnBackGallery">GERI DON</button>
                 </div>
             </section>
 
@@ -225,8 +204,8 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>www.045hairstudio.com</p>
-            <p class="footer-info">Çalışma Saatleri: 09:00 - 21:00 (Pazar Kapalı)</p>
+            <p><a href="https://www.instagram.com/045hairstudioo" target="_blank" rel="noopener" style="color: #ffffff; text-decoration: none;">@045hairstudioo</a></p>
+            <p class="footer-info">Calisma Saatleri: 09:00 - 21:00 (Pazar Kapali)</p>
         </div>
     </footer>
 
@@ -257,6 +236,14 @@
                 <button class="btn-modal-close" id="btnSelectOther">Baska Saat Sec</button>
             </div>
         </div>
+    </div>
+
+    <!-- Tam Ekran Fotoğraf Görüntüleyici -->
+    <div class="fullscreen-viewer" id="fullscreenViewer">
+        <button class="fullscreen-close" id="fullscreenClose">&times;</button>
+        <button class="fullscreen-nav fullscreen-prev" id="fullscreenPrev">&lt;</button>
+        <button class="fullscreen-nav fullscreen-next" id="fullscreenNext">&gt;</button>
+        <img id="fullscreenImg" src="" alt="Fotograf">
     </div>
 
     <script src="js/main.js"></script>

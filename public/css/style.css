@@ -1,6 +1,6 @@
 /* ========================================
-   045 HAIR STUDIO - PROFESSIONAL STYLE
-   Siyah / Krem / Gri Tema
+   045 HAIR STUDIO - PREMIUM DARK THEME
+   Siyah / Nardo Gri / Metalik Gri / Beyaz
 ======================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
@@ -13,9 +13,9 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: #0f0f0f;
+    background: #0a0a0a;
     min-height: 100vh;
-    color: #e8e0d5;
+    color: #d0d0d0;
     overflow-x: hidden;
 }
 
@@ -41,10 +41,10 @@ body {
    HEADER
 ======================================== */
 .header {
-    background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+    background: linear-gradient(180deg, #161616 0%, #0a0a0a 100%);
     padding: 35px 0;
     text-align: center;
-    border-bottom: 1px solid #2a2520;
+    border-bottom: 1px solid #2a2a2a;
     position: relative;
 }
 
@@ -56,7 +56,7 @@ body {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: #c9a96e;
+    background: #ffffff;
 }
 
 .logo {
@@ -70,7 +70,7 @@ body {
     font-size: 2.5rem;
     filter: none;
     animation: none;
-    color: #c9a96e;
+    color: #ffffff;
 }
 
 .logo h1 {
@@ -79,13 +79,13 @@ body {
     font-weight: 600;
     letter-spacing: 5px;
     background: none;
-    -webkit-text-fill-color: #e8e0d5;
+    -webkit-text-fill-color: #ffffff;
     animation: none;
     text-shadow: none;
 }
 
 .tagline {
-    color: #8a8070;
+    color: #6e6e6e;
     font-size: 0.8rem;
     margin-top: 8px;
     letter-spacing: 4px;
@@ -111,7 +111,7 @@ body {
     left: 10%;
     width: 80%;
     height: 1px;
-    background: #2a2520;
+    background: #2a2a2a;
 }
 
 .step {
@@ -126,7 +126,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #1a1a1a;
+    background: #161616;
     border: 1px solid #333;
     display: flex;
     align-items: center;
@@ -139,17 +139,17 @@ body {
 }
 
 .step.active .step-number {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
     animation: none;
 }
 
 .step.completed .step-number {
-    background: #2a2520;
-    border-color: #c9a96e;
-    color: #c9a96e;
+    background: #2a2a2a;
+    border-color: #6e6e6e;
+    color: #ffffff;
     box-shadow: none;
 }
 
@@ -162,12 +162,12 @@ body {
 }
 
 .step.active .step-text {
-    color: #c9a96e;
+    color: #ffffff;
     text-shadow: none;
 }
 
 .step.completed .step-text {
-    color: #8a8070;
+    color: #8c8c8c;
 }
 
 /* ========================================
@@ -193,7 +193,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.6rem;
     letter-spacing: 2px;
-    color: #e8e0d5;
+    color: #ffffff;
     text-shadow: none;
     font-weight: 500;
 }
@@ -208,8 +208,8 @@ body {
 }
 
 .barber-card {
-    background: #1a1a1a;
-    border: 1px solid #2a2520;
+    background: #161616;
+    border: 1px solid #2a2a2a;
     border-radius: 16px;
     padding: 25px 15px;
     text-align: center;
@@ -224,22 +224,22 @@ body {
 }
 
 .barber-card:hover {
-    border-color: #c9a96e;
+    border-color: #6e6e6e;
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .barber-card.selected {
-    border-color: #c9a96e;
-    background: #1e1b16;
-    box-shadow: 0 0 0 1px #c9a96e, 0 8px 30px rgba(201, 169, 110, 0.15);
+    border-color: #ffffff;
+    background: #1a1a1a;
+    box-shadow: 0 0 0 1px #ffffff, 0 8px 30px rgba(255, 255, 255, 0.08);
 }
 
 .barber-avatar {
     width: 65px;
     height: 65px;
-    background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
-    border: 2px solid #c9a96e;
+    background: linear-gradient(135deg, #2a2a2a 0%, #161616 100%);
+    border: 2px solid #6e6e6e;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -248,11 +248,20 @@ body {
     font-size: 1.8rem;
     box-shadow: none;
     animation: none;
+    overflow: hidden;
+}
+
+.barber-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .barber-card.selected .barber-avatar {
-    background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+    border-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 .barber-card h3 {
@@ -260,7 +269,7 @@ body {
     font-size: 1.2rem;
     letter-spacing: 1px;
     margin-bottom: 8px;
-    color: #e8e0d5;
+    color: #ffffff;
     font-weight: 500;
 }
 
@@ -276,15 +285,15 @@ body {
 }
 
 .barber-role.patron {
-    background: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    color: #0a0a0a;
     box-shadow: none;
 }
 
 .barber-role.usta {
-    background: #2a2520;
-    color: #c9a96e;
-    border: 1px solid #3a3530;
+    background: #2a2a2a;
+    color: #d0d0d0;
+    border: 1px solid #3a3a3a;
     box-shadow: none;
 }
 
@@ -294,6 +303,201 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
+/* ========================================
+   FOTOGRAF GALERISI
+======================================== */
+.barber-gallery-section {
+    margin-top: 20px;
+    padding: 20px 0;
+    animation: fadeIn 0.4s ease;
+}
+
+.gallery-title {
+    text-align: center;
+    font-size: 1rem;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.barber-gallery {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 0 15px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.barber-gallery::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-photo {
+    flex: 0 0 220px;
+    height: 280px;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    scroll-snap-align: start;
+    position: relative;
+    border: 1px solid #2a2a2a;
+    transition: all 0.3s ease;
+}
+
+.gallery-photo:hover {
+    border-color: #6e6e6e;
+    transform: scale(1.02);
+}
+
+.gallery-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-photo:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-empty {
+    text-align: center;
+    padding: 30px;
+    color: #6e6e6e;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.btn-book-barber {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #0a0a0a;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+}
+
+.btn-book-barber:hover {
+    background: #d0d0d0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2);
+}
+
+.btn-back-gallery {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: 1px solid #2a2a2a;
+    border-radius: 14px;
+    background: transparent;
+    color: #8c8c8c;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-back-gallery:hover {
+    border-color: #6e6e6e;
+    color: #ffffff;
+}
+
+/* Fullscreen Viewer */
+.fullscreen-viewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.fullscreen-viewer.active {
+    display: flex;
+}
+
+.fullscreen-viewer img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.fullscreen-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #6e6e6e;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2001;
+}
+
+.fullscreen-close:hover {
+    background: #ffffff;
+    color: #0a0a0a;
+    border-color: #ffffff;
+}
+
+.fullscreen-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border: 2px solid #6e6e6e;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2001;
+}
+
+.fullscreen-nav:hover {
+    background: #ffffff;
+    color: #0a0a0a;
+}
+
+.fullscreen-prev { left: 15px; }
+.fullscreen-next { right: 15px; }
 
 /* ========================================
    TAKVIM
@@ -321,14 +525,14 @@ body {
 }
 
 .view-btn:hover {
-    border-color: #c9a96e;
-    color: #c9a96e;
+    border-color: #ffffff;
+    color: #ffffff;
 }
 
 .view-btn.active {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
     box-shadow: none;
 }
 
@@ -353,16 +557,16 @@ body {
     border: 1px solid #333;
     border-radius: 50%;
     background: transparent;
-    color: #8a8070;
+    color: #8c8c8c;
     cursor: pointer;
     font-size: 1.1rem;
     transition: all 0.3s ease;
 }
 
 .nav-btn:hover {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
     box-shadow: none;
 }
 
@@ -370,7 +574,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.1rem;
     letter-spacing: 2px;
-    color: #c9a96e;
+    color: #ffffff;
     text-shadow: none;
 }
 
@@ -381,7 +585,7 @@ body {
 }
 
 .day-card {
-    background: #1a1a1a;
+    background: #161616;
     border: 1px solid #252525;
     border-radius: 12px;
     padding: 15px 5px;
@@ -391,21 +595,21 @@ body {
 }
 
 .day-card:hover:not(.disabled) {
-    border-color: #c9a96e;
-    background: #1e1b16;
+    border-color: #6e6e6e;
+    background: #1e1e1e;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transform: scale(1.03);
 }
 
 .day-card.selected {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    background: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .day-card.selected .day-name,
 .day-card.selected .day-num {
-    color: #0f0f0f;
+    color: #0a0a0a;
 }
 
 .day-card.disabled {
@@ -422,7 +626,7 @@ body {
 }
 
 .day-card:hover:not(.disabled) .day-name {
-    color: #c9a96e;
+    color: #ffffff;
 }
 
 .day-card .day-num {
@@ -441,7 +645,7 @@ body {
 .month-grid .day-header {
     text-align: center;
     font-size: 0.7rem;
-    color: #c9a96e;
+    color: #ffffff;
     padding: 8px 0;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -452,7 +656,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #1a1a1a;
+    background: #161616;
     border: 1px solid #252525;
     border-radius: 8px;
     cursor: pointer;
@@ -461,17 +665,17 @@ body {
 }
 
 .month-grid .month-day:hover:not(.disabled):not(.empty) {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .month-grid .month-day.selected {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .month-grid .month-day.disabled {
@@ -486,7 +690,7 @@ body {
 }
 
 .month-grid .month-day.today {
-    border: 1px solid #c9a96e;
+    border: 1px solid #ffffff;
 }
 
 /* ========================================
@@ -495,7 +699,7 @@ body {
 .time-selection {
     margin-top: 30px;
     padding-top: 25px;
-    border-top: 1px solid #2a2520;
+    border-top: 1px solid #2a2a2a;
 }
 
 .time-selection h3 {
@@ -504,7 +708,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.1rem;
     letter-spacing: 1px;
-    color: #c9a96e;
+    color: #ffffff;
 }
 
 .time-slots {
@@ -516,7 +720,7 @@ body {
 .time-slot {
     padding: 14px;
     text-align: center;
-    background: #1a1a1a;
+    background: #161616;
     border: 1px solid #252525;
     border-radius: 10px;
     cursor: pointer;
@@ -525,22 +729,22 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.5px;
-    color: #e8e0d5;
+    color: #d0d0d0;
 }
 
 .time-slot:hover:not(.disabled) {
-    border-color: #c9a96e;
-    background: #1e1b16;
+    border-color: #6e6e6e;
+    background: #1e1e1e;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transform: scale(1.03);
 }
 
 .time-slot.selected {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .time-slot.disabled {
@@ -559,7 +763,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #c9a96e;
+    color: #ffffff;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -572,10 +776,10 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 16px;
-    border: 1px solid #2a2520;
+    border: 1px solid #2a2a2a;
     border-radius: 12px;
-    background: #1a1a1a;
-    color: #e8e0d5;
+    background: #161616;
+    color: #d0d0d0;
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -584,8 +788,8 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #c9a96e;
-    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
 }
 
 .form-group textarea {
@@ -613,7 +817,7 @@ body {
     border: 1px solid #333;
     border-radius: 12px;
     background: transparent;
-    color: #8a8070;
+    color: #8c8c8c;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -624,8 +828,8 @@ body {
 }
 
 .btn-back:hover {
-    border-color: #c9a96e;
-    color: #c9a96e;
+    border-color: #ffffff;
+    color: #ffffff;
 }
 
 .btn-next,
@@ -634,8 +838,8 @@ body {
     padding: 16px;
     border: none;
     border-radius: 12px;
-    background: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    color: #0a0a0a;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -643,26 +847,26 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
     animation: none;
     background-size: auto;
 }
 
 .btn-next:hover,
 .btn-confirm:hover {
-    background: #d4b878;
+    background: #d0d0d0;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(201, 169, 110, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
 /* ========================================
    OZET KARTI
 ======================================== */
 .summary-card {
-    background: #1a1a1a;
+    background: #161616;
     border-radius: 16px;
     padding: 25px;
-    border: 1px solid #2a2520;
+    border: 1px solid #2a2a2a;
     box-shadow: none;
 }
 
@@ -678,7 +882,7 @@ body {
 }
 
 .summary-label {
-    color: #666;
+    color: #6e6e6e;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.8rem;
@@ -688,7 +892,7 @@ body {
 .summary-value {
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
-    color: #c9a96e;
+    color: #ffffff;
     text-shadow: none;
 }
 
@@ -703,15 +907,15 @@ body {
 .success-icon {
     width: 90px;
     height: 90px;
-    background: #c9a96e;
+    background: #ffffff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 25px;
     font-size: 2.5rem;
-    color: #0f0f0f;
-    box-shadow: 0 8px 30px rgba(201, 169, 110, 0.3);
+    color: #0a0a0a;
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
     animation: none;
 }
 
@@ -719,13 +923,13 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 2rem;
     letter-spacing: 3px;
-    color: #e8e0d5;
+    color: #ffffff;
     text-shadow: none;
     margin-bottom: 15px;
 }
 
 .success-message p {
-    color: #8a8070;
+    color: #8c8c8c;
     margin-bottom: 10px;
     font-size: 0.95rem;
 }
@@ -740,8 +944,8 @@ body {
     padding: 16px 45px;
     border: none;
     border-radius: 12px;
-    background: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    color: #0a0a0a;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -749,28 +953,28 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .btn-new:hover {
-    background: #d4b878;
+    background: #d0d0d0;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(201, 169, 110, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
 /* ========================================
    FOOTER
 ======================================== */
 .footer {
-    background: #0a0a0a;
+    background: #050505;
     padding: 25px;
     text-align: center;
     margin-top: 50px;
-    border-top: 1px solid #2a2520;
+    border-top: 1px solid #2a2a2a;
 }
 
 .footer p {
-    color: #c9a96e;
+    color: #ffffff;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
     letter-spacing: 2px;
@@ -780,7 +984,7 @@ body {
 .footer-info {
     margin-top: 8px;
     font-size: 0.75rem !important;
-    color: #555 !important;
+    color: #6e6e6e !important;
     text-shadow: none !important;
     font-family: 'Montserrat', sans-serif !important;
 }
@@ -789,13 +993,13 @@ body {
    RESPONSIVE
 ======================================== */
 
-/* Yakınlaştırmayı engelle */
+/* Yakinlastirmayi engelle */
 * {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 
-/* Input zoom engellemek için minimum 16px */
+/* Input zoom engellemek icin minimum 16px */
 input, textarea, select {
     font-size: 16px !important;
 }
@@ -843,7 +1047,7 @@ input, textarea, select {
         letter-spacing: 1px;
     }
 
-    /* Berber kartları - 2 sütun telefonda */
+    /* Berber kartlari - 2 sutun telefonda */
     .barber-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -870,7 +1074,13 @@ input, textarea, select {
         padding: 3px 10px;
     }
 
-    /* Takvim - günler */
+    /* Galeri */
+    .gallery-photo {
+        flex: 0 0 180px;
+        height: 240px;
+    }
+
+    /* Takvim - gunler */
     .days-grid {
         gap: 5px;
     }
@@ -888,7 +1098,7 @@ input, textarea, select {
         font-size: 1.1rem;
     }
 
-    /* Saat seçimi - 3 sütun */
+    /* Saat secimi - 3 sutun */
     .time-slots {
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
@@ -910,7 +1120,7 @@ input, textarea, select {
         font-size: 0.85rem;
     }
 
-    /* Özet kartı */
+    /* Ozet karti */
     .summary-card {
         padding: 18px;
     }
@@ -939,7 +1149,7 @@ input, textarea, select {
         font-size: 0.8rem;
     }
 
-    /* Nav butonları */
+    /* Nav butonlari */
     .nav-btn {
         width: 36px;
         height: 36px;
@@ -950,7 +1160,7 @@ input, textarea, select {
         font-size: 0.95rem;
     }
 
-    /* Başarı mesajı */
+    /* Basari mesaji */
     .success-icon {
         width: 75px;
         height: 75px;
@@ -1019,8 +1229,8 @@ input, textarea, select {
 .spinner {
     width: 45px;
     height: 45px;
-    border: 3px solid #1a1a1a;
-    border-top-color: #c9a96e;
+    border: 3px solid #161616;
+    border-top-color: #ffffff;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin: 0 auto;
@@ -1054,11 +1264,11 @@ input, textarea, select {
 }
 
 .modal-content {
-    background: #1a1a1a;
+    background: #161616;
     border-radius: 20px;
     width: 100%;
     max-width: 400px;
-    border: 1px solid #2a2520;
+    border: 1px solid #2a2a2a;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     animation: modalSlide 0.3s ease;
 }
@@ -1086,7 +1296,7 @@ input, textarea, select {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.2rem;
     letter-spacing: 1px;
-    color: #e8e0d5;
+    color: #ffffff;
     text-shadow: none;
 }
 
@@ -1096,7 +1306,7 @@ input, textarea, select {
     border: 1px solid #333;
     border-radius: 50%;
     background: transparent;
-    color: #8a8070;
+    color: #8c8c8c;
     font-size: 1.3rem;
     cursor: pointer;
     display: flex;
@@ -1106,9 +1316,9 @@ input, textarea, select {
 }
 
 .modal-close:hover {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0f0f0f;
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #0a0a0a;
     box-shadow: none;
 }
 
@@ -1119,17 +1329,17 @@ input, textarea, select {
 .modal-info {
     text-align: center;
     margin-bottom: 25px;
-    color: #8a8070;
+    color: #8c8c8c;
     font-size: 0.95rem;
 }
 
 .modal-info strong {
-    color: #c9a96e;
+    color: #ffffff;
     text-shadow: none;
 }
 
 .suggestion-title {
-    color: #c9a96e;
+    color: #ffffff;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
     margin-bottom: 15px;
@@ -1150,7 +1360,7 @@ input, textarea, select {
     align-items: center;
     gap: 15px;
     padding: 16px;
-    background: #0f0f0f;
+    background: #0a0a0a;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1158,7 +1368,7 @@ input, textarea, select {
 }
 
 .suggestion-card:hover {
-    border-color: #c9a96e;
+    border-color: #6e6e6e;
     transform: translateX(5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
@@ -1166,14 +1376,21 @@ input, textarea, select {
 .suggestion-avatar {
     width: 45px;
     height: 45px;
-    background: #2a2520;
-    border: 1px solid #c9a96e;
+    background: #2a2a2a;
+    border: 1px solid #6e6e6e;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
     box-shadow: none;
+    overflow: hidden;
+}
+
+.suggestion-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .suggestion-info {
@@ -1184,17 +1401,17 @@ input, textarea, select {
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
     letter-spacing: 1px;
-    color: #e8e0d5;
+    color: #ffffff;
     margin-bottom: 3px;
 }
 
 .suggestion-info p {
     font-size: 0.75rem;
-    color: #666;
+    color: #6e6e6e;
 }
 
 .suggestion-select {
-    color: #c9a96e;
+    color: #ffffff;
     font-size: 1.2rem;
 }
 
@@ -1204,13 +1421,13 @@ input, textarea, select {
 }
 
 .no-suggestion p {
-    color: #666;
+    color: #6e6e6e;
     margin-bottom: 8px;
 }
 
 .no-suggestion .hint {
     font-size: 0.85rem;
-    color: #c9a96e;
+    color: #ffffff;
 }
 
 .modal-footer {
@@ -1223,7 +1440,7 @@ input, textarea, select {
     border: 1px solid #333;
     border-radius: 10px;
     background: transparent;
-    color: #8a8070;
+    color: #8c8c8c;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
@@ -1234,8 +1451,8 @@ input, textarea, select {
 }
 
 .btn-modal-close:hover {
-    border-color: #c9a96e;
-    color: #c9a96e;
+    border-color: #ffffff;
+    color: #ffffff;
 }
 
 /* ========================================
@@ -1259,14 +1476,14 @@ input, textarea, select {
 }
 
 .toast.success {
-    background: #c9a96e;
-    color: #0f0f0f;
-    box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4);
+    background: #ffffff;
+    color: #0a0a0a;
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
 }
 
 .toast.error {
     background: #8b3a3a;
-    color: #e8e0d5;
+    color: #d0d0d0;
     box-shadow: 0 8px 30px rgba(139, 58, 58, 0.4);
 }
 

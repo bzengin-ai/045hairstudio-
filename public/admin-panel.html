@@ -6,7 +6,7 @@
     <title>Admin Paneli - 045 Hair Studio</title>
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
-    <meta name="theme-color" content="#0f0f0f">
+    <meta name="theme-color" content="#0a0a0a">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -17,59 +17,11 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #0f0f0f;
+            background: #0a0a0a;
             min-height: 100vh;
-            color: #e8e0d5;
+            color: #d0d0d0;
             position: relative;
             overflow-x: hidden;
-        }
-
-        /* Graffiti */
-        .graffiti-left {
-            position: fixed;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 6rem;
-            letter-spacing: 10px;
-            color: transparent;
-            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .graffiti-right {
-            position: fixed;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 6rem;
-            letter-spacing: 10px;
-            color: transparent;
-            -webkit-text-stroke: 2px rgba(201, 169, 110, 0.08);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .graffiti-corner {
-            position: fixed;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 5px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .graffiti-corner-tl { top: 10px; left: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
-        .graffiti-corner-tr { top: 10px; right: 10px; color: rgba(201, 169, 110, 0.12); transform: rotate(5deg); }
-        .graffiti-corner-bl { bottom: 10px; left: 10px; color: rgba(201, 169, 110, 0.10); transform: rotate(5deg); }
-        .graffiti-corner-br { bottom: 10px; right: 10px; color: rgba(201, 169, 110, 0.15); transform: rotate(-5deg); }
-
-        @media (max-width: 768px) {
-            .graffiti-left, .graffiti-right { display: none; }
-            .graffiti-corner { font-size: 1.2rem; }
         }
 
         .container {
@@ -100,7 +52,6 @@
 
         .login-logo span {
             font-size: 4rem;
-            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.3));
         }
 
         .login-logo h1 {
@@ -108,11 +59,11 @@
             font-size: 2.5rem;
             letter-spacing: 6px;
             margin-top: 15px;
-            color: #c9a96e;
+            color: #ffffff;
         }
 
         .login-logo p {
-            color: #8a8070;
+            color: #6e6e6e;
             font-size: 1.1rem;
             letter-spacing: 5px;
             text-transform: uppercase;
@@ -120,10 +71,10 @@
         }
 
         .login-form {
-            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
             padding: 35px;
             border-radius: 20px;
-            border: 1px solid #2a2520;
+            border: 1px solid #2a2a2a;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
@@ -133,7 +84,7 @@
 
         .form-group label {
             display: block;
-            color: #c9a96e;
+            color: #ffffff;
             margin-bottom: 10px;
             font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
@@ -143,10 +94,10 @@
         .form-group input {
             width: 100%;
             padding: 18px;
-            border: 2px solid #2a2520;
+            border: 2px solid #2a2a2a;
             border-radius: 15px;
-            background: #1a1a1a;
-            color: #e8e0d5;
+            background: #0a0a0a;
+            color: #d0d0d0;
             font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
             transition: all 0.3s ease;
@@ -154,8 +105,8 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #c9a96e;
-            box-shadow: 0 0 15px rgba(201, 169, 110, 0.15);
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
         }
 
         .btn-login {
@@ -163,8 +114,8 @@
             padding: 18px;
             border: none;
             border-radius: 15px;
-            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
-            color: #0f0f0f;
+            background: #ffffff;
+            color: #0a0a0a;
             font-family: 'Montserrat', sans-serif;
             font-size: 1.3rem;
             font-weight: 700;
@@ -175,7 +126,7 @@
 
         .btn-login:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
         }
 
         .error-message {
@@ -197,11 +148,11 @@
 
         /* Header */
         .panel-header {
-            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
             padding: 25px;
             border-radius: 20px;
             margin-bottom: 20px;
-            border: 1px solid #2a2520;
+            border: 1px solid #2a2a2a;
         }
 
         .header-top {
@@ -219,29 +170,28 @@
 
         .admin-badge span {
             font-size: 2rem;
-            filter: drop-shadow(0 0 10px rgba(201, 169, 110, 0.3));
         }
 
         .admin-badge h2 {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.5rem;
             letter-spacing: 3px;
-            color: #c9a96e;
+            color: #ffffff;
         }
 
         .admin-badge p {
             font-size: 0.75rem;
-            color: #8a8070;
+            color: #6e6e6e;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .btn-logout {
             padding: 12px 20px;
-            border: 2px solid #8a6840;
+            border: 2px solid #6e6e6e;
             border-radius: 12px;
             background: transparent;
-            color: #c9a96e;
+            color: #8c8c8c;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 2px;
@@ -250,8 +200,9 @@
         }
 
         .btn-logout:hover {
-            background: #c9a96e;
-            color: #0f0f0f;
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #0a0a0a;
         }
 
         /* Stats */
@@ -262,29 +213,71 @@
         }
 
         .stat-box {
-            background: linear-gradient(145deg, #1a1a1a 0%, #0f0f0f 100%);
+            background: linear-gradient(145deg, #161616 0%, #0a0a0a 100%);
             padding: 18px 12px;
             border-radius: 15px;
             text-align: center;
-            border: 1px solid #2a2520;
+            border: 1px solid #2a2a2a;
             transition: all 0.3s ease;
         }
 
         .stat-box:hover {
-            border-color: #c9a96e;
+            border-color: #6e6e6e;
         }
 
         .stat-box .num {
             font-family: 'Montserrat', sans-serif;
             font-size: 2.5rem;
-            color: #c9a96e;
+            color: #ffffff;
         }
 
         .stat-box .txt {
             font-size: 0.7rem;
-            color: #8a8070;
+            color: #6e6e6e;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            background: transparent;
+            color: #6e6e6e;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: #6e6e6e;
+            color: #ffffff;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #0a0a0a;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Date Selector */
@@ -292,28 +285,29 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
-            border: 1px solid #2a2520;
+            border: 1px solid #2a2a2a;
         }
 
         .date-nav {
             width: 45px;
             height: 45px;
-            border: 2px solid #c9a96e;
+            border: 2px solid #6e6e6e;
             border-radius: 50%;
             background: transparent;
-            color: #c9a96e;
+            color: #8c8c8c;
             cursor: pointer;
             font-size: 1.3rem;
             transition: all 0.3s ease;
         }
 
         .date-nav:hover {
-            background: #c9a96e;
-            color: #0f0f0f;
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #0a0a0a;
         }
 
         .current-date {
@@ -324,12 +318,12 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.6rem;
             letter-spacing: 3px;
-            color: #e8e0d5;
+            color: #ffffff;
         }
 
         .current-date .full-date {
             font-size: 0.85rem;
-            color: #8a8070;
+            color: #6e6e6e;
         }
 
         /* Filter */
@@ -343,10 +337,10 @@
 
         .filter-btn {
             padding: 12px 18px;
-            border: 2px solid #2a2520;
+            border: 2px solid #2a2a2a;
             border-radius: 25px;
             background: transparent;
-            color: #8a8070;
+            color: #6e6e6e;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
@@ -356,14 +350,14 @@
         }
 
         .filter-btn:hover {
-            border-color: #c9a96e;
-            color: #c9a96e;
+            border-color: #6e6e6e;
+            color: #ffffff;
         }
 
         .filter-btn.active {
-            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
-            border-color: #c9a96e;
-            color: #0f0f0f;
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #0a0a0a;
             font-weight: 700;
         }
 
@@ -378,43 +372,50 @@
             gap: 12px;
             margin-bottom: 15px;
             padding: 15px;
-            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
             border-radius: 15px;
-            border: 1px solid #2a2520;
+            border: 1px solid #2a2a2a;
         }
 
         .barber-avatar {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            background: linear-gradient(135deg, #6e6e6e 0%, #4a4a4a 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .barber-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .barber-info h4 {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             letter-spacing: 2px;
-            color: #e8e0d5;
+            color: #ffffff;
         }
 
         .barber-info p {
             font-size: 0.75rem;
-            color: #8a8070;
+            color: #6e6e6e;
             text-transform: uppercase;
         }
 
         .barber-count {
             margin-left: auto;
-            background: linear-gradient(135deg, #c9a96e 0%, #b8944a 100%);
+            background: #ffffff;
             padding: 8px 15px;
             border-radius: 20px;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
-            color: #0f0f0f;
+            color: #0a0a0a;
             font-weight: 700;
         }
 
@@ -427,13 +428,13 @@
         }
 
         .apt-card {
-            background: linear-gradient(135deg, #2a2520 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
             border-radius: 12px;
             padding: 15px;
             display: flex;
             align-items: center;
             gap: 15px;
-            border-left: 4px solid #c9a96e;
+            border-left: 4px solid #6e6e6e;
             transition: all 0.3s ease;
         }
 
@@ -443,14 +444,14 @@
         }
 
         .apt-card.bekliyor { border-left-color: #f39c12; }
-        .apt-card.onaylandi { border-left-color: #c9a96e; }
+        .apt-card.onaylandi { border-left-color: #ffffff; }
         .apt-card.iptal { border-left-color: #c0392b; opacity: 0.5; }
 
         .apt-time {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.4rem;
             letter-spacing: 2px;
-            color: #e8e0d5;
+            color: #ffffff;
             min-width: 60px;
         }
 
@@ -461,16 +462,16 @@
             font-size: 1rem;
             letter-spacing: 1px;
             margin-bottom: 3px;
-            color: #e8e0d5;
+            color: #ffffff;
         }
 
         .apt-info .phone {
             font-size: 0.85rem;
-            color: #8a8070;
+            color: #6e6e6e;
         }
 
         .apt-info .phone a {
-            color: #c9a96e;
+            color: #8c8c8c;
             text-decoration: none;
         }
 
@@ -484,7 +485,7 @@
         }
 
         .apt-status.bekliyor { background: linear-gradient(90deg, #f39c12, #e67e22); color: #000; }
-        .apt-status.onaylandi { background: linear-gradient(135deg, #c9a96e, #b8944a); color: #0f0f0f; }
+        .apt-status.onaylandi { background: #ffffff; color: #0a0a0a; }
         .apt-status.iptal { background: #c0392b; color: #fff; }
 
         /* Empty State */
@@ -497,7 +498,6 @@
         .empty-state .icon {
             font-size: 4rem;
             margin-bottom: 15px;
-            filter: drop-shadow(0 0 15px rgba(201, 169, 110, 0.2));
         }
 
         .empty-state p {
@@ -512,10 +512,10 @@
             width: 100%;
             padding: 15px;
             margin-top: 25px;
-            border: 2px solid #2a2520;
+            border: 2px solid #2a2a2a;
             border-radius: 12px;
             background: transparent;
-            color: #8a8070;
+            color: #6e6e6e;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
@@ -525,13 +525,172 @@
         }
 
         .btn-today:hover {
-            border-color: #c9a96e;
-            color: #c9a96e;
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        /* ========================================
+           GALERI YONETIMI
+        ======================================== */
+        .gallery-manager {
+            margin-bottom: 30px;
+        }
+
+        .gallery-barber-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .gallery-barber-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .gallery-barber-avatar {
+            width: 50px;
+            height: 50px;
+            background: #2a2a2a;
+            border: 2px solid #6e6e6e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            overflow: hidden;
+        }
+
+        .gallery-barber-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-barber-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .gallery-barber-role {
+            font-size: 0.7rem;
+            color: #6e6e6e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gallery-upload-area {
+            border: 2px dashed #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-upload-area:hover {
+            border-color: #6e6e6e;
+        }
+
+        .gallery-upload-area.dragover {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .upload-text {
+            color: #6e6e6e;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .upload-hint {
+            color: #444;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+
+        .gallery-upload-input {
+            display: none;
+        }
+
+        .gallery-photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .gallery-photo-item {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+        }
+
+        .gallery-photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-photo-delete {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            background: rgba(192, 57, 43, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .gallery-photo-item:hover .gallery-photo-delete {
+            opacity: 1;
+        }
+
+        .gallery-photo-delete:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .gallery-empty-text {
+            text-align: center;
+            padding: 15px;
+            color: #444;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .upload-progress {
+            display: none;
+            margin: 10px 0;
+            text-align: center;
+            color: #8c8c8c;
+            font-size: 0.85rem;
         }
 
         /* Scrollbar */
         .filter-row::-webkit-scrollbar { height: 4px; }
-        .filter-row::-webkit-scrollbar-thumb { background: #c9a96e; border-radius: 2px; }
+        .filter-row::-webkit-scrollbar-thumb { background: #6e6e6e; border-radius: 2px; }
 
         /* Toast */
         .toast {
@@ -545,12 +704,13 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             z-index: 1000;
+            animation: slideUp 0.3s ease;
         }
 
         .toast.success {
-            background: #c9a96e;
-            color: #0f0f0f;
-            box-shadow: 0 5px 25px rgba(201, 169, 110, 0.3);
+            background: #ffffff;
+            color: #0a0a0a;
+            box-shadow: 0 5px 25px rgba(255, 255, 255, 0.15);
         }
 
         .toast.error {
@@ -558,22 +718,30 @@
             color: #fff;
             box-shadow: 0 5px 25px rgba(192, 57, 43, 0.3);
         }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-photos-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .gallery-photo-delete {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Graffiti -->
-    <div class="graffiti-left">045</div>
-    <div class="graffiti-right">045</div>
-    <div class="graffiti-corner graffiti-corner-tl">045</div>
-    <div class="graffiti-corner graffiti-corner-tr">045</div>
-    <div class="graffiti-corner graffiti-corner-bl">045</div>
-    <div class="graffiti-corner graffiti-corner-br">045</div>
-
     <!-- Login -->
     <div class="login-screen" id="loginScreen">
         <div class="container">
             <div class="login-logo">
-                <span>👑</span>
+                <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
                 <p>PATRON PANELI</p>
             </div>
@@ -599,7 +767,7 @@
             <div class="panel-header">
                 <div class="header-top">
                     <div class="admin-badge">
-                        <span>👑</span>
+                        <span>&#9986;</span>
                         <div>
                             <h2 id="adminName">MUHAMMED</h2>
                             <p>Patron Paneli</p>
@@ -624,34 +792,50 @@
                 </div>
             </div>
 
-            <!-- Date Selector -->
-            <div class="date-selector">
-                <button class="date-nav" id="prevDay">&lt;</button>
-                <div class="current-date">
-                    <div class="day" id="dayName">PAZARTESI</div>
-                    <div class="full-date" id="fullDate">6 Ocak 2026</div>
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="randevular">RANDEVULAR</button>
+                <button class="tab-btn" data-tab="galeri">GALERI</button>
+            </div>
+
+            <!-- Tab: Randevular -->
+            <div class="tab-content active" id="tabRandevular">
+                <!-- Date Selector -->
+                <div class="date-selector">
+                    <button class="date-nav" id="prevDay">&lt;</button>
+                    <div class="current-date">
+                        <div class="day" id="dayName">PAZARTESI</div>
+                        <div class="full-date" id="fullDate">6 Ocak 2026</div>
+                    </div>
+                    <button class="date-nav" id="nextDay">&gt;</button>
                 </div>
-                <button class="date-nav" id="nextDay">&gt;</button>
+
+                <!-- Filter -->
+                <div class="filter-row">
+                    <button class="filter-btn active" data-filter="all">TUMU</button>
+                    <button class="filter-btn" data-filter="1">MUHAMMED</button>
+                    <button class="filter-btn" data-filter="2">CENGO</button>
+                    <button class="filter-btn" data-filter="3">RIO</button>
+                    <button class="filter-btn" data-filter="4">AHMET</button>
+                </div>
+
+                <!-- Appointments -->
+                <div id="appointmentsContainer"></div>
+
+                <button class="btn-today" id="btnToday">BUGUNE DON</button>
             </div>
 
-            <!-- Filter -->
-            <div class="filter-row">
-                <button class="filter-btn active" data-filter="all">TUMU</button>
-                <button class="filter-btn" data-filter="1">MUHAMMED</button>
-                <button class="filter-btn" data-filter="2">CENGO</button>
-                <button class="filter-btn" data-filter="3">RIO</button>
-                <button class="filter-btn" data-filter="4">AHMET</button>
+            <!-- Tab: Galeri -->
+            <div class="tab-content" id="tabGaleri">
+                <div id="galleryContainer">
+                    <!-- JS ile doldurulacak -->
+                </div>
             </div>
-
-            <!-- Appointments -->
-            <div id="appointmentsContainer"></div>
-
-            <button class="btn-today" id="btnToday">BUGUNE DON</button>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:4000/api';
+        const API_URL = window.location.origin + '/api';
 
         let currentUser = null;
         let selectedDate = new Date();
@@ -659,10 +843,10 @@
         let allAppointments = [];
 
         const barbers = [
-            { id: 1, name: 'Muhammed', role: 'Patron', icon: '👨‍💼' },
-            { id: 2, name: 'Cengo', role: 'Usta Berber', icon: '👨' },
-            { id: 3, name: 'Rio', role: 'Usta Berber', icon: '👨' },
-            { id: 4, name: 'Ahmet', role: 'Usta Berber', icon: '👨' }
+            { id: 1, name: 'Muhammed', role: 'Patron' },
+            { id: 2, name: 'Cengo', role: 'Usta Berber' },
+            { id: 3, name: 'Rio', role: 'Usta Berber' },
+            { id: 4, name: 'Ahmet', role: 'Usta Berber' }
         ];
 
         const dayNames = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma', 'Cumartesi'];
@@ -682,8 +866,178 @@
             initDateNavigation();
             initFilter();
             initLogout();
+            initTabs();
         });
 
+        // ========================================
+        // TAB SISTEMI
+        // ========================================
+        function initTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                    this.classList.add('active');
+                    const tab = this.dataset.tab;
+                    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+
+                    if (tab === 'galeri') {
+                        loadGallery();
+                    }
+                });
+            });
+        }
+
+        // ========================================
+        // GALERI YONETIMI
+        // ========================================
+        async function loadGallery() {
+            const container = document.getElementById('galleryContainer');
+
+            let barbersWithPhotos = [];
+            try {
+                const response = await fetch(`${API_URL}/barbers`);
+                if (response.ok) {
+                    barbersWithPhotos = await response.json();
+                }
+            } catch (error) {
+                barbersWithPhotos = barbers.map(b => ({ ...b, photos: [] }));
+            }
+
+            container.innerHTML = barbersWithPhotos.map(barber => {
+                const hasPhoto = barber.photos && barber.photos.length > 0;
+                const avatarContent = hasPhoto
+                    ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+                    : `<span style="color: #6e6e6e;">&#9986;</span>`;
+
+                const photosHtml = (barber.photos && barber.photos.length > 0)
+                    ? `<div class="gallery-photos-grid">
+                        ${barber.photos.map(photo => `
+                            <div class="gallery-photo-item">
+                                <img src="/uploads/${photo}" alt="">
+                                <button class="gallery-photo-delete" onclick="deletePhoto(${barber.id}, '${photo}')">&times;</button>
+                            </div>
+                        `).join('')}
+                       </div>`
+                    : '<div class="gallery-empty-text">Henuz fotograf yok</div>';
+
+                return `
+                    <div class="gallery-barber-card" id="galleryBarber${barber.id}">
+                        <div class="gallery-barber-header">
+                            <div class="gallery-barber-avatar">${avatarContent}</div>
+                            <div>
+                                <div class="gallery-barber-name">${barber.name}</div>
+                                <div class="gallery-barber-role">${barber.role === 'patron' ? 'Patron' : 'Usta Berber'} - ${(barber.photos || []).length} foto</div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-upload-area" id="uploadArea${barber.id}"
+                             ondragover="handleDragOver(event, ${barber.id})"
+                             ondragleave="handleDragLeave(event, ${barber.id})"
+                             ondrop="handleDrop(event, ${barber.id})"
+                             onclick="document.getElementById('fileInput${barber.id}').click()">
+                            <div class="upload-icon">+</div>
+                            <div class="upload-text">Fotograf Yukle</div>
+                            <div class="upload-hint">JPG, PNG, WEBP - Max 5MB</div>
+                        </div>
+                        <input type="file" id="fileInput${barber.id}" class="gallery-upload-input"
+                               accept="image/jpeg,image/png,image/webp"
+                               onchange="uploadPhoto(${barber.id}, this.files[0])">
+
+                        <div class="upload-progress" id="progress${barber.id}">Yukleniyor...</div>
+
+                        ${photosHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleDragOver(e, barberId) {
+            e.preventDefault();
+            document.getElementById(`uploadArea${barberId}`).classList.add('dragover');
+        }
+
+        function handleDragLeave(e, barberId) {
+            e.preventDefault();
+            document.getElementById(`uploadArea${barberId}`).classList.remove('dragover');
+        }
+
+        function handleDrop(e, barberId) {
+            e.preventDefault();
+            document.getElementById(`uploadArea${barberId}`).classList.remove('dragover');
+
+            const file = e.dataTransfer.files[0];
+            if (file) uploadPhoto(barberId, file);
+        }
+
+        async function uploadPhoto(barberId, file) {
+            if (!file) return;
+
+            // Dosya tipi kontrolu
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Sadece JPG, PNG, WEBP yuklenebilir', 'error');
+                return;
+            }
+
+            // Dosya boyutu kontrolu
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Dosya boyutu 5MB\'yi asamaz', 'error');
+                return;
+            }
+
+            const progress = document.getElementById(`progress${barberId}`);
+            progress.style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            try {
+                const response = await fetch(`${API_URL}/barber/${barberId}/photos`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showToast('Fotograf yuklendi', 'success');
+                    loadGallery(); // Yenile
+                } else {
+                    const err = await response.json();
+                    showToast(err.error || 'Yukleme basarisiz', 'error');
+                }
+            } catch (error) {
+                showToast('Yukleme basarisiz', 'error');
+            }
+
+            progress.style.display = 'none';
+            // Input'u sifirla
+            const fileInput = document.getElementById(`fileInput${barberId}`);
+            if (fileInput) fileInput.value = '';
+        }
+
+        async function deletePhoto(barberId, filename) {
+            if (!confirm('Bu fotografyi silmek istediginizden emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/barber/${barberId}/photos/${filename}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Fotograf silindi', 'success');
+                    loadGallery();
+                } else {
+                    showToast('Silme basarisiz', 'error');
+                }
+            } catch (error) {
+                showToast('Silme basarisiz', 'error');
+            }
+        }
+
+        // ========================================
+        // LOGIN
+        // ========================================
         function initLoginForm() {
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -771,7 +1125,7 @@
             if (allAppointments.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📅</div>
+                        <div class="icon">&#128197;</div>
                         <p>Bu gun icin randevu yok</p>
                     </div>
                 `;
@@ -786,7 +1140,7 @@
                         html += `
                             <div class="barber-section">
                                 <div class="barber-header">
-                                    <div class="barber-avatar">${barber.icon}</div>
+                                    <div class="barber-avatar"><span style="color: #d0d0d0;">&#9986;</span></div>
                                     <div class="barber-info">
                                         <h4>${barber.name.toUpperCase()}</h4>
                                         <p>${barber.role}</p>
@@ -806,7 +1160,7 @@
                 container.innerHTML = `
                     <div class="barber-section">
                         <div class="barber-header">
-                            <div class="barber-avatar">${barber.icon}</div>
+                            <div class="barber-avatar"><span style="color: #d0d0d0;">&#9986;</span></div>
                             <div class="barber-info">
                                 <h4>${barber.name.toUpperCase()}</h4>
                                 <p>${barber.role}</p>
@@ -895,6 +1249,18 @@
         function getStatusText(status) {
             const texts = { 'bekliyor': 'BEKLIYOR', 'onaylandi': 'ONAYLANDI', 'iptal': 'IPTAL' };
             return texts[status] || status;
+        }
+
+        function showToast(message, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>

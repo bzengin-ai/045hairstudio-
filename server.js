@@ -2,9 +2,43 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+// Uploads klasorunu olustur
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Multer yapilandirmasi
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, 'barber-' + req.params.id + '-' + uniqueSuffix + ext);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Sadece JPG, PNG ve WEBP dosyalari yuklenebilir'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
 
 // Middleware
 app.use(cors());
@@ -66,7 +100,8 @@ app.get('/api/barbers', (req, res) => {
         id: b.id,
         name: b.name,
         role: b.role,
-        experience: b.experience
+        experience: b.experience,
+        photos: b.photos || []
     }));
     res.json(barbers);
 });
@@ -266,6 +301,76 @@ app.get('/api/admin/stats', (req, res) => {
         total: totalAppointments,
         barberStats
     });
+});
+
+// ========================================
+// FOTOGRAF API'LERI
+// ========================================
+
+// Fotograf yukle
+app.post('/api/barber/:id/photos', upload.single('photo'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'Dosya yuklenemedi' });
+    }
+
+    const db = loadDatabase();
+    const barberId = parseInt(req.params.id);
+    const barber = db.barbers.find(b => b.id === barberId);
+
+    if (!barber) {
+        // Dosyayi sil
+        fs.unlinkSync(req.file.path);
+        return res.status(404).json({ error: 'Berber bulunamadi' });
+    }
+
+    if (!barber.photos) {
+        barber.photos = [];
+    }
+
+    barber.photos.push(req.file.filename);
+    saveDatabase(db);
+
+    res.status(201).json({ filename: req.file.filename, photos: barber.photos });
+});
+
+// Fotograf sil
+app.delete('/api/barber/:id/photos/:filename', (req, res) => {
+    const db = loadDatabase();
+    const barberId = parseInt(req.params.id);
+    const barber = db.barbers.find(b => b.id === barberId);
+
+    if (!barber) {
+        return res.status(404).json({ error: 'Berber bulunamadi' });
+    }
+
+    const filename = req.params.filename;
+    const filePath = path.join(uploadsDir, filename);
+
+    // Dosyayi sil
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
+
+    // Veritabanindan kaldir
+    if (barber.photos) {
+        barber.photos = barber.photos.filter(p => p !== filename);
+    }
+    saveDatabase(db);
+
+    res.json({ message: 'Fotograf silindi', photos: barber.photos || [] });
+});
+
+// Berber fotograflarini listele
+app.get('/api/barber/:id/photos', (req, res) => {
+    const db = loadDatabase();
+    const barberId = parseInt(req.params.id);
+    const barber = db.barbers.find(b => b.id === barberId);
+
+    if (!barber) {
+        return res.status(404).json({ error: 'Berber bulunamadi' });
+    }
+
+    res.json(barber.photos || []);
 });
 
 // ========================================

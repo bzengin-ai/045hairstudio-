@@ -1,21 +1,14 @@
 // ========================================
 // GLOBAL DEGISKENLER
 // ========================================
-const API_URL = 'http://localhost:4000/api';
+const API_URL = window.location.origin + '/api';
 
 let selectedBarber = null;
 let selectedDate = null;
 let selectedTime = null;
 let currentWeekStart = new Date();
 let currentMonth = new Date();
-
-// Berber bilgileri
-const barbers = [
-    { id: 1, name: 'Muhammed', role: 'Patron' },
-    { id: 2, name: 'Cengo', role: 'Usta Berber' },
-    { id: 3, name: 'Rio', role: 'Usta Berber' },
-    { id: 4, name: 'Ahmet', role: 'Usta Berber' }
-];
+let barbersData = [];
 
 // Calisma saatleri (09:00 - 21:00)
 const workingHours = [
@@ -31,20 +24,72 @@ const dayNamesFull = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cum
 const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
                     'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
 
+// Fullscreen galeri state
+let fullscreenPhotos = [];
+let fullscreenIndex = 0;
+
 // ========================================
 // SAYFA YUKLENDIKTEN SONRA
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
-    initBarberSelection();
+    loadBarbers();
     initCalendar();
     initFormNavigation();
     initViewSelector();
+    initFullscreenViewer();
 
     // Haftanin baslangicini pazartesi yap
     setWeekStart();
     renderWeeklyCalendar();
     renderMonthlyCalendar();
 });
+
+// ========================================
+// BERBER YUKLE VE RENDER
+// ========================================
+async function loadBarbers() {
+    try {
+        const response = await fetch(`${API_URL}/barbers`);
+        if (response.ok) {
+            barbersData = await response.json();
+        }
+    } catch (error) {
+        console.log('API baglantisi yok, varsayilan veriler');
+        barbersData = [
+            { id: 1, name: 'Muhammed', role: 'patron', photos: [] },
+            { id: 2, name: 'Cengo', role: 'berber', photos: [] },
+            { id: 3, name: 'Rio', role: 'berber', photos: [] },
+            { id: 4, name: 'Ahmet', role: 'berber', photos: [] }
+        ];
+    }
+
+    renderBarberCards();
+}
+
+function renderBarberCards() {
+    const grid = document.getElementById('barberGrid');
+    grid.innerHTML = barbersData.map(barber => {
+        const roleLabel = barber.role === 'patron' ? 'Patron' : 'Usta Berber';
+        const roleClass = barber.role === 'patron' ? 'patron' : 'usta';
+        const hasPhoto = barber.photos && barber.photos.length > 0;
+        const avatarContent = hasPhoto
+            ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+            : `<span style="font-size: 1.5rem; color: #6e6e6e;">&#9986;</span>`;
+
+        return `
+            <div class="barber-card" data-barber-id="${barber.id}">
+                <div class="barber-avatar">
+                    ${avatarContent}
+                </div>
+                <h3>${barber.name}</h3>
+                <span class="barber-role ${roleClass}">${roleLabel}</span>
+                <p class="barber-exp"></p>
+            </div>
+        `;
+    }).join('');
+
+    initBarberSelection();
+}
 
 // ========================================
 // BERBER SECIMI
@@ -59,16 +104,127 @@ function initBarberSelection() {
 
             // Yeni secimi ekle
             this.classList.add('selected');
+            const barberId = parseInt(this.dataset.barberId);
+            const barberData = barbersData.find(b => b.id === barberId);
+
             selectedBarber = {
-                id: parseInt(this.dataset.barberId),
+                id: barberId,
                 name: this.querySelector('h3').textContent,
                 role: this.querySelector('.barber-role').textContent
             };
 
-            // Otomatik olarak sonraki adima gec
-            setTimeout(() => goToStep(2), 300);
+            // Fotograflari olan berber icin galeri goster
+            if (barberData && barberData.photos && barberData.photos.length > 0) {
+                showBarberGallery(barberData);
+            } else {
+                // Fotografi yoksa direkt sonraki adima gec
+                hideBarberGallery();
+                setTimeout(() => goToStep(2), 300);
+            }
         });
     });
+}
+
+// ========================================
+// BERBER GALERISI
+// ========================================
+function showBarberGallery(barber) {
+    const section = document.getElementById('barberGallerySection');
+    const gallery = document.getElementById('barberGallery');
+    const title = document.getElementById('galleryTitle');
+
+    title.textContent = `${barber.name} - Galeri`;
+
+    if (barber.photos && barber.photos.length > 0) {
+        gallery.innerHTML = barber.photos.map((photo, index) => `
+            <div class="gallery-photo" data-index="${index}">
+                <img src="/uploads/${photo}" alt="${barber.name} - ${index + 1}">
+            </div>
+        `).join('');
+
+        // Fotograf tiklaninca tam ekran
+        gallery.querySelectorAll('.gallery-photo').forEach(photoEl => {
+            photoEl.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                openFullscreen(barber.photos, idx);
+            });
+        });
+    } else {
+        gallery.innerHTML = '<div class="gallery-empty">Henuz fotograf eklenmemis</div>';
+    }
+
+    section.style.display = 'block';
+
+    // Galeriye scroll
+    setTimeout(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+
+    // Randevu al butonu
+    document.getElementById('btnBookBarber').onclick = function() {
+        hideBarberGallery();
+        goToStep(2);
+    };
+
+    // Geri don butonu
+    document.getElementById('btnBackGallery').onclick = function() {
+        hideBarberGallery();
+        selectedBarber = null;
+        document.querySelectorAll('.barber-card').forEach(c => c.classList.remove('selected'));
+    };
+}
+
+function hideBarberGallery() {
+    document.getElementById('barberGallerySection').style.display = 'none';
+}
+
+// ========================================
+// FULLSCREEN GORUNTULEME
+// ========================================
+function initFullscreenViewer() {
+    document.getElementById('fullscreenClose').addEventListener('click', closeFullscreen);
+    document.getElementById('fullscreenPrev').addEventListener('click', () => navigateFullscreen(-1));
+    document.getElementById('fullscreenNext').addEventListener('click', () => navigateFullscreen(1));
+
+    document.getElementById('fullscreenViewer').addEventListener('click', function(e) {
+        if (e.target === this) closeFullscreen();
+    });
+
+    // Klavye navigasyonu
+    document.addEventListener('keydown', function(e) {
+        const viewer = document.getElementById('fullscreenViewer');
+        if (!viewer.classList.contains('active')) return;
+
+        if (e.key === 'Escape') closeFullscreen();
+        if (e.key === 'ArrowLeft') navigateFullscreen(-1);
+        if (e.key === 'ArrowRight') navigateFullscreen(1);
+    });
+}
+
+function openFullscreen(photos, index) {
+    fullscreenPhotos = photos;
+    fullscreenIndex = index;
+
+    const viewer = document.getElementById('fullscreenViewer');
+    document.getElementById('fullscreenImg').src = `/uploads/${photos[index]}`;
+    viewer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Tek foto varsa nav butonlari gizle
+    document.getElementById('fullscreenPrev').style.display = photos.length > 1 ? 'flex' : 'none';
+    document.getElementById('fullscreenNext').style.display = photos.length > 1 ? 'flex' : 'none';
+}
+
+function closeFullscreen() {
+    document.getElementById('fullscreenViewer').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function navigateFullscreen(direction) {
+    fullscreenIndex += direction;
+    if (fullscreenIndex < 0) fullscreenIndex = fullscreenPhotos.length - 1;
+    if (fullscreenIndex >= fullscreenPhotos.length) fullscreenIndex = 0;
+    document.getElementById('fullscreenImg').src = `/uploads/${fullscreenPhotos[fullscreenIndex]}`;
 }
 
 // ========================================
@@ -336,7 +492,7 @@ function showSuggestions(time, date) {
     document.getElementById('modalTime').textContent = time;
 
     // Ayni saatte musait berberleri bul
-    const availableBarbers = barbers.filter(barber => {
+    const availableBarbers = barbersData.filter(barber => {
         // Secili berberi atla
         if (barber.id === selectedBarber.id) return false;
 
@@ -349,18 +505,25 @@ function showSuggestions(time, date) {
         suggestionSection.style.display = 'block';
         noSuggestion.style.display = 'none';
 
-        suggestionList.innerHTML = availableBarbers.map(barber => `
-            <div class="suggestion-card" data-barber-id="${barber.id}" data-time="${time}">
-                <div class="suggestion-avatar">
-                    ${barber.id === 1 ? '👨‍💼' : '👨'}
+        suggestionList.innerHTML = availableBarbers.map(barber => {
+            const hasPhoto = barber.photos && barber.photos.length > 0;
+            const avatarContent = hasPhoto
+                ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+                : (barber.role === 'patron' ? '&#9986;' : '&#9986;');
+
+            return `
+                <div class="suggestion-card" data-barber-id="${barber.id}" data-time="${time}">
+                    <div class="suggestion-avatar">
+                        ${avatarContent}
+                    </div>
+                    <div class="suggestion-info">
+                        <h4>${barber.name}</h4>
+                        <p>${barber.role === 'patron' ? 'Patron' : 'Usta Berber'} - ${time} musait</p>
+                    </div>
+                    <span class="suggestion-select">&rarr;</span>
                 </div>
-                <div class="suggestion-info">
-                    <h4>${barber.name}</h4>
-                    <p>${barber.role} - ${time} musait</p>
-                </div>
-                <span class="suggestion-select">→</span>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Oneri kartlarina tiklama eventi ekle
         document.querySelectorAll('.suggestion-card').forEach(card => {
@@ -369,11 +532,11 @@ function showSuggestions(time, date) {
                 const chosenTime = this.dataset.time;
 
                 // Yeni berberi sec
-                const newBarber = barbers.find(b => b.id === barberId);
+                const newBarber = barbersData.find(b => b.id === barberId);
                 selectedBarber = {
                     id: newBarber.id,
                     name: newBarber.name,
-                    role: newBarber.role
+                    role: newBarber.role === 'patron' ? 'Patron' : 'Usta Berber'
                 };
 
                 // Berber kartlarini guncelle
@@ -496,6 +659,11 @@ function goToStep(step) {
     // Istenen adimi goster
     document.getElementById(`step${step}`).classList.add('active');
 
+    // Step 1 ise galeriyi gizle
+    if (step === 1) {
+        hideBarberGallery();
+    }
+
     // Step indicator'u guncelle
     document.querySelectorAll('.step').forEach((s, index) => {
         s.classList.remove('active', 'completed');
@@ -604,6 +772,9 @@ function resetForm() {
 
     // Berber secimini kaldir
     document.querySelectorAll('.barber-card').forEach(c => c.classList.remove('selected'));
+
+    // Galeriyi gizle
+    hideBarberGallery();
 
     // Takvimi sifirla
     setWeekStart();
