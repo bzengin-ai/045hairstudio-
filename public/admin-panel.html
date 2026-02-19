@@ -1188,9 +1188,9 @@
                 const response = await fetch(`${API_URL}/admin/stats`);
                 if (response.ok) {
                     const stats = await response.json();
-                    document.getElementById('todayTotal').textContent = stats.today;
-                    document.getElementById('pendingTotal').textContent = stats.pending;
-                    document.getElementById('allTotal').textContent = stats.total;
+                    document.getElementById('todayTotal').textContent = stats.today || 0;
+                    document.getElementById('pendingTotal').textContent = stats.pending || 0;
+                    document.getElementById('allTotal').textContent = stats.total || 0;
                 }
             } catch (error) {
                 console.log('API baglantisi yok');
@@ -1232,7 +1232,7 @@
             if (currentFilter === 'all') {
                 let html = '';
                 barbers.forEach(barber => {
-                    const barberApts = allAppointments.filter(a => a.barberId === barber.id);
+                    const barberApts = allAppointments.filter(a => Number(a.barber_id) === Number(barber.id));
                     if (barberApts.length > 0) {
                         html += `
                             <div class="barber-section">
@@ -1279,9 +1279,9 @@
                 <div class="apt-card ${apt.status}">
                     <div class="apt-time">${apt.time}</div>
                     <div class="apt-info">
-                        <div class="name">${apt.customerName}</div>
+                        <div class="name">${apt.customer_name || 'İsimsiz'}</div>
                         <div class="phone">
-                            <a href="tel:${apt.customerPhone}">${apt.customerPhone}</a>
+                            <a href="tel:${apt.customer_phone || ''}">${apt.customer_phone || '-'}</a>
                         </div>
                     </div>
                     <div class="apt-right">
@@ -1303,19 +1303,27 @@
         }
 
         function sendWhatsApp(aptId) {
-            const apt = allAppointments.find(a => a.id === aptId);
-            if (!apt) return;
+            const apt = allAppointments.find(a => Number(a.id) === Number(aptId));
+            if (!apt) {
+                showToast('Randevu bilgisi bulunamadı', 'error');
+                return;
+            }
 
-            const phone = apt.customerPhone.replace(/\D/g, '');
+            if (!apt.customer_phone) {
+                showToast('Müşteri telefon numarası eksik', 'error');
+                return;
+            }
+
+            const phone = apt.customer_phone.replace(/\D/g, '');
             const trPhone = phone.startsWith('0') ? '9' + phone : (phone.startsWith('90') ? phone : '90' + phone);
 
             let message = "";
             if (apt.status === 'onaylandi') {
-                message = `Merhaba ${apt.customerName}, ${apt.date} tarihindeki saat ${apt.time} randevunuz onaylanmıştır. Sizi bekliyoruz! 💈`;
+                message = `Merhaba ${apt.customer_name}, ${apt.date} tarihindeki saat ${apt.time} randevunuz onaylanmıştır. Sizi bekliyoruz! 💈`;
             } else if (apt.status === 'iptal') {
-                message = `Merhaba ${apt.customerName}, maalesef ${apt.date} tarihindeki saat ${apt.time} randevunuzu iptal etmek zorundayız. Başka bir saate randevu oluşturabilirsiniz. ✂️`;
+                message = `Merhaba ${apt.customer_name}, maalesef ${apt.date} tarihindeki saat ${apt.time} randevunuzu iptal etmek zorundayız. Başka bir saate randevu oluşturabilirsiniz. ✂️`;
             } else {
-                message = `Merhaba ${apt.customerName}, ${apt.date} tarihindeki saat ${apt.time} randevunuz hakkında sizinle iletişime geçmek istedik.`;
+                message = `Merhaba ${apt.customer_name}, ${apt.date} tarihindeki saat ${apt.time} randevunuz hakkında sizinle iletişime geçmek istedik.`;
             }
 
             const wpUrl = `https://wa.me/${trPhone}?text=${encodeURIComponent(message)}`;
