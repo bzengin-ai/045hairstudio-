@@ -785,7 +785,7 @@
             <div class="login-logo">
                 <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
-                <p id="loginTitle">YENETIM PANELI</p>
+                <p id="loginTitle">YONETIM PANELI</p>
             </div>
             <form class="login-form" id="loginForm">
                 <div class="form-group">
@@ -1062,7 +1062,7 @@
         }
 
         async function deletePhoto(barberId, filename) {
-            if (!confirm('Bu fotografyi silmek istediginizden emin misiniz?')) return;
+            if (!confirm('Bu fotografi silmek istediginizden emin misiniz?')) return;
 
             try {
                 const response = await fetch(`${API_URL}/barber/${barberId}/photos/${filename}`, {
