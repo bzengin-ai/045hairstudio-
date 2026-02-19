@@ -132,32 +132,67 @@ let globalGalleryPhotos = [];
 
 function renderGlobalGallery() {
     const grid = document.getElementById('globalGalleryGrid');
-    globalGalleryPhotos = [];
+    const desc = document.getElementById('galleryDesc');
+    const backBtn = document.getElementById('btnBackToBarbers');
 
-    barbersData.forEach(barber => {
-        if (barber.photos) {
-            barber.photos.forEach(photo => {
-                globalGalleryPhotos.push({ url: photo, barber: barber.name });
-            });
-        }
-    });
+    backBtn.style.display = 'none';
+    desc.textContent = 'Berberlerimizin Seçkin Çalışmaları';
 
-    if (globalGalleryPhotos.length === 0) {
-        grid.innerHTML = '<div class="gallery-empty">Henüz fotoğraf eklenmemiş</div>';
+    grid.innerHTML = barbersData.map(barber => {
+        const hasPhoto = barber.photos && barber.photos.length > 0;
+        const avatarUrl = hasPhoto ? `/uploads/${barber.photos[0]}` : '/logo.png';
+        const workCount = (barber.photos ? barber.photos.length : 0);
+
+        return `
+            <div class="barber-gal-card reveal-init" onclick="openBarberPortfolio(${barber.id})">
+                <div class="barber-gal-img">
+                    <img src="${avatarUrl}" alt="${barber.name}">
+                </div>
+                <div class="barber-gal-info">
+                    <h3>${barber.name}</h3>
+                    <p>${workCount} Çalışma</p>
+                </div>
+                <div class="gal-card-overlay">
+                    <span>PORTFOLYO GÖR &rarr;</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openBarberPortfolio(barberId) {
+    const grid = document.getElementById('globalGalleryGrid');
+    const desc = document.getElementById('galleryDesc');
+    const backBtn = document.getElementById('btnBackToBarbers');
+
+    const barber = barbersData.find(b => b.id === barberId);
+    if (!barber) return;
+
+    desc.textContent = `${barber.name} Portfolyosu`;
+    backBtn.style.display = 'inline-block';
+
+    if (!barber.photos || barber.photos.length === 0) {
+        grid.innerHTML = '<div class="gallery-empty">Bu berber için henüz fotoğraf eklenmemiş.</div>';
         return;
     }
 
-    grid.innerHTML = globalGalleryPhotos.map((item, idx) => `
-        <div class="gallery-photo reveal-init" onclick="openFullscreenGlobal(${idx})">
-            <img src="/uploads/${item.url}" alt="${item.barber}'s Work">
-            <div class="photo-info">${item.barber}</div>
+    grid.innerHTML = barber.photos.map((photo, idx) => `
+        <div class="gallery-photo reveal-init" onclick="openFullscreenBarber(${barberId}, ${idx})">
+            <img src="/uploads/${photo}" alt="${barber.name} - ${idx}">
+            <div class="photo-info">${barber.name}</div>
         </div>
     `).join('');
 }
 
-function openFullscreenGlobal(idx) {
-    const urls = globalGalleryPhotos.map(p => p.url);
-    openFullscreen(urls, idx);
+function showGlobalBarbers() {
+    renderGlobalGallery();
+}
+
+function openFullscreenBarber(barberId, idx) {
+    const barber = barbersData.find(b => b.id === barberId);
+    if (barber && barber.photos) {
+        openFullscreen(barber.photos, idx);
+    }
 }
 
 function orderProduct(name) {

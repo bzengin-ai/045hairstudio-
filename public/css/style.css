@@ -852,6 +852,115 @@ body {
     padding-left: 30px;
 }
 
+/* ========================================
+   GLOBAL GALERI OZEL STILLER
+======================================== */
+.barber-gal-card {
+    position: relative;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    height: 350px;
+}
+
+.barber-gal-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.barber-gal-img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.barber-gal-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.barber-gal-card:hover .barber-gal-img img {
+    transform: scale(1.1);
+}
+
+.barber-gal-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 20px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    z-index: 2;
+}
+
+.barber-gal-info h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.barber-gal-info p {
+    color: var(--accent-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.gal-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: 3;
+}
+
+.gal-card-overlay span {
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 2px;
+    border: 1.5px solid #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+}
+
+.barber-gal-card:hover .gal-card-overlay {
+    opacity: 1;
+}
+
+.btn-back-barbers {
+    display: table;
+    margin: -10px auto 30px;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+}
+
+.btn-back-barbers:hover {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
