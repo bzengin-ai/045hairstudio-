@@ -1355,7 +1355,7 @@
             });
         }
 
-        function showPanel() {
+        async function showPanel() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('panelScreen').classList.add('active');
             document.getElementById('adminName').textContent = currentUser.name.toUpperCase();
@@ -1373,6 +1373,12 @@
                 if (marketTab) marketTab.style.display = 'block';
                 currentFilter = 'all';
                 document.getElementById('adminFilterRow').style.display = 'flex';
+            }
+
+            // Once berber verilerini yukle, sonra randevulari goster
+            // Bu sayede renderAppointments barbers arayi bos olmuyor
+            if (barbers.length === 0) {
+                await loadBarbersData();
             }
 
             updateDateDisplay();
@@ -1527,11 +1533,12 @@
                 });
                 container.innerHTML = html || '<div class="empty-state"><p>Filtreye uygun randevu bulunamadı</p></div>';
             } else {
-                const barber = barbers.find(b => b.id === parseInt(currentFilter));
-                if (!barber) {
-                    container.innerHTML = '<div class="loading">Berber bilgisi yukleniyor...</div>';
-                    return;
-                }
+                // Berber panel: display appointments directly from API data
+                // Use currentUser for header info if barbers array not ready
+                const barber = barbers.find(b => b.id === parseInt(currentFilter)) || {
+                    name: currentUser ? currentUser.name : 'BERBER',
+                    role: currentUser ? currentUser.role : ''
+                };
                 container.innerHTML = `
                     <div class="barber-section">
                         <div class="barber-header">
