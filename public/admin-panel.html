@@ -998,9 +998,10 @@
                         <div class="txt">Bekleyen</div>
                         <div class="stat-badge-new" id="pendingBadge" style="display:none;">!</div>
                     </div>
-                    <div class="stat-box clickable" onclick="loadSpecialAppointments('all')" title="Tüm Randevular">
-                        <div class="num" id="allTotal">0</div>
-                        <div class="txt">Toplam</div>
+                    <div class="stat-box clickable" onclick="loadSpecialAppointments('onaylandi')"
+                        title="Tüm Onaylanan Randevular">
+                        <div class="num" id="approvedTotal">0</div>
+                        <div class="txt">Onaylanan</div>
                     </div>
                 </div>
             </div>
@@ -1008,7 +1009,7 @@
             <!-- Tab Navigation -->
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="randevular">Randevular</button>
-                <button class="tab-btn" data-tab="istatistikler">İstatistikler</button>
+                <button class="tab-btn" data-tab="onaylananlar">Onaylananlar</button>
                 <button class="tab-btn patron-only" data-tab="market">Market</button>
                 <button class="tab-btn" data-tab="galeri">GALERI</button>
             </div>
@@ -1040,6 +1041,15 @@
                 <div id="appointmentsContainer"></div>
 
                 <button class="btn-today" id="btnToday">BUGUNE DON</button>
+            </div>
+
+            <!-- Tab: Onaylananlar -->
+            <div id="tabOnaylananlar" class="tab-content">
+                <div id="approvedAppointmentsContainer">
+                    <div class="empty-state">
+                        <p>Henüz onaylanmış randevu yok.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Tab: Galeri -->
@@ -1329,20 +1339,20 @@
                     // Filter stats for current barber if not owner
                     let today = stats.today;
                     let pending = stats.pending;
-                    let total = stats.total;
+                    let approved = stats.approved;
 
                     if (currentUser.role !== 'patron') {
                         const myStats = stats.barberStats.find(b => b.id === currentUser.id);
                         if (myStats) {
                             today = myStats.todayCount;
                             pending = myStats.pendingCount;
-                            total = myStats.totalCount;
+                            approved = myStats.approvedCount;
                         }
                     }
 
                     document.getElementById('todayTotal').textContent = today || 0;
                     document.getElementById('pendingTotal').textContent = pending || 0;
-                    document.getElementById('allTotal').textContent = total || 0;
+                    document.getElementById('approvedTotal').textContent = approved || 0;
 
                     // Show alert badge if pending exists
                     const badge = document.getElementById('pendingBadge');
@@ -1391,6 +1401,10 @@
                 url += `status=bekliyor`;
                 header.textContent = 'LISTELENIYOR: TUM BEKLEYENLER';
                 header.style.color = '#f39c12';
+            } else if (type === 'onaylandi') {
+                url += `status=onaylandi`;
+                header.textContent = 'LISTELENIYOR: TUM ONAYLANANLAR';
+                header.style.color = '#2ecc71';
             } else if (type === 'today') {
                 const today = formatDate(new Date());
                 url += `date=${today}`;
@@ -1586,9 +1600,53 @@
 
                     if (tabName === 'market') loadProducts();
                     if (tabName === 'randevular') loadAppointments();
-                    if (tabName === 'istatistikler') loadStats();
+                    if (tabName === 'onaylananlar') loadApprovedAppointments();
+                    if (tabName === 'galeri') loadGallery();
                 });
             });
+        }
+
+        async function loadApprovedAppointments() {
+            const container = document.getElementById('approvedAppointmentsContainer');
+            container.innerHTML = '<div class="loading">Yükleniyor...</div>';
+
+            let url = `${API_URL}/admin/appointments?status=onaylandi`;
+            if (currentUser.role !== 'patron') {
+                url += `&barberId=${currentUser.id}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="empty-state"><p>Henüz onaylanmış randevu yok.</p></div>';
+                        return;
+                    }
+
+                    // Group by date for better view
+                    const grouped = {};
+                    data.forEach(apt => {
+                        if (!grouped[apt.date]) grouped[apt.date] = [];
+                        grouped[apt.date].push(apt);
+                    });
+
+                    let html = '';
+                    Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+                        html += `
+                            <div class="date-group-header" style="margin: 20px 0 10px; color: var(--accent-secondary); font-weight: 800; font-size: 0.8rem; letter-spacing: 2px;">
+                                ${date}
+                            </div>
+                            <div class="appointment-list">
+                                ${grouped[date].map(apt => renderAppointmentCard(apt)).join('')}
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><p>Yüklenirken hata oluştu.</p></div>';
+            }
         }
 
         // ========================================

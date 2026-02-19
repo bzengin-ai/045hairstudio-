@@ -281,18 +281,21 @@ app.get('/api/admin/stats', async (req, res) => {
 
     const todayAppointments = allAppointments.filter(a => a.date === today);
     const pendingAppointments = allAppointments.filter(a => a.status === 'bekliyor');
+    const approvedAppointments = allAppointments.filter(a => a.status === 'onaylandi');
 
     const barberStats = barbers.map(b => ({
         id: b.id,
         name: b.name,
         todayCount: todayAppointments.filter(a => a.barber_id === b.id).length,
         pendingCount: pendingAppointments.filter(a => a.barber_id === b.id).length,
+        approvedCount: approvedAppointments.filter(a => a.barber_id === b.id).length,
         totalCount: allAppointments.filter(a => a.barber_id === b.id).length
     }));
 
     res.json({
         today: todayAppointments.length,
         pending: pendingAppointments.length,
+        approved: approvedAppointments.length,
         total: allAppointments.length,
         barberStats
     });
