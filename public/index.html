@@ -20,11 +20,45 @@
 <body>
 
 
+    <!-- Portal Screen -->
+    <div class="portal-screen" id="portalScreen">
+        <header class="portal-header reveal-init">
+            <div class="logo">
+                <img src="/logo.png" alt="045 Hair Studio" class="logo-img">
+            </div>
+            <p class="tagline">Barber & Commercial Hub</p>
+        </header>
+
+        <div class="portal-grid reveal-init reveal-delay-1">
+            <div class="portal-card" id="cardRandevu" onclick="openRandevu()">
+                <div class="portal-card-bg"></div>
+                <div class="portal-card-content">
+                    <h2>RANDEVU</h2>
+                    <p>Hemen Yerini Ayırt</p>
+                </div>
+            </div>
+            <div class="portal-card" id="cardMarket" onclick="openMarket()">
+                <div class="portal-card-bg"></div>
+                <div class="portal-card-content">
+                    <h2>MARKET</h2>
+                    <p>Özel Bakım Ürünleri</p>
+                </div>
+            </div>
+            <div class="portal-card" id="cardGaleri" onclick="openGaleri()">
+                <div class="portal-card-bg"></div>
+                <div class="portal-card-content">
+                    <h2>GALERİ</h2>
+                    <p>Sanatımızı İnceleyin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Background Glow -->
     <div class="bg-glow"></div>
 
-    <!-- Header -->
-    <header class="header reveal-init">
+    <!-- Header (Hidden by default, shown in Randevu flow) -->
+    <header class="header reveal-init" id="mainHeader" style="display: none;">
         <div class="container">
             <div class="logo">
                 <img src="/logo.png" alt="045 Hair Studio" class="logo-img">
@@ -34,8 +68,9 @@
     </header>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" id="mainRandevu" style="display: none;">
         <div class="container">
+            <button class="btn-back-portal" onclick="backToPortal()">← Ana Menü</button>
             <!-- Step Indicator -->
             <div class="step-indicator reveal-init reveal-delay-1">
                 <div class="step active" data-step="1">
@@ -188,6 +223,58 @@
                     <button class="btn-new" id="newBooking">Yeni Randevu Al</button>
                 </div>
             </section>
+        </div>
+    </main>
+
+    <!-- Market View -->
+    <main class="main-content market-view" id="mainMarket" style="display: none;">
+        <div class="container">
+            <button class="btn-back-portal" onclick="backToPortal()">← Ana Menü</button>
+            <div class="step-indicator reveal-init">
+                <h1 style="color: #fff; letter-spacing: 5px; font-weight: 800; font-size: 2.5rem; text-align: center;">
+                    MARKET</h1>
+                <p
+                    style="text-align: center; color: var(--accent-secondary); letter-spacing: 3px; font-size: 0.8rem; margin-top: 10px;">
+                    Özel Ürün Koleksiyonumuz</p>
+            </div>
+
+            <div class="market-grid" id="marketGrid">
+                <!-- Products will be loaded here -->
+                <div class="product-card">
+                    <div class="product-img">🧴</div>
+                    <div class="product-info">
+                        <h3>Özel Sakal Yağı</h3>
+                        <div class="product-price">250 TL</div>
+                        <button class="btn-order-whatsapp">WP Sipariş</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">👕</div>
+                    <div class="product-info">
+                        <h3>045 Oversize T-Shirt</h3>
+                        <div class="product-price">750 TL</div>
+                        <button class="btn-order-whatsapp">WP Sipariş</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global Gallery View -->
+    <main class="main-content global-gallery-view" id="mainGaleri" style="display: none;">
+        <div class="container">
+            <button class="btn-back-portal" onclick="backToPortal()">← Ana Menü</button>
+            <div class="step-indicator reveal-init">
+                <h1 style="color: #fff; letter-spacing: 5px; font-weight: 800; font-size: 2.5rem; text-align: center;">
+                    GALERİ</h1>
+                <p
+                    style="text-align: center; color: var(--accent-secondary); letter-spacing: 3px; font-size: 0.8rem; margin-top: 10px;">
+                    Berberlerimizin Seçkin Çalışmaları</p>
+            </div>
+
+            <div class="gallery-grid" id="globalGalleryGrid">
+                <!-- All barber photos will be combined here -->
+            </div>
         </div>
     </main>
 

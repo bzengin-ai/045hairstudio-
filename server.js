@@ -100,39 +100,69 @@ app.get('/api/appointments', async (req, res) => {
 app.post('/api/appointments', async (req, res) => {
     const { barberId, barberName, date, time, customerName, customerPhone, note } = req.body;
 
-    // Ayni saat dolu mu kontrol et
-    const { data: existing } = await supabase
-        .from('appointments')
-        .select('id')
-        .eq('barber_id', barberId)
-        .eq('date', date)
-        .eq('time', time)
-        .single();
-
-    if (existing) {
-        return res.status(400).json({ error: 'Bu saat dolu' });
-    }
-
-    const { data: newAppointment, error } = await supabase
+    const { data, error } = await supabase
         .from('appointments')
         .insert([{
-            id: Date.now(),
             barber_id: barberId,
             barber_name: barberName,
             date,
             time,
             customer_name: customerName,
             customer_phone: customerPhone,
-            note: note || '',
+            note,
             status: 'bekliyor'
         }])
-        .select()
-        .single();
+        .select();
 
     if (error) return res.status(500).json({ error: error.message });
+    res.json(data[0]);
+});
 
-    console.log(`Yeni randevu: ${customerName} - ${barberName} - ${date} ${time}`);
-    res.status(201).json(newAppointment);
+// ========================================
+// MARKET PRODUCTS API
+// ========================================
+
+// Tum urunleri getir
+app.get('/api/products', async (req, res) => {
+    const { data: products, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(products);
+});
+
+// Yeni urun ekle (Admin)
+app.post('/api/products', upload.single('image'), async (req, res) => {
+    const { name, price, description, category } = req.body;
+    const imageUrl = req.file ? req.file.filename : null;
+
+    const { data, error } = await supabase
+        .from('products')
+        .insert([{
+            name,
+            price,
+            description,
+            category,
+            image_url: imageUrl
+        }])
+        .select();
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data[0]);
+});
+
+// Urun sil (Admin)
+app.delete('/api/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Urun silindi' });
 });
 
 // Randevu durumunu guncelle

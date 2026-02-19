@@ -19,12 +19,12 @@
         }
 
         :root {
-            --gold: #d4af37;
-            --gold-light: #f1e5ac;
+            --accent: #ffffff;
+            --accent-secondary: #a8a9ad;
             --dark: #050505;
             --surface: #121212;
-            --glass: rgba(20, 20, 20, 0.85);
-            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(20, 20, 20, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         body {
@@ -79,12 +79,12 @@
         }
 
         .login-logo p {
-            color: var(--gold);
+            color: var(--accent-secondary);
             font-size: 0.9rem;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            font-weight: 500;
-            opacity: 0.8;
+            font-weight: 400;
+            opacity: 0.6;
         }
 
         .login-form {
@@ -102,13 +102,14 @@
 
         .form-group label {
             display: block;
-            color: var(--gold);
+            color: var(--accent-secondary);
             margin-bottom: 12px;
             font-family: 'Outfit', sans-serif;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.8rem;
+            letter-spacing: 4px;
+            font-size: 0.75rem;
             font-weight: 600;
+            opacity: 0.7;
         }
 
         .form-group input {
@@ -125,31 +126,32 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
-            background: rgba(212, 175, 55, 0.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .btn-login {
             width: 100%;
-            padding: 20px;
+            padding: 22px;
             border: none;
-            border-radius: 18px;
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            border-radius: 20px;
+            background: #ffffff;
             color: var(--dark);
             font-family: 'Outfit', sans-serif;
             font-size: 1.3rem;
             font-weight: 800;
             letter-spacing: 5px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
             text-transform: uppercase;
         }
 
         .btn-login:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            background: #fdfdfd;
         }
 
         .error-message {
@@ -249,27 +251,27 @@
         }
 
         .stat-box:hover {
-            border-color: var(--gold);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
         }
 
         .stat-box .num {
             font-family: 'Outfit', sans-serif;
             font-size: 2.8rem;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 800;
             line-height: 1;
             margin-bottom: 5px;
         }
 
         .stat-box .txt {
-            font-size: 0.65rem;
-            color: var(--gold);
+            font-size: 0.6rem;
+            color: var(--accent-secondary);
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 600;
-            opacity: 0.8;
+            opacity: 0.6;
         }
 
         /* Tab Navigation */
@@ -296,15 +298,54 @@
         }
 
         .tab-btn:hover {
-            border-color: var(--gold);
+            border-color: rgba(255, 255, 255, 0.3);
             color: #ffffff;
         }
 
         .tab-btn.active {
-            background: var(--gold);
-            border-color: var(--gold);
+            background: #ffffff;
+            border-color: #ffffff;
             color: var(--dark);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Market Table */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .market-table th,
+        .market-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .market-table th {
+            color: var(--accent-secondary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-add-product {
+            width: 100%;
+            padding: 15px;
+            background: #ffffff;
+            color: var(--dark);
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-add-product:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
         }
 
         .tab-content {
@@ -912,13 +953,14 @@
 
             <!-- Tab Navigation -->
             <div class="tab-nav">
-                <button class="tab-btn active" data-tab="randevular">RANDEVULAR</button>
+                <button class="tab-btn active" data-tab="randevular">Randevular</button>
+                <button class="tab-btn" data-tab="istatistikler">İstatistikler</button>
+                <button class="tab-btn patron-only" data-tab="market">Market</button>
                 <button class="tab-btn" data-tab="galeri">GALERI</button>
             </div>
 
-            <!-- Tab: Randevular -->
-            <div class="tab-content active" id="tabRandevular">
-                <!-- Date Selector -->
+            <!-- Randevular Tab -->
+            <div id="tabRandevular" class="tab-content active">
                 <div class="date-selector">
                     <button class="date-nav" id="prevDay">&lt;</button>
                     <div class="current-date">
@@ -982,28 +1024,14 @@
             initDateNavigation();
             initFilter();
             initLogout();
-            initTabs();
+            initTabNav(); // Updated from initTabs
+            initProductForm(); // New
         });
 
         // ========================================
         // TAB SISTEMI
         // ========================================
-        function initTabs() {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-                    this.classList.add('active');
-                    const tab = this.dataset.tab;
-                    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-
-                    if (tab === 'galeri') {
-                        loadGallery();
-                    }
-                });
-            });
-        }
 
         // ========================================
         // GALERI YONETIMI
@@ -1399,6 +1427,130 @@
             }
         }
 
+        function initTabNav() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const tabName = this.dataset.tab;
+
+                    // Berber ise markete giremez
+                    if (tabName === 'market' && currentUser.role !== 'patron') {
+                        showToast('Bu bolume sadece patron erisebilir', 'error');
+                        return;
+                    }
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+
+                    if (tabName === 'market') loadProducts();
+                    if (tabName === 'randevular') loadAppointments();
+                    if (tabName === 'istatistikler') loadStats();
+                });
+            });
+        }
+
+        // ========================================
+        // MARKET MANAGEMENT
+        // ========================================
+        let allProducts = [];
+
+        async function loadProducts() {
+            const container = document.getElementById('productList');
+            container.innerHTML = '<div class="loading">Yukleniyor...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                if (response.ok) {
+                    allProducts = await response.json();
+                    renderProducts();
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state">Urunler yuklenemedi</div>';
+            }
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('productList');
+            if (allProducts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Henuz urun eklenmemis</p></div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${allProducts.map(p => `
+                            <tr>
+                                <td><strong>${p.name}</strong></td>
+                                <td>${p.category}</td>
+                                <td>${p.price} TL</td>
+                                <td>
+                                    <button class="btn-action btn-delete" onclick="deleteProduct(${p.id})">🗑 Sil</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function showAddProductModal() {
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.getElementById('productForm').reset();
+        }
+
+        function initProductForm() {
+            document.getElementById('productForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const name = document.getElementById('prodName').value;
+                const price = document.getElementById('prodPrice').value;
+                const category = document.getElementById('prodCategory').value;
+
+                try {
+                    const response = await fetch(`${API_URL}/products`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, price, category, description: '' })
+                    });
+
+                    if (response.ok) {
+                        showToast('Urun eklendi', 'success');
+                        closeProductModal();
+                        loadProducts();
+                    }
+                } catch (error) {
+                    showToast('Hata olustu', 'error');
+                }
+            });
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Urunu silmek istediginizden emin misiniz?')) return;
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast('Urun silindi', 'success');
+                    loadProducts();
+                }
+            } catch (error) {
+                showToast('Hata olustu', 'error');
+            }
+        }
         function initDateNavigation() {
             document.getElementById('prevDay').addEventListener('click', () => {
                 selectedDate.setDate(selectedDate.getDate() - 1);

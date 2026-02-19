@@ -22,7 +22,7 @@ const workingHours = [
 const dayNames = ['Paz', 'Pzt', 'Sal', 'Car', 'Per', 'Cum', 'Cmt'];
 const dayNamesFull = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma', 'Cumartesi'];
 const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
-                    'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
+    'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
 
 // Fullscreen galeri state
 let fullscreenPhotos = [];
@@ -31,7 +31,7 @@ let fullscreenIndex = 0;
 // ========================================
 // SAYFA YUKLENDIKTEN SONRA
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadBarbers();
     initCalendar();
     initFormNavigation();
@@ -42,7 +42,120 @@ document.addEventListener('DOMContentLoaded', function() {
     setWeekStart();
     renderWeeklyCalendar();
     renderMonthlyCalendar();
+
+    // Portal check (URL hash'e gore admin sayfasina veya belirli bolume mi gitmeli?)
+    checkUrlHash();
 });
+
+function checkUrlHash() {
+    const hash = window.location.hash;
+    if (hash === '#randevu') openRandevu();
+    else if (hash === '#market') openMarket();
+    else if (hash === '#galeri') openGaleri();
+}
+
+// ========================================
+// PORTAL NAVIGASYONU
+// ========================================
+async function openRandevu() {
+    hideAllMainViews();
+    await loadBarbers(); // Berber listesi ve fotograflarini guncelle
+    document.getElementById('portalScreen').classList.add('hidden');
+    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('mainRandevu').style.display = 'block';
+}
+
+function openMarket() {
+    hideAllMainViews();
+    document.getElementById('portalScreen').classList.add('hidden');
+    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('mainMarket').style.display = 'block';
+    renderMarket();
+}
+
+async function openGaleri() {
+    hideAllMainViews();
+    await loadBarbers(); // En guncel verileri cek (yeni yuklenen fotograflar dahil)
+    document.getElementById('portalScreen').classList.add('hidden');
+    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('mainGaleri').style.display = 'block';
+    renderGlobalGallery();
+}
+
+function backToPortal() {
+    document.getElementById('portalScreen').classList.remove('hidden');
+    document.getElementById('mainHeader').style.display = 'none';
+    hideAllMainViews();
+}
+
+function hideAllMainViews() {
+    document.getElementById('mainRandevu').style.display = 'none';
+    document.getElementById('mainMarket').style.display = 'none';
+    document.getElementById('mainGaleri').style.display = 'none';
+}
+
+// ========================================
+// MARKET VE GLOBAL GALERI RENDER
+// ========================================
+function renderMarket() {
+    const grid = document.getElementById('marketGrid');
+    // Simdilik statik, sonra API'dan gelecek
+    const products = [
+        { name: 'Özel Sakal Yağı', price: '250 TL', icon: '🧴' },
+        { name: '045 Oversize T-Shirt', price: '750 TL', icon: '👕' },
+        { name: 'Mat Wax (Seri 045)', price: '320 TL', icon: '💆‍♂️' },
+        { name: '045 Premium Parfüm', price: '1200 TL', icon: '💨' }
+    ];
+
+    grid.innerHTML = products.map(p => `
+        <div class="product-card reveal-init">
+            <div class="product-img">${p.icon}</div>
+            <div class="product-info">
+                <h3>${p.name}</h3>
+                <div class="product-price">${p.price}</div>
+                <button class="btn-order-whatsapp" onclick="orderProduct('${p.name}')">WP Sipariş</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+let globalGalleryPhotos = [];
+
+function renderGlobalGallery() {
+    const grid = document.getElementById('globalGalleryGrid');
+    globalGalleryPhotos = [];
+
+    barbersData.forEach(barber => {
+        if (barber.photos) {
+            barber.photos.forEach(photo => {
+                globalGalleryPhotos.push({ url: photo, barber: barber.name });
+            });
+        }
+    });
+
+    if (globalGalleryPhotos.length === 0) {
+        grid.innerHTML = '<div class="gallery-empty">Henüz fotoğraf eklenmemiş</div>';
+        return;
+    }
+
+    grid.innerHTML = globalGalleryPhotos.map((item, idx) => `
+        <div class="gallery-photo reveal-init" onclick="openFullscreenGlobal(${idx})">
+            <img src="/uploads/${item.url}" alt="${item.barber}'s Work">
+            <div class="photo-info">${item.barber}</div>
+        </div>
+    `).join('');
+}
+
+function openFullscreenGlobal(idx) {
+    const urls = globalGalleryPhotos.map(p => p.url);
+    openFullscreen(urls, idx);
+}
+
+function orderProduct(name) {
+    const message = `Merhaba, 045 Market'ten "${name}" ürünü hakkında bilgi almak istiyorum. 💈`;
+    const wpUrl = `https://wa.me/905436653045?text=${encodeURIComponent(message)}`;
+    window.open(wpUrl, '_blank');
+}
 
 // ========================================
 // BERBER YUKLE VE RENDER
@@ -98,7 +211,7 @@ function initBarberSelection() {
     const barberCards = document.querySelectorAll('.barber-card');
 
     barberCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             // Onceki secimi kaldir
             barberCards.forEach(c => c.classList.remove('selected'));
 
@@ -144,7 +257,7 @@ function showBarberGallery(barber) {
 
         // Fotograf tiklaninca tam ekran
         gallery.querySelectorAll('.gallery-photo').forEach(photoEl => {
-            photoEl.addEventListener('click', function() {
+            photoEl.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
                 openFullscreen(barber.photos, idx);
             });
@@ -161,13 +274,13 @@ function showBarberGallery(barber) {
     }, 100);
 
     // Randevu al butonu
-    document.getElementById('btnBookBarber').onclick = function() {
+    document.getElementById('btnBookBarber').onclick = function () {
         hideBarberGallery();
         goToStep(2);
     };
 
     // Geri don butonu
-    document.getElementById('btnBackGallery').onclick = function() {
+    document.getElementById('btnBackGallery').onclick = function () {
         hideBarberGallery();
         selectedBarber = null;
         document.querySelectorAll('.barber-card').forEach(c => c.classList.remove('selected'));
@@ -186,12 +299,12 @@ function initFullscreenViewer() {
     document.getElementById('fullscreenPrev').addEventListener('click', () => navigateFullscreen(-1));
     document.getElementById('fullscreenNext').addEventListener('click', () => navigateFullscreen(1));
 
-    document.getElementById('fullscreenViewer').addEventListener('click', function(e) {
+    document.getElementById('fullscreenViewer').addEventListener('click', function (e) {
         if (e.target === this) closeFullscreen();
     });
 
     // Klavye navigasyonu
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         const viewer = document.getElementById('fullscreenViewer');
         if (!viewer.classList.contains('active')) return;
 
@@ -527,7 +640,7 @@ function showSuggestions(time, date) {
 
         // Oneri kartlarina tiklama eventi ekle
         document.querySelectorAll('.suggestion-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function () {
                 const barberId = parseInt(this.dataset.barberId);
                 const chosenTime = this.dataset.time;
 
@@ -582,7 +695,7 @@ function initModalListeners() {
     }
 
     // Dis alana tiklama
-    modal.onclick = function(e) {
+    modal.onclick = function (e) {
         if (e.target === modal) {
             closeModal();
         }
@@ -612,7 +725,7 @@ function initViewSelector() {
     const viewBtns = document.querySelectorAll('.view-btn');
 
     viewBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             viewBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
 
