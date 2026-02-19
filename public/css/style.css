@@ -99,10 +99,36 @@ body {
     transition: var(--transition-smooth);
 }
 
-.portal-card:hover {
+.portal-card:not(.disabled):hover {
     transform: translateY(-10px);
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+}
+
+.portal-card.disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.portal-card.disabled:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ribbon-soon {
+    position: absolute;
+    top: 25px;
+    right: -40px;
+    background: #ff0000;
+    color: white;
+    padding: 8px 50px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    transform: rotate(45deg);
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
 }
 
 .portal-card-bg {
