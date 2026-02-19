@@ -286,6 +286,7 @@ app.get('/api/admin/stats', async (req, res) => {
         id: b.id,
         name: b.name,
         todayCount: todayAppointments.filter(a => a.barber_id === b.id).length,
+        pendingCount: pendingAppointments.filter(a => a.barber_id === b.id).length,
         totalCount: allAppointments.filter(a => a.barber_id === b.id).length
     }));
 

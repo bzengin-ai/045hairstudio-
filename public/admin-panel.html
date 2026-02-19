@@ -1335,10 +1335,8 @@
                         const myStats = stats.barberStats.find(b => b.id === currentUser.id);
                         if (myStats) {
                             today = myStats.todayCount;
+                            pending = myStats.pendingCount;
                             total = myStats.totalCount;
-                            // Pending filter is handled differently in backend stats, 
-                            // we'll assume the barber wants to see their own pending eventually
-                            // for now show global pending if owner or filter via backend if needed.
                         }
                     }
 
