@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,8 +13,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="045 Studio">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- Graffiti Decorations -->
     <div class="graffiti-left">045</div>
@@ -33,8 +36,11 @@
     <div class="graffiti-corner graffiti-corner-bl">045</div>
     <div class="graffiti-corner graffiti-corner-br">045</div>
 
+    <!-- Background Glow -->
+    <div class="bg-glow"></div>
+
     <!-- Header -->
-    <header class="header">
+    <header class="header reveal-init">
         <div class="container">
             <div class="logo">
                 <img src="/logo.png" alt="045 Hair Studio" class="logo-img">
@@ -47,7 +53,7 @@
     <main class="main-content">
         <div class="container">
             <!-- Step Indicator -->
-            <div class="step-indicator">
+            <div class="step-indicator reveal-init reveal-delay-1">
                 <div class="step active" data-step="1">
                     <span class="step-number">1</span>
                     <span class="step-text">Berber Seç</span>
@@ -143,7 +149,8 @@
                     </div>
                     <div class="form-group">
                         <label for="customerNote">Not (İsteğe Bağlı)</label>
-                        <textarea id="customerNote" placeholder="Eklemek istediğiniz bir not varsa yazabilirsiniz..."></textarea>
+                        <textarea id="customerNote"
+                            placeholder="Eklemek istediğiniz bir not varsa yazabilirsiniz..."></textarea>
                     </div>
                 </form>
                 <div class="btn-group">
@@ -201,10 +208,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer reveal-init reveal-delay-3">
         <div class="container">
-            <p><a href="https://www.instagram.com/045hairstudioo" target="_blank" rel="noopener" style="color: #ffffff; text-decoration: none;">@045hairstudioo</a></p>
-            <p class="footer-info">Calisma Saatleri: 09:00 - 21:00 (Pazar Kapali)</p>
+            <p><a href="https://www.instagram.com/045hairstudioo" target="_blank" rel="noopener">@045hairstudioo</a></p>
+            <p class="footer-info">Çalışma Saatleri: 09:00 - 21:00 (Pazar Kapalı)</p>
         </div>
     </footer>
 
@@ -247,4 +254,5 @@
 
     <script src="js/main.js"></script>
 </body>
+
 </html>

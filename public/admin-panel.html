@@ -15,15 +15,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f1e5ac;
+            --dark: #050505;
+            --surface: #121212;
+            --glass: rgba(20, 20, 20, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: #0a0a0a;
+            font-family: 'Outfit', 'Montserrat', sans-serif;
+            background: var(--dark);
             min-height: 100vh;
-            color: #d0d0d0;
+            color: #ffffff;
             position: relative;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
@@ -59,27 +70,30 @@
         }
 
         .login-logo h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
-            letter-spacing: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            letter-spacing: 8px;
             margin-top: 15px;
             color: #ffffff;
+            font-weight: 800;
         }
 
         .login-logo p {
-            color: #6e6e6e;
-            font-size: 1.1rem;
-            letter-spacing: 5px;
+            color: var(--gold);
+            font-size: 0.9rem;
+            letter-spacing: 6px;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 500;
+            opacity: 0.8;
         }
 
         .login-form {
-            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
-            padding: 35px;
-            border-radius: 20px;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
         }
 
         .form-group {
@@ -88,49 +102,54 @@
 
         .form-group label {
             display: block;
-            color: #ffffff;
-            margin-bottom: 10px;
-            font-family: 'Montserrat', sans-serif;
+            color: var(--gold);
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
         .form-group input {
             width: 100%;
-            padding: 18px;
-            border: 2px solid #2a2a2a;
-            border-radius: 15px;
-            background: #0a0a0a;
-            color: #d0d0d0;
-            font-family: 'Montserrat', sans-serif;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--surface);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #ffffff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+            background: rgba(212, 175, 55, 0.02);
         }
 
         .btn-login {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             border: none;
-            border-radius: 15px;
-            background: #ffffff;
-            color: #0a0a0a;
-            font-family: 'Montserrat', sans-serif;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
             font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 4px;
+            font-weight: 800;
+            letter-spacing: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            text-transform: uppercase;
         }
 
         .btn-login:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 45px rgba(212, 175, 55, 0.4);
         }
 
         .error-message {
@@ -154,11 +173,13 @@
 
         /* Header */
         .panel-header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
-            padding: 25px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #2a2a2a;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
 
         .header-top {
@@ -219,29 +240,36 @@
         }
 
         .stat-box {
-            background: linear-gradient(145deg, #161616 0%, #0a0a0a 100%);
-            padding: 18px 12px;
-            border-radius: 15px;
+            background: var(--surface);
+            padding: 22px 12px;
+            border-radius: 20px;
             text-align: center;
-            border: 1px solid #2a2a2a;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .stat-box:hover {
-            border-color: #6e6e6e;
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
         }
 
         .stat-box .num {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
             color: #ffffff;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
         }
 
         .stat-box .txt {
-            font-size: 0.7rem;
-            color: #6e6e6e;
+            font-size: 0.65rem;
+            color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            opacity: 0.8;
         }
 
         /* Tab Navigation */
@@ -253,29 +281,30 @@
 
         .tab-btn {
             flex: 1;
-            padding: 14px;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
             background: transparent;
-            color: #6e6e6e;
+            color: #8c8c8c;
             cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 0.85rem;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .tab-btn:hover {
-            border-color: #6e6e6e;
+            border-color: var(--gold);
             color: #ffffff;
         }
 
         .tab-btn.active {
-            background: #ffffff;
-            border-color: #ffffff;
-            color: #0a0a0a;
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
         }
 
         .tab-content {
@@ -824,15 +853,17 @@
 </head>
 
 <body>
-    <!-- Login -->
-    <div class="login-screen" id="loginScreen">
-        <div class="container">
-            <div class="login-logo">
+    <!-- Background Glow -->
+    <div class="bg-glow"></div>
+
+    <div class="container reveal-init">
+        <div class="login-screen" id="loginScreen">
+            <div class="login-logo reveal-init reveal-delay-1">
                 <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
                 <p id="loginTitle">YONETIM PANELI</p>
             </div>
-            <form class="login-form" id="loginForm">
+            <form class="login-form reveal-init reveal-delay-2" id="loginForm">
                 <div class="form-group">
                     <label>Kullanici Adi</label>
                     <input type="text" id="username" placeholder="muhammed" required>
