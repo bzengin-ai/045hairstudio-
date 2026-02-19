@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
     <meta name="theme-color" content="#0a0a0a">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -43,7 +45,9 @@
             z-index: 1;
         }
 
-        .login-screen.hidden { display: none; }
+        .login-screen.hidden {
+            display: none;
+        }
 
         .login-logo {
             text-align: center;
@@ -144,7 +148,9 @@
             z-index: 1;
         }
 
-        .panel-screen.active { display: block; }
+        .panel-screen.active {
+            display: block;
+        }
 
         /* Header */
         .panel-header {
@@ -443,9 +449,18 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .apt-card.bekliyor { border-left-color: #f39c12; }
-        .apt-card.onaylandi { border-left-color: #ffffff; }
-        .apt-card.iptal { border-left-color: #c0392b; opacity: 0.5; }
+        .apt-card.bekliyor {
+            border-left-color: #f39c12;
+        }
+
+        .apt-card.onaylandi {
+            border-left-color: #ffffff;
+        }
+
+        .apt-card.iptal {
+            border-left-color: #c0392b;
+            opacity: 0.5;
+        }
 
         .apt-time {
             font-family: 'Montserrat', sans-serif;
@@ -455,7 +470,9 @@
             min-width: 60px;
         }
 
-        .apt-info { flex: 1; }
+        .apt-info {
+            flex: 1;
+        }
 
         .apt-info .name {
             font-family: 'Montserrat', sans-serif;
@@ -484,9 +501,20 @@
             font-weight: 600;
         }
 
-        .apt-status.bekliyor { background: linear-gradient(90deg, #f39c12, #e67e22); color: #000; }
-        .apt-status.onaylandi { background: #ffffff; color: #0a0a0a; }
-        .apt-status.iptal { background: #c0392b; color: #fff; }
+        .apt-status.bekliyor {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .apt-status.onaylandi {
+            background: #ffffff;
+            color: #0a0a0a;
+        }
+
+        .apt-status.iptal {
+            background: #c0392b;
+            color: #fff;
+        }
 
         /* Empty State */
         .empty-state {
@@ -689,8 +717,14 @@
         }
 
         /* Scrollbar */
-        .filter-row::-webkit-scrollbar { height: 4px; }
-        .filter-row::-webkit-scrollbar-thumb { background: #6e6e6e; border-radius: 2px; }
+        .filter-row::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-row::-webkit-scrollbar-thumb {
+            background: #6e6e6e;
+            border-radius: 2px;
+        }
 
         /* Toast */
         .toast {
@@ -720,8 +754,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         @media (max-width: 768px) {
@@ -736,6 +777,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Login -->
     <div class="login-screen" id="loginScreen">
@@ -743,7 +785,7 @@
             <div class="login-logo">
                 <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
-                <p>PATRON PANELI</p>
+                <p id="loginTitle">YENETIM PANELI</p>
             </div>
             <form class="login-form" id="loginForm">
                 <div class="form-group">
@@ -755,7 +797,7 @@
                     <input type="password" id="password" placeholder="****" required>
                 </div>
                 <button type="submit" class="btn-login">GIRIS YAP</button>
-                <p class="error-message" id="errorMessage">Sadece patron giris yapabilir!</p>
+                <p class="error-message" id="errorMessage">Gecersiz kullanici adi veya sifre!</p>
             </form>
         </div>
     </div>
@@ -770,7 +812,7 @@
                         <span>&#9986;</span>
                         <div>
                             <h2 id="adminName">MUHAMMED</h2>
-                            <p>Patron Paneli</p>
+                            <p id="panelSubtitle">Patron Paneli</p>
                         </div>
                     </div>
                     <button class="btn-logout" id="btnLogout">CIKIS</button>
@@ -851,15 +893,13 @@
 
         const dayNames = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma', 'Cumartesi'];
         const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
-                            'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
+            'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const saved = localStorage.getItem('adminUser');
             if (saved) {
                 currentUser = JSON.parse(saved);
-                if (currentUser.role === 'patron') {
-                    showPanel();
-                }
+                showPanel();
             }
 
             initLoginForm();
@@ -874,7 +914,7 @@
         // ========================================
         function initTabs() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
@@ -903,6 +943,11 @@
                 }
             } catch (error) {
                 barbersWithPhotos = barbers.map(b => ({ ...b, photos: [] }));
+            }
+
+            // Berber girisi ise sadece kendisini goster
+            if (currentUser.role !== 'patron') {
+                barbersWithPhotos = barbersWithPhotos.filter(b => b.id === currentUser.id);
             }
 
             container.innerHTML = barbersWithPhotos.map(barber => {
@@ -1039,7 +1084,7 @@
         // LOGIN
         // ========================================
         function initLoginForm() {
-            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            document.getElementById('loginForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
 
                 const username = document.getElementById('username').value;
@@ -1054,13 +1099,9 @@
 
                     if (response.ok) {
                         const user = await response.json();
-                        if (user.role === 'patron') {
-                            currentUser = user;
-                            localStorage.setItem('adminUser', JSON.stringify(currentUser));
-                            showPanel();
-                        } else {
-                            document.getElementById('errorMessage').style.display = 'block';
-                        }
+                        currentUser = user;
+                        localStorage.setItem('adminUser', JSON.stringify(currentUser));
+                        showPanel();
                     } else {
                         document.getElementById('errorMessage').style.display = 'block';
                     }
@@ -1080,6 +1121,17 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('panelScreen').classList.add('active');
             document.getElementById('adminName').textContent = currentUser.name.toUpperCase();
+
+            const isAdmin = currentUser.role === 'patron';
+            document.getElementById('panelSubtitle').textContent = isAdmin ? 'Patron Paneli' : 'Berber Paneli';
+
+            if (!isAdmin) {
+                currentFilter = currentUser.id.toString();
+                document.querySelector('.filter-row').style.display = 'none';
+            } else {
+                currentFilter = 'all';
+                document.querySelector('.filter-row').style.display = 'flex';
+            }
 
             updateDateDisplay();
             loadStats();
@@ -1218,7 +1270,7 @@
 
         function initFilter() {
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
@@ -1264,4 +1316,5 @@
         }
     </script>
 </body>
+
 </html>

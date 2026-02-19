@@ -66,22 +66,10 @@ body {
     gap: 15px;
 }
 
-.logo-icon {
-    font-size: 2.5rem;
-    filter: none;
-    animation: none;
-    color: #ffffff;
-}
-
-.logo h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: 5px;
-    background: none;
-    -webkit-text-fill-color: #ffffff;
-    animation: none;
-    text-shadow: none;
+.logo-img {
+    height: 80px;
+    width: auto;
+    border-radius: 12px;
 }
 
 .tagline {
@@ -1013,13 +1001,8 @@ input, textarea, select {
         padding: 25px 0;
     }
 
-    .logo h1 {
-        font-size: 1.6rem;
-        letter-spacing: 3px;
-    }
-
-    .logo-icon {
-        font-size: 2rem;
+    .logo-img {
+        height: 65px;
     }
 
     .tagline {
@@ -1211,9 +1194,8 @@ input, textarea, select {
         font-size: 0.8rem;
     }
 
-    .logo h1 {
-        font-size: 1.3rem;
-        letter-spacing: 2px;
+    .logo-img {
+        height: 55px;
     }
 }
 
