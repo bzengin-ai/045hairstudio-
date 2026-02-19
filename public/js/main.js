@@ -9,6 +9,7 @@ let selectedTime = null;
 let currentWeekStart = new Date();
 let currentMonth = new Date();
 let barbersData = [];
+let currentStep = 1; // Track the current step in Randevu flow
 
 // Calisma saatleri (09:00 - 21:00)
 const workingHours = [
@@ -83,6 +84,14 @@ async function openGaleri() {
 }
 
 function backToPortal() {
+    // If we are in the Randevu flow and past step 1, go back to step 1 instead of portal
+    const isRandevuVisible = document.getElementById('mainRandevu').style.display === 'block';
+
+    if (isRandevuVisible && currentStep > 1) {
+        goToStep(1);
+        return;
+    }
+
     document.getElementById('portalScreen').classList.remove('hidden');
     document.getElementById('mainHeader').style.display = 'none';
     hideAllMainViews();
@@ -164,16 +173,23 @@ async function loadBarbers() {
     try {
         const response = await fetch(`${API_URL}/barbers`);
         if (response.ok) {
-            barbersData = await response.json();
+            const data = await response.json();
+
+            // Berber Siralamasi: Muhammed, Cengo, Rio, Ahmet
+            const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
+            barbersData = data.sort((a, b) => (sortOrder[a.name] || 99) - (sortOrder[b.name] || 99));
         }
     } catch (error) {
         console.log('API baglantisi yok, varsayilan veriler');
         barbersData = [
-            { id: 1, name: 'Muhammed', role: 'patron', photos: [] },
-            { id: 2, name: 'Cengo', role: 'berber', photos: [] },
-            { id: 3, name: 'Rio', role: 'berber', photos: [] },
-            { id: 4, name: 'Ahmet', role: 'berber', photos: [] }
-        ];
+            { id: 1, name: 'Muhammed', role: 'patron', photos: ['muhammed.jpg'] },
+            { id: 2, name: 'Cengo', role: 'berber', photos: ['cengo.jpg'] },
+            { id: 3, name: 'Rio', role: 'berber', photos: ['rio.jpg'] },
+            { id: 4, name: 'Ahmet', role: 'berber', photos: ['ahmet.jpg'] }
+        ].sort((a, b) => {
+            const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
+            return sortOrder[a.name] - sortOrder[b.name];
+        });
     }
 
     renderBarberCards();
@@ -766,6 +782,8 @@ function initFormNavigation() {
 }
 
 function goToStep(step) {
+    currentStep = step; // Global state guncelle
+
     // Tum adimlari gizle
     document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
 
