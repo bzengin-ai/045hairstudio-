@@ -108,6 +108,7 @@ body {
 .portal-card.disabled {
     cursor: not-allowed;
     opacity: 0.8;
+    pointer-events: none;
 }
 
 .portal-card.disabled:hover {
