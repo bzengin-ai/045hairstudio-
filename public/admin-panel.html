@@ -1029,12 +1029,9 @@
                 </div>
 
                 <!-- Filter -->
-                <div class="filter-row">
+                <div class="filter-row" id="adminFilterRow">
                     <button class="filter-btn active" data-filter="all">TUMU</button>
-                    <button class="filter-btn" data-filter="1">MUHAMMED</button>
-                    <button class="filter-btn" data-filter="2">CENGO</button>
-                    <button class="filter-btn" data-filter="3">RIO</button>
-                    <button class="filter-btn" data-filter="4">AHMET</button>
+                    <!-- Dinamik berber butonlari buraya gelecek -->
                 </div>
 
                 <!-- Appointments -->
@@ -1069,12 +1066,7 @@
         let currentFilter = 'all';
         let allAppointments = [];
 
-        const barbers = [
-            { id: 1, name: 'Muhammed', role: 'Patron' },
-            { id: 2, name: 'Cengo', role: 'Usta Berber' },
-            { id: 3, name: 'Rio', role: 'Usta Berber' },
-            { id: 4, name: 'Ahmet', role: 'Usta Berber' }
-        ];
+        let barbers = [];
 
         const dayNames = ['Pazar', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma', 'Cumartesi'];
         const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
@@ -1100,10 +1092,33 @@
             try {
                 const response = await fetch(`${API_URL}/barbers`);
                 if (response.ok) {
-                    const data = await response.json();
-                    // Sync with global barbers array if needed, or use directly
+                    barbers = await response.json();
+                    renderFilterButtons();
+
+                    // Veriler geldikten sonra eger login olunmusa dashboard'u tazele
+                    if (currentUser) {
+                        loadStats();
+                        if (allAppointments.length > 0) renderAppointments();
+                    }
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.error('Berberler yuklenemedi');
+            }
+        }
+
+        function renderFilterButtons() {
+            const filterRow = document.getElementById('adminFilterRow');
+            if (!filterRow) return;
+
+            // Tumu butonunu koru
+            let html = '<button class="filter-btn active" data-filter="all">TUMU</button>';
+
+            barbers.forEach(barber => {
+                html += `<button class="filter-btn" data-filter="${barber.id}">${barber.name.toUpperCase()}</button>`;
+            });
+
+            filterRow.innerHTML = html;
+            initFilter(); // Event listener'lari tekrar bagla
         }
 
         // ========================================
@@ -1315,11 +1330,11 @@
             if (!isAdmin) {
                 if (marketTab) marketTab.style.display = 'none';
                 currentFilter = currentUser.id.toString();
-                document.querySelector('.filter-row').style.display = 'none';
+                document.getElementById('adminFilterRow').style.display = 'none';
             } else {
                 if (marketTab) marketTab.style.display = 'block';
                 currentFilter = 'all';
-                document.querySelector('.filter-row').style.display = 'flex';
+                document.getElementById('adminFilterRow').style.display = 'flex';
             }
 
             updateDateDisplay();
@@ -1443,6 +1458,11 @@
 
             if (currentFilter === 'all') {
                 let html = '';
+                if (barbers.length === 0) {
+                    container.innerHTML = '<div class="loading">Sistem verileri yukleniyor...</div>';
+                    return;
+                }
+
                 barbers.forEach(barber => {
                     const barberApts = allAppointments.filter(a => Number(a.barber_id) === Number(barber.id));
                     if (barberApts.length > 0) {
@@ -1463,9 +1483,13 @@
                         `;
                     }
                 });
-                container.innerHTML = html;
+                container.innerHTML = html || '<div class="empty-state"><p>Filtreye uygun randevu bulunamadı</p></div>';
             } else {
                 const barber = barbers.find(b => b.id === parseInt(currentFilter));
+                if (!barber) {
+                    container.innerHTML = '<div class="loading">Berber bilgisi yukleniyor...</div>';
+                    return;
+                }
                 container.innerHTML = `
                     <div class="barber-section">
                         <div class="barber-header">
