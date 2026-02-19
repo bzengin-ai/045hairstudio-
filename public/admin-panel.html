@@ -552,6 +552,11 @@
             color: #fff;
         }
 
+        .btn-whatsapp {
+            background: #25d366;
+            color: #fff;
+        }
+
         .btn-action:hover {
             transform: scale(1.1);
         }
@@ -1280,20 +1285,41 @@
                         </div>
                     </div>
                     <div class="apt-right">
-                        ${isBekliyor ? `
-                            <div class="apt-actions">
+                        <div class="apt-actions">
+                            <button class="btn-action btn-whatsapp" onclick="sendWhatsApp(${apt.id})" title="WhatsApp Bilgi Gönder">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.185-.573c.948.517 1.947.887 3.145.887a5.768 5.768 0 0 0 5.769-5.768c0-3.181-2.587-5.767-5.768-5.767zm3.387 8.264c-.147.415-.852.757-1.174.788-.29.029-.635.05-1.02-.083-.247-.085-.561-.205-.975-.382-1.766-.755-2.909-2.541-2.996-2.657-.087-.116-.708-.94-.708-1.794 0-.853.448-1.273.607-1.446.159-.173.346-.217.461-.217.115 0 .23 0 .331.005.109.004.253-.042.395.3.142.342.486 1.185.528 1.271.042.086.069.185.012.298-.058.114-.087.184-.173.284-.087.1-.183.224-.263.3-.089.085-.183.178-.078.359.104.181.465.767.998 1.242.687.61 1.265.799 1.446.885.181.085.289.071.395-.052.105-.124.448-.522.568-.7.12-.178.241-.15.405-.089s1.036.489 1.215.578c.178.089.297.133.34.208.043.074.043.431-.104.846z"></path><path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.528 3.658 1.442 5.166l-1.353 4.93 5.068-1.332C8.544 21.575 10.211 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.634 0-3.155-.471-4.437-1.282l-.318-.203-3.007.79.803-2.923-.222-.353C4.022 15.776 3.5 13.945 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.5-8.5 8.5z"></path></svg>
+                            </button>
+                            ${isBekliyor ? `
                                 <button class="btn-action btn-approve" onclick="updateAptStatus(${apt.id}, 'onaylandi')" title="Onayla">✓</button>
                                 <button class="btn-action btn-iptal" onclick="updateAptStatus(${apt.id}, 'iptal')" title="Iptal Et">✕</button>
-                            </div>
-                        ` : `
-                            <div class="apt-actions">
+                            ` : `
                                 <span class="apt-status ${apt.status}">${getStatusText(apt.status)}</span>
                                 <button class="btn-action btn-delete" onclick="deleteApt(${apt.id})" title="Sil">🗑</button>
-                            </div>
-                        `}
+                            `}
+                        </div>
                     </div>
                 </div>
             `;
+        }
+
+        function sendWhatsApp(aptId) {
+            const apt = allAppointments.find(a => a.id === aptId);
+            if (!apt) return;
+
+            const phone = apt.customerPhone.replace(/\D/g, '');
+            const trPhone = phone.startsWith('0') ? '9' + phone : (phone.startsWith('90') ? phone : '90' + phone);
+
+            let message = "";
+            if (apt.status === 'onaylandi') {
+                message = `Merhaba ${apt.customerName}, ${apt.date} tarihindeki saat ${apt.time} randevunuz onaylanmıştır. Sizi bekliyoruz! 💈`;
+            } else if (apt.status === 'iptal') {
+                message = `Merhaba ${apt.customerName}, maalesef ${apt.date} tarihindeki saat ${apt.time} randevunuzu iptal etmek zorundayız. Başka bir saate randevu oluşturabilirsiniz. ✂️`;
+            } else {
+                message = `Merhaba ${apt.customerName}, ${apt.date} tarihindeki saat ${apt.time} randevunuz hakkında sizinle iletişime geçmek istedik.`;
+            }
+
+            const wpUrl = `https://wa.me/${trPhone}?text=${encodeURIComponent(message)}`;
+            window.open(wpUrl, '_blank');
         }
 
         async function updateAptStatus(id, status) {
