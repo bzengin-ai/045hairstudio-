@@ -4,8 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
+const { createClient } = require('@supabase/supabase-js');
+
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+// Supabase Yapilandirmasi
+const SUPABASE_URL = 'https://pbwwiihlkqsjebgzlddq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBid3dpaWhsa3FzamViZ3psZGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTE5NTQsImV4cCI6MjA4NzA2Nzk1NH0.Rs2XXH9Kv0L3WMGu0IP4sxvxZLrket-S1setOLxzmUY';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Uploads klasorunu olustur
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
@@ -53,40 +60,9 @@ if (!fs.existsSync(path.join(__dirname, 'data'))) {
     fs.mkdirSync(path.join(__dirname, 'data'));
 }
 
-// Veritabanini yukle veya olustur
-function loadDatabase() {
-    try {
-        if (fs.existsSync(DB_PATH)) {
-            const data = fs.readFileSync(DB_PATH, 'utf8');
-            return JSON.parse(data);
-        }
-    } catch (error) {
-        console.log('Veritabani olusturuluyor...');
-    }
-
-    // Varsayilan veritabani
-    const defaultDB = {
-        barbers: [
-            { id: 1, name: 'Muhammed', role: 'patron', username: 'muhammed', password: '1234', experience: '15 Yil' },
-            { id: 2, name: 'Cengo', role: 'berber', username: 'cengo', password: '1234', experience: '8 Yil' },
-            { id: 3, name: 'Rio', role: 'berber', username: 'rio', password: '1234', experience: '5 Yil' },
-            { id: 4, name: 'Ahmet', role: 'berber', username: 'ahmet', password: '1234', experience: '3 Yil' }
-        ],
-        appointments: [],
-        settings: {
-            shopName: '045 Berber Shop',
-            workingHours: { start: '09:00', end: '21:00' },
-            closedDay: 0 // Pazar
-        }
-    };
-
-    saveDatabase(defaultDB);
-    return defaultDB;
-}
-
-// Veritabanini kaydet
-function saveDatabase(data) {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+// Data klasorunu olustur (Uploads icin hala gerekebilir)
+if (!fs.existsSync(path.join(__dirname, 'data'))) {
+    fs.mkdirSync(path.join(__dirname, 'data'));
 }
 
 // ========================================
@@ -94,122 +70,119 @@ function saveDatabase(data) {
 // ========================================
 
 // Berberleri getir
-app.get('/api/barbers', (req, res) => {
-    const db = loadDatabase();
-    const barbers = db.barbers.map(b => ({
-        id: b.id,
-        name: b.name,
-        role: b.role,
-        experience: b.experience,
-        photos: b.photos || []
-    }));
+app.get('/api/barbers', async (req, res) => {
+    const { data: barbers, error } = await supabase
+        .from('barbers')
+        .select('id, name, role, experience, photos');
+
+    if (error) return res.status(500).json({ error: error.message });
     res.json(barbers);
 });
 
 // Randevulari getir (tarih ve berber filtresi)
-app.get('/api/appointments', (req, res) => {
-    const db = loadDatabase();
-    let appointments = db.appointments;
+app.get('/api/appointments', async (req, res) => {
+    let query = supabase.from('appointments').select('*');
 
     const { barberId, date, startDate, endDate } = req.query;
 
-    if (barberId) {
-        appointments = appointments.filter(a => a.barberId === parseInt(barberId));
-    }
-
-    if (date) {
-        appointments = appointments.filter(a => a.date === date);
-    }
-
+    if (barberId) query = query.eq('barber_id', parseInt(barberId));
+    if (date) query = query.eq('date', date);
     if (startDate && endDate) {
-        appointments = appointments.filter(a => a.date >= startDate && a.date <= endDate);
+        query = query.gte('date', startDate).lte('date', endDate);
     }
 
+    const { data: appointments, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
     res.json(appointments);
 });
 
 // Yeni randevu olustur
-app.post('/api/appointments', (req, res) => {
-    const db = loadDatabase();
+app.post('/api/appointments', async (req, res) => {
     const { barberId, barberName, date, time, customerName, customerPhone, note } = req.body;
 
     // Ayni saat dolu mu kontrol et
-    const existing = db.appointments.find(
-        a => a.barberId === barberId && a.date === date && a.time === time
-    );
+    const { data: existing } = await supabase
+        .from('appointments')
+        .select('id')
+        .eq('barber_id', barberId)
+        .eq('date', date)
+        .eq('time', time)
+        .single();
 
     if (existing) {
         return res.status(400).json({ error: 'Bu saat dolu' });
     }
 
-    const newAppointment = {
-        id: Date.now(),
-        barberId,
-        barberName,
-        date,
-        time,
-        customerName,
-        customerPhone,
-        note: note || '',
-        status: 'bekliyor', // bekliyor, onaylandi, iptal
-        createdAt: new Date().toISOString()
-    };
+    const { data: newAppointment, error } = await supabase
+        .from('appointments')
+        .insert([{
+            id: Date.now(),
+            barber_id: barberId,
+            barber_name: barberName,
+            date,
+            time,
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            note: note || '',
+            status: 'bekliyor'
+        }])
+        .select()
+        .single();
 
-    db.appointments.push(newAppointment);
-    saveDatabase(db);
+    if (error) return res.status(500).json({ error: error.message });
 
     console.log(`Yeni randevu: ${customerName} - ${barberName} - ${date} ${time}`);
-
     res.status(201).json(newAppointment);
 });
 
 // Randevu durumunu guncelle
-app.put('/api/appointments/:id', (req, res) => {
-    const db = loadDatabase();
+app.put('/api/appointments/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const { status, note, cancelNote } = req.body;
 
-    const index = db.appointments.findIndex(a => a.id === id);
-    if (index === -1) {
-        return res.status(404).json({ error: 'Randevu bulunamadi' });
-    }
+    const updateData = {};
+    if (status) updateData.status = status;
+    if (note !== undefined) updateData.note = note;
+    if (cancelNote !== undefined) updateData.cancelNote = cancelNote;
 
-    if (status) db.appointments[index].status = status;
-    if (note !== undefined) db.appointments[index].note = note;
-    if (cancelNote !== undefined) db.appointments[index].cancelNote = cancelNote;
+    const { data, error } = await supabase
+        .from('appointments')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
 
-    saveDatabase(db);
-    res.json(db.appointments[index]);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
 });
 
 // Randevu sil
-app.delete('/api/appointments/:id', (req, res) => {
-    const db = loadDatabase();
+app.delete('/api/appointments/:id', async (req, res) => {
     const id = parseInt(req.params.id);
 
-    const index = db.appointments.findIndex(a => a.id === id);
-    if (index === -1) {
-        return res.status(404).json({ error: 'Randevu bulunamadi' });
-    }
+    const { error } = await supabase
+        .from('appointments')
+        .delete()
+        .eq('id', id);
 
-    db.appointments.splice(index, 1);
-    saveDatabase(db);
-
+    if (error) return res.status(500).json({ error: error.message });
     res.json({ message: 'Randevu silindi' });
 });
 
 // ========================================
 // BERBER GIRIS
 // ========================================
-app.post('/api/login', (req, res) => {
-    const db = loadDatabase();
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const barber = db.barbers.find(
-        b => b.username === username && b.password === password
-    );
+    const { data: barber, error } = await supabase
+        .from('barbers')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .single();
 
-    if (!barber) {
+    if (error || !barber) {
         return res.status(401).json({ error: 'Gecersiz kullanici adi veya sifre' });
     }
 
@@ -222,83 +195,73 @@ app.post('/api/login', (req, res) => {
 });
 
 // Berber kendi randevularini getir
-app.get('/api/barber/:id/appointments', (req, res) => {
-    const db = loadDatabase();
+app.get('/api/barber/:id/appointments', async (req, res) => {
     const barberId = parseInt(req.params.id);
     const { date, startDate, endDate } = req.query;
 
-    let appointments = db.appointments.filter(a => a.barberId === barberId);
+    let query = supabase.from('appointments').select('*').eq('barber_id', barberId);
 
-    if (date) {
-        appointments = appointments.filter(a => a.date === date);
-    }
-
+    if (date) query = query.eq('date', date);
     if (startDate && endDate) {
-        appointments = appointments.filter(a => a.date >= startDate && a.date <= endDate);
+        query = query.gte('date', startDate).lte('date', endDate);
     }
 
-    // Tarihe ve saate gore sirala
-    appointments.sort((a, b) => {
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return a.time.localeCompare(b.time);
-    });
+    // Sirala
+    query = query.order('date', { ascending: true }).order('time', { ascending: true });
 
+    const { data: appointments, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
     res.json(appointments);
 });
+
 
 // ========================================
 // ADMIN (PATRON) ROUTES
 // ========================================
 
 // Tum randevulari getir (patron icin)
-app.get('/api/admin/appointments', (req, res) => {
-    const db = loadDatabase();
+app.get('/api/admin/appointments', async (req, res) => {
     const { date, startDate, endDate, barberId } = req.query;
 
-    let appointments = [...db.appointments];
+    let query = supabase.from('appointments').select('*');
 
-    if (date) {
-        appointments = appointments.filter(a => a.date === date);
-    }
-
+    if (date) query = query.eq('date', date);
     if (startDate && endDate) {
-        appointments = appointments.filter(a => a.date >= startDate && a.date <= endDate);
+        query = query.gte('date', startDate).lte('date', endDate);
     }
+    if (barberId) query = query.eq('barber_id', parseInt(barberId));
 
-    if (barberId) {
-        appointments = appointments.filter(a => a.barberId === parseInt(barberId));
-    }
+    // Sirala
+    query = query.order('date', { ascending: true }).order('time', { ascending: true });
 
-    // Tarihe ve saate gore sirala
-    appointments.sort((a, b) => {
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return a.time.localeCompare(b.time);
-    });
-
+    const { data: appointments, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
     res.json(appointments);
 });
 
 // Istatistikler (patron icin)
-app.get('/api/admin/stats', (req, res) => {
-    const db = loadDatabase();
+app.get('/api/admin/stats', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
 
-    const todayAppointments = db.appointments.filter(a => a.date === today);
-    const pendingAppointments = db.appointments.filter(a => a.status === 'bekliyor');
-    const totalAppointments = db.appointments.length;
+    const { data: allAppointments, error: aptError } = await supabase.from('appointments').select('id, date, status, barber_id');
+    const { data: barbers, error: barbError } = await supabase.from('barbers').select('id, name');
 
-    // Berber bazinda randevu sayilari
-    const barberStats = db.barbers.map(b => ({
+    if (aptError || barbError) return res.status(500).json({ error: (aptError || barbError).message });
+
+    const todayAppointments = allAppointments.filter(a => a.date === today);
+    const pendingAppointments = allAppointments.filter(a => a.status === 'bekliyor');
+
+    const barberStats = barbers.map(b => ({
         id: b.id,
         name: b.name,
-        todayCount: todayAppointments.filter(a => a.barberId === b.id).length,
-        totalCount: db.appointments.filter(a => a.barberId === b.id).length
+        todayCount: todayAppointments.filter(a => a.barber_id === b.id).length,
+        totalCount: allAppointments.filter(a => a.barber_id === b.id).length
     }));
 
     res.json({
         today: todayAppointments.length,
         pending: pendingAppointments.length,
-        total: totalAppointments,
+        total: allAppointments.length,
         barberStats
     });
 });
@@ -308,69 +271,88 @@ app.get('/api/admin/stats', (req, res) => {
 // ========================================
 
 // Fotograf yukle
-app.post('/api/barber/:id/photos', upload.single('photo'), (req, res) => {
+app.post('/api/barber/:id/photos', upload.single('photo'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'Dosya yuklenemedi' });
     }
 
-    const db = loadDatabase();
     const barberId = parseInt(req.params.id);
-    const barber = db.barbers.find(b => b.id === barberId);
 
-    if (!barber) {
-        // Dosyayi sil
+    // Berberi getir
+    const { data: barber, error: fetchError } = await supabase
+        .from('barbers')
+        .select('photos')
+        .eq('id', barberId)
+        .single();
+
+    if (fetchError || !barber) {
         fs.unlinkSync(req.file.path);
         return res.status(404).json({ error: 'Berber bulunamadi' });
     }
 
-    if (!barber.photos) {
-        barber.photos = [];
+    const photos = barber.photos || [];
+    photos.push(req.file.filename);
+
+    const { error: updateError } = await supabase
+        .from('barbers')
+        .update({ photos })
+        .eq('id', barberId);
+
+    if (updateError) {
+        fs.unlinkSync(req.file.path);
+        return res.status(500).json({ error: updateError.message });
     }
 
-    barber.photos.push(req.file.filename);
-    saveDatabase(db);
-
-    res.status(201).json({ filename: req.file.filename, photos: barber.photos });
+    res.status(201).json({ filename: req.file.filename, photos });
 });
 
 // Fotograf sil
-app.delete('/api/barber/:id/photos/:filename', (req, res) => {
-    const db = loadDatabase();
+app.delete('/api/barber/:id/photos/:filename', async (req, res) => {
     const barberId = parseInt(req.params.id);
-    const barber = db.barbers.find(b => b.id === barberId);
+    const filename = req.params.filename;
 
-    if (!barber) {
+    const { data: barber, error: fetchError } = await supabase
+        .from('barbers')
+        .select('photos')
+        .eq('id', barberId)
+        .single();
+
+    if (fetchError || !barber) {
         return res.status(404).json({ error: 'Berber bulunamadi' });
     }
 
-    const filename = req.params.filename;
     const filePath = path.join(uploadsDir, filename);
-
-    // Dosyayi sil
     if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
     }
 
-    // Veritabanindan kaldir
-    if (barber.photos) {
-        barber.photos = barber.photos.filter(p => p !== filename);
-    }
-    saveDatabase(db);
+    const photos = (barber.photos || []).filter(p => p !== filename);
 
-    res.json({ message: 'Fotograf silindi', photos: barber.photos || [] });
+    const { error: updateError } = await supabase
+        .from('barbers')
+        .update({ photos })
+        .eq('id', barberId);
+
+    if (updateError) return res.status(500).json({ error: updateError.message });
+
+    res.json({ message: 'Fotograf silindi', photos });
 });
 
 // Berber fotograflarini listele
-app.get('/api/barber/:id/photos', (req, res) => {
-    const db = loadDatabase();
+app.get('/api/barber/:id/photos', async (req, res) => {
     const barberId = parseInt(req.params.id);
-    const barber = db.barbers.find(b => b.id === barberId);
 
-    if (!barber) {
+    const { data, error } = await supabase
+        .from('barbers')
+        .select('photos')
+        .eq('id', barberId)
+        .single();
+
+    if (error || !data) {
         return res.status(404).json({ error: 'Berber bulunamadi' });
     }
 
-    res.json(barber.photos || []);
+    res.json(data.photos || []);
 });
 
 // ========================================
