@@ -23,8 +23,9 @@
             --accent-secondary: #a8a9ad;
             --dark: #050505;
             --surface: #121212;
-            --glass: rgba(20, 20, 20, 0.9);
-            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(15, 15, 15, 0.95);
+            --border: rgba(255, 255, 255, 0.1);
+            --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         body {
@@ -448,15 +449,16 @@
             gap: 12px;
             margin-bottom: 15px;
             padding: 15px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
-            border-radius: 15px;
-            border: 1px solid #2a2a2a;
+            background: var(--glass);
+            border-radius: 20px;
+            border: 1px solid var(--border);
         }
 
         .barber-avatar {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #6e6e6e 0%, #4a4a4a 100%);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -679,12 +681,14 @@
             margin-bottom: 30px;
         }
 
+        /* Gallery Styles Refined */
         .gallery-barber-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #161616 100%);
-            border: 1px solid #2a2a2a;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
         }
 
         .gallery-barber-header {
@@ -697,8 +701,8 @@
         .gallery-barber-avatar {
             width: 50px;
             height: 50px;
-            background: #2a2a2a;
-            border: 2px solid #6e6e6e;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -714,53 +718,56 @@
         }
 
         .gallery-barber-name {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 1.1rem;
+            font-weight: 700;
             letter-spacing: 2px;
             color: #ffffff;
         }
 
         .gallery-barber-role {
             font-size: 0.7rem;
-            color: #6e6e6e;
+            color: var(--accent-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .gallery-upload-area {
-            border: 2px dashed #2a2a2a;
-            border-radius: 12px;
-            padding: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
             text-align: center;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: var(--transition-smooth);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 25px;
         }
 
-        .gallery-upload-area:hover {
-            border-color: #6e6e6e;
-        }
-
+        .gallery-upload-area:hover,
         .gallery-upload-area.dragover {
             border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
         }
 
         .upload-icon {
             font-size: 2rem;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            opacity: 0.5;
         }
 
         .upload-text {
-            color: #6e6e6e;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
 
         .upload-hint {
-            color: #444;
             font-size: 0.7rem;
-            margin-top: 5px;
+            color: var(--accent-secondary);
+            opacity: 0.6;
         }
 
         .gallery-upload-input {
@@ -1024,9 +1031,20 @@
             initDateNavigation();
             initFilter();
             initLogout();
-            initTabNav(); // Updated from initTabs
-            initProductForm(); // New
+            initTabNav();
+            initProductForm();
+            loadBarbersData(); // Fetch barbers with photos
         });
+
+        async function loadBarbersData() {
+            try {
+                const response = await fetch(`${API_URL}/barbers`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Sync with global barbers array if needed, or use directly
+                }
+            } catch (e) { }
+        }
 
         // ========================================
         // TAB SISTEMI
@@ -1063,21 +1081,24 @@
                 const photosHtml = (barber.photos && barber.photos.length > 0)
                     ? `<div class="gallery-photos-grid">
                         ${barber.photos.map(photo => `
-                            <div class="gallery-photo-item">
+                            <div class="gallery-photo-item reveal-init">
                                 <img src="/uploads/${photo}" alt="">
                                 <button class="gallery-photo-delete" onclick="deletePhoto(${barber.id}, '${photo}')">&times;</button>
                             </div>
                         `).join('')}
                        </div>`
-                    : '<div class="gallery-empty-text">Henuz fotograf yok</div>';
+                    : '<div class="gallery-empty-text">Henüz çalışma yüklenmemiş. Şov başlasın!</div>';
+
+                const isSelf = barber.id === currentUser.id;
+                const headerTitle = isSelf ? "SİZİN PORTFOLİONUZ" : `${barber.name.toUpperCase()} PORTFOLİOSU`;
 
                 return `
                     <div class="gallery-barber-card" id="galleryBarber${barber.id}">
                         <div class="gallery-barber-header">
                             <div class="gallery-barber-avatar">${avatarContent}</div>
                             <div>
-                                <div class="gallery-barber-name">${barber.name}</div>
-                                <div class="gallery-barber-role">${barber.role === 'patron' ? 'Patron' : 'Usta Berber'} - ${(barber.photos || []).length} foto</div>
+                                <div class="gallery-barber-name" style="font-weight: 800; letter-spacing: 2px;">${headerTitle}</div>
+                                <div class="gallery-barber-role">${(barber.photos || []).length} Sanat Eseri</div>
                             </div>
                         </div>
 
@@ -1086,15 +1107,15 @@
                              ondragleave="handleDragLeave(event, ${barber.id})"
                              ondrop="handleDrop(event, ${barber.id})"
                              onclick="document.getElementById('fileInput${barber.id}').click()">
-                            <div class="upload-icon">+</div>
-                            <div class="upload-text">Fotograf Yukle</div>
-                            <div class="upload-hint">JPG, PNG, WEBP - Max 5MB</div>
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">YENİ ÇALIŞMA EKLE</div>
+                            <div class="upload-hint">SÜREKLE BIRAK VEYA TIKLA</div>
                         </div>
                         <input type="file" id="fileInput${barber.id}" class="gallery-upload-input"
                                accept="image/jpeg,image/png,image/webp"
                                onchange="uploadPhoto(${barber.id}, this.files[0])">
 
-                        <div class="upload-progress" id="progress${barber.id}">Yukleniyor...</div>
+                        <div class="upload-progress" id="progress${barber.id}" style="color: #fff; font-weight: 800; margin-bottom: 15px;">YÜKLENİYOR...</div>
 
                         ${photosHtml}
                     </div>
@@ -1229,10 +1250,14 @@
             const isAdmin = currentUser.role === 'patron';
             document.getElementById('panelSubtitle').textContent = isAdmin ? 'Patron Paneli' : 'Berber Paneli';
 
+            // Role Based UI
+            const marketTab = document.querySelector('.tab-btn[data-tab="market"]');
             if (!isAdmin) {
+                if (marketTab) marketTab.style.display = 'none';
                 currentFilter = currentUser.id.toString();
                 document.querySelector('.filter-row').style.display = 'none';
             } else {
+                if (marketTab) marketTab.style.display = 'block';
                 currentFilter = 'all';
                 document.querySelector('.filter-row').style.display = 'flex';
             }
@@ -1240,6 +1265,9 @@
             updateDateDisplay();
             loadStats();
             loadAppointments();
+
+            // Ensure we start on appointments
+            document.querySelector('.tab-btn[data-tab="randevular"]').click();
         }
 
         async function loadStats() {
