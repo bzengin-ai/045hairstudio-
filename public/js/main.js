@@ -885,6 +885,10 @@ function updateSummary() {
 // RANDEVU ONAYLA
 // ========================================
 async function confirmBooking() {
+    const btn = document.getElementById('confirmBooking');
+    btn.disabled = true;
+    btn.textContent = 'GÖNDERİLİYOR...';
+
     const appointment = {
         barberId: selectedBarber.id,
         barberName: selectedBarber.name,
@@ -908,12 +912,18 @@ async function confirmBooking() {
         if (response.ok) {
             showSuccess();
         } else {
-            throw new Error('Randevu olusturulamadi');
+            const errData = await response.json().catch(() => ({}));
+            const errMsg = errData.error || `Sunucu hatası: ${response.status}`;
+            console.error('Randevu hatasi:', errMsg);
+            alert('Randevu oluşturulamadı: ' + errMsg);
+            btn.disabled = false;
+            btn.textContent = 'RANDEVU ONAYLA';
         }
     } catch (error) {
-        console.error('API hatasi:', error);
-        // Demo modda basarili goster
-        showSuccess();
+        console.error('Ağ/API hatasi:', error);
+        alert('Bağlantı hatası. Lütfen tekrar deneyin: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'RANDEVU ONAYLA';
     }
 }
 

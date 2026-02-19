@@ -100,10 +100,17 @@ app.get('/api/appointments', async (req, res) => {
 app.post('/api/appointments', async (req, res) => {
     const { barberId, barberName, date, time, customerName, customerPhone, note } = req.body;
 
+    console.log('[RANDEVU] Yeni randevu istegi:', { barberId, barberName, date, time, customerName, customerPhone });
+
+    if (!barberId || !date || !time || !customerName || !customerPhone) {
+        console.error('[RANDEVU] Eksik alan:', { barberId, date, time, customerName, customerPhone });
+        return res.status(400).json({ error: 'Eksik alanlar: barberId, date, time, customerName, customerPhone zorunludur.' });
+    }
+
     const { data, error } = await supabase
         .from('appointments')
         .insert([{
-            barber_id: barberId,
+            barber_id: parseInt(barberId),
             barber_name: barberName,
             date,
             time,
@@ -114,9 +121,15 @@ app.post('/api/appointments', async (req, res) => {
         }])
         .select();
 
-    if (error) return res.status(500).json({ error: error.message });
+    if (error) {
+        console.error('[RANDEVU] Supabase hatasi:', error);
+        return res.status(500).json({ error: error.message });
+    }
+
+    console.log('[RANDEVU] Basarili:', data[0]?.id);
     res.json(data[0]);
 });
+
 
 // ========================================
 // MARKET PRODUCTS API
