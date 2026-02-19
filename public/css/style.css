@@ -177,17 +177,12 @@ body {
     font-weight: 600;
 }
 
-/* Specific Card BG Placeholders (Fallbacks) */
-#cardRandevu .portal-card-bg {
-    background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=1000');
-}
-
-#cardMarket .portal-card-bg {
-    background-image: url('https://images.unsplash.com/photo-1512690118237-77983652875b?auto=format&fit=crop&q=80&w=1000');
-}
-
+/* Unified Glassmorphism: Cards are now empty and transparent to show main background */
+#cardRandevu .portal-card-bg,
+#cardMarket .portal-card-bg,
 #cardGaleri .portal-card-bg {
-    background-image: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=1000');
+    background-image: none;
+    background-color: transparent;
 }
 
 @media (max-width: 900px) {
