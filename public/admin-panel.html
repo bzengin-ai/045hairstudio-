@@ -516,6 +516,46 @@
             color: #fff;
         }
 
+        /* Apt Actions */
+        .apt-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-approve {
+            background: #ffffff;
+            color: #0a0a0a;
+        }
+
+        .btn-iptal {
+            background: #2a2a2a;
+            color: #c0392b;
+            border: 1px solid #c0392b;
+        }
+
+        .btn-delete {
+            background: #c0392b;
+            color: #fff;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -1228,6 +1268,8 @@
         }
 
         function renderAppointmentCard(apt) {
+            const isBekliyor = apt.status === 'bekliyor';
+
             return `
                 <div class="apt-card ${apt.status}">
                     <div class="apt-time">${apt.time}</div>
@@ -1237,9 +1279,59 @@
                             <a href="tel:${apt.customerPhone}">${apt.customerPhone}</a>
                         </div>
                     </div>
-                    <span class="apt-status ${apt.status}">${getStatusText(apt.status)}</span>
+                    <div class="apt-right">
+                        ${isBekliyor ? `
+                            <div class="apt-actions">
+                                <button class="btn-action btn-approve" onclick="updateAptStatus(${apt.id}, 'onaylandi')" title="Onayla">✓</button>
+                                <button class="btn-action btn-iptal" onclick="updateAptStatus(${apt.id}, 'iptal')" title="Iptal Et">✕</button>
+                            </div>
+                        ` : `
+                            <div class="apt-actions">
+                                <span class="apt-status ${apt.status}">${getStatusText(apt.status)}</span>
+                                <button class="btn-action btn-delete" onclick="deleteApt(${apt.id})" title="Sil">🗑</button>
+                            </div>
+                        `}
+                    </div>
                 </div>
             `;
+        }
+
+        async function updateAptStatus(id, status) {
+            try {
+                const response = await fetch(`${API_URL}/appointments/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    showToast(`Randevu ${status === 'onaylandi' ? 'onaylandi' : 'iptal edildi'}`, 'success');
+                    loadAppointments();
+                } else {
+                    showToast('Guncelleme basarisiz', 'error');
+                }
+            } catch (error) {
+                showToast('Hata olustu', 'error');
+            }
+        }
+
+        async function deleteApt(id) {
+            if (!confirm('Bu randevuyu silmek istediginizden emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/appointments/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Randevu silindi', 'success');
+                    loadAppointments();
+                } else {
+                    showToast('Silme basarisiz', 'error');
+                }
+            } catch (error) {
+                showToast('Hata olustu', 'error');
+            }
         }
 
         function initDateNavigation() {
