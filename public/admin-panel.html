@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin Paneli - 045 Hair Studio</title>
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
@@ -36,6 +36,15 @@
             position: relative;
             overflow-x: hidden;
             line-height: 1.6;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        input,
+        textarea {
+            user-select: text;
+            font-size: 16px !important;
+            /* Prevent iOS zoom on focus */
         }
 
         .container {
@@ -244,12 +253,16 @@
 
         .stat-box {
             background: var(--surface);
-            padding: 22px 12px;
-            border-radius: 20px;
+            padding: 18px 8px;
+            border-radius: 18px;
             text-align: center;
             border: 1px solid var(--border);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
         }
 
         .stat-box:hover {
@@ -303,7 +316,7 @@
 
         .stat-box .num {
             font-family: 'Outfit', sans-serif;
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             color: #ffffff;
             font-weight: 800;
             line-height: 1;
@@ -328,18 +341,19 @@
 
         .tab-btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px 8px;
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 14px;
             background: transparent;
             color: #8c8c8c;
             cursor: pointer;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
             font-weight: 600;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            white-space: nowrap;
         }
 
         .tab-btn:hover {
@@ -453,7 +467,15 @@
             gap: 8px;
             margin-bottom: 20px;
             overflow-x: auto;
-            padding-bottom: 5px;
+            padding: 5px 0 10px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .filter-row::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
         }
 
         .filter-btn {
@@ -580,10 +602,11 @@
 
         .apt-time {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 2px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
             color: #ffffff;
-            min-width: 60px;
+            min-width: 50px;
+            font-weight: 700;
         }
 
         .apt-info {
@@ -895,9 +918,12 @@
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            transform: none;
+            width: calc(100% - 40px);
+            max-width: none;
             padding: 18px 40px;
             border-radius: 15px;
             font-family: 'Montserrat', sans-serif;
@@ -932,6 +958,15 @@
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .panel-header {
+                padding: 20px 15px;
+                border-radius: 20px;
+            }
+
             .gallery-photos-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
@@ -939,6 +974,19 @@
 
             .gallery-photo-delete {
                 opacity: 1;
+            }
+
+            .market-table {
+                font-size: 0.8rem;
+            }
+
+            .market-table th,
+            .market-table td {
+                padding: 8px 5px;
+            }
+
+            .admin-badge h2 {
+                font-size: 1.2rem;
             }
         }
     </style>
