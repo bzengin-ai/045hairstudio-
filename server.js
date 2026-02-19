@@ -251,7 +251,7 @@ app.get('/api/barber/:id/appointments', async (req, res) => {
 
 // Tum randevulari getir (patron icin)
 app.get('/api/admin/appointments', async (req, res) => {
-    const { date, startDate, endDate, barberId } = req.query;
+    const { date, startDate, endDate, barberId, status } = req.query;
 
     let query = supabase.from('appointments').select('*');
 
@@ -260,8 +260,9 @@ app.get('/api/admin/appointments', async (req, res) => {
         query = query.gte('date', startDate).lte('date', endDate);
     }
     if (barberId) query = query.eq('barber_id', parseInt(barberId));
+    if (status) query = query.eq('status', status);
 
-    // Sirala
+    // Sirala (Tarihe gore)
     query = query.order('date', { ascending: true }).order('time', { ascending: true });
 
     const { data: appointments, error } = await query;

@@ -249,12 +249,56 @@
             text-align: center;
             border: 1px solid var(--border);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
         }
 
         .stat-box:hover {
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-5px);
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-box.clickable {
+            cursor: pointer;
+        }
+
+        .stat-box.clickable:active {
+            transform: scale(0.95);
+        }
+
+        .stat-badge-new {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff0000;
+            color: #fff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            animation: statPulse 2s infinite;
+        }
+
+        @keyframes statPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+
+            70% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+            }
         }
 
         .stat-box .num {
@@ -943,15 +987,18 @@
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-box">
+                    <div class="stat-box clickable" onclick="loadSpecialAppointments('today')"
+                        title="Bugünkü Randevular">
                         <div class="num" id="todayTotal">0</div>
                         <div class="txt">Bugun</div>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box clickable" id="boxPending" onclick="loadSpecialAppointments('pending')"
+                        title="Tüm Bekleyen Randevular">
                         <div class="num" id="pendingTotal">0</div>
                         <div class="txt">Bekleyen</div>
+                        <div class="stat-badge-new" id="pendingBadge" style="display:none;">!</div>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box clickable" onclick="loadSpecialAppointments('all')" title="Tüm Randevular">
                         <div class="num" id="allTotal">0</div>
                         <div class="txt">Toplam</div>
                     </div>
@@ -973,6 +1020,9 @@
                     <div class="current-date">
                         <div class="day" id="dayName">PAZARTESI</div>
                         <div class="full-date" id="fullDate">6 Ocak 2026</div>
+                        <div id="listHeader"
+                            style="margin-top: 5px; color: #fff; font-weight: 800; font-size: 0.7rem; letter-spacing: 2px; display: none;">
+                            LİSTELENİYOR: BEKLEYENLER</div>
                     </div>
                     <button class="date-nav" id="nextDay">&gt;</button>
                 </div>
@@ -1275,9 +1325,34 @@
                 const response = await fetch(`${API_URL}/admin/stats`);
                 if (response.ok) {
                     const stats = await response.json();
-                    document.getElementById('todayTotal').textContent = stats.today || 0;
-                    document.getElementById('pendingTotal').textContent = stats.pending || 0;
-                    document.getElementById('allTotal').textContent = stats.total || 0;
+
+                    // Filter stats for current barber if not owner
+                    let today = stats.today;
+                    let pending = stats.pending;
+                    let total = stats.total;
+
+                    if (currentUser.role !== 'patron') {
+                        const myStats = stats.barberStats.find(b => b.id === currentUser.id);
+                        if (myStats) {
+                            today = myStats.todayCount;
+                            total = myStats.totalCount;
+                            // Pending filter is handled differently in backend stats, 
+                            // we'll assume the barber wants to see their own pending eventually
+                            // for now show global pending if owner or filter via backend if needed.
+                        }
+                    }
+
+                    document.getElementById('todayTotal').textContent = today || 0;
+                    document.getElementById('pendingTotal').textContent = pending || 0;
+                    document.getElementById('allTotal').textContent = total || 0;
+
+                    // Show alert badge if pending exists
+                    const badge = document.getElementById('pendingBadge');
+                    if (pending > 0) {
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
                 }
             } catch (error) {
                 console.log('API baglantisi yok');
@@ -1286,6 +1361,7 @@
 
         async function loadAppointments() {
             const dateStr = formatDate(selectedDate);
+            document.getElementById('listHeader').style.display = 'none';
 
             try {
                 const url = currentFilter === 'all'
@@ -1300,6 +1376,43 @@
             } catch (error) {
                 allAppointments = [];
                 renderAppointments();
+            }
+        }
+
+        async function loadSpecialAppointments(type) {
+            const header = document.getElementById('listHeader');
+            header.style.display = 'block';
+
+            let url = `${API_URL}/admin/appointments?`;
+
+            if (currentUser.role !== 'patron') {
+                url += `barberId=${currentUser.id}&`;
+            }
+
+            if (type === 'pending') {
+                url += `status=bekliyor`;
+                header.textContent = 'LISTELENIYOR: TUM BEKLEYENLER';
+                header.style.color = '#f39c12';
+            } else if (type === 'today') {
+                const today = formatDate(new Date());
+                url += `date=${today}`;
+                header.textContent = 'LISTELENIYOR: BUGUNKU RANDEVULAR';
+                header.style.color = '#fff';
+            } else {
+                header.textContent = 'LISTELENIYOR: TUM KAYITLAR';
+                header.style.color = '#fff';
+            }
+
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    allAppointments = await response.json();
+                    renderAppointments();
+                    // Scroll down to see results
+                    document.getElementById('appointmentsContainer').scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                showToast('Hata olustu', 'error');
             }
         }
 
