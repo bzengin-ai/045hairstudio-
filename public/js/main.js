@@ -8,7 +8,8 @@ const LOCAL_PHOTOS = ['muhammed.jpeg', 'cengo.jpg', 'rio.jpg', 'ahmet.jpg'];
 function getPhotoUrl(photo) {
     if (!photo) return '/logo.png';
     if (photo.startsWith('http')) return photo;
-    return `/uploads/${photo}`;
+    if (LOCAL_PHOTOS.includes(photo)) return `/uploads/${photo}`;
+    return `${SUPABASE_STORAGE_URL}/${photo}`;
 }
 
 let selectedBarber = null;
