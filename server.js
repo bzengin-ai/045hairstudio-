@@ -110,6 +110,7 @@ app.post('/api/appointments', async (req, res) => {
     const { data, error } = await supabase
         .from('appointments')
         .insert([{
+            id: Date.now(),
             barber_id: parseInt(barberId),
             barber_name: barberName,
             date,
@@ -428,7 +429,6 @@ app.listen(PORT, () => {
     console.log('');
     console.log('Sayfalar:');
     console.log(`  Musteri:  http://localhost:${PORT}`);
-    console.log(`  Berber:   http://localhost:${PORT}/berber`);
     console.log(`  Admin:    http://localhost:${PORT}/admin`);
     console.log('');
     console.log('Giris Bilgileri:');

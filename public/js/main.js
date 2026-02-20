@@ -213,11 +213,26 @@ async function loadBarbers() {
             // Berber Siralamasi: Muhammed, Cengo, Rio, Ahmet
             const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
             barbersData = data.sort((a, b) => (sortOrder[a.name] || 99) - (sortOrder[b.name] || 99));
+
+            // TUM BERBERLER ICIN GORSEL DUZELTME
+            // uploads klasorundeki dosyalara gore zorla
+            const photoMap = {
+                'Muhammed': 'muhammed.jpeg',
+                'Cengo': 'cengo.jpg',
+                'Rio': 'rio.jpg',
+                'Ahmet': 'ahmet.jpg'
+            };
+            barbersData.forEach(barber => {
+                if (photoMap[barber.name]) {
+                    if (!barber.photos) barber.photos = [];
+                    barber.photos = [photoMap[barber.name], ...barber.photos.filter(p => p !== photoMap[barber.name])];
+                }
+            });
         }
     } catch (error) {
         console.log('API baglantisi yok, varsayilan veriler');
         barbersData = [
-            { id: 1, name: 'Muhammed', role: 'patron', photos: ['muhammed.jpg'] },
+            { id: 1, name: 'Muhammed', role: 'patron', photos: ['muhammed.jpeg'] },
             { id: 2, name: 'Cengo', role: 'berber', photos: ['cengo.jpg'] },
             { id: 3, name: 'Rio', role: 'berber', photos: ['rio.jpg'] },
             { id: 4, name: 'Ahmet', role: 'berber', photos: ['ahmet.jpg'] }
@@ -597,10 +612,10 @@ async function showTimeSlots(date) {
             const allData = await allResponse.json();
             // Berber bazinda grupla
             allData.forEach(apt => {
-                if (!allBookedSlots[apt.barberId]) {
-                    allBookedSlots[apt.barberId] = [];
+                if (!allBookedSlots[apt.barber_id]) {
+                    allBookedSlots[apt.barber_id] = [];
                 }
-                allBookedSlots[apt.barberId].push(apt.time);
+                allBookedSlots[apt.barber_id].push(apt.time);
             });
         }
     } catch (error) {
@@ -660,7 +675,7 @@ function showSuggestions(time, date) {
         // Secili berberi atla
         if (barber.id === selectedBarber.id) return false;
 
-        // Bu berberin bu saati dolu mu?
+        // Bu berberin bu saati dolu mu? (barber_id snake_case ile eslestir)
         const barberBooked = allBookedSlots[barber.id] || [];
         return !barberBooked.includes(time);
     });
@@ -896,8 +911,7 @@ async function confirmBooking() {
         time: selectedTime,
         customerName: document.getElementById('customerName').value.trim(),
         customerPhone: document.getElementById('customerPhone').value.trim(),
-        note: document.getElementById('customerNote').value.trim(),
-        createdAt: new Date().toISOString()
+        note: document.getElementById('customerNote').value.trim()
     };
 
     try {
