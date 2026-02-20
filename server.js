@@ -20,7 +20,18 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Multer yapilandirmasi (memory storage - Supabase'e yukleyecegiz)
+// Multer yapilandirmasi
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, 'barber-' + req.params.id + '-' + uniqueSuffix + ext);
+    }
+});
+
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (allowedTypes.includes(file.mimetype)) {
@@ -31,12 +42,10 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-    storage: multer.memoryStorage(),
+    storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
-
-const STORAGE_BUCKET = 'barber-photos';
 
 // Middleware
 app.use(cors());
@@ -313,28 +322,13 @@ app.get('/api/admin/stats', async (req, res) => {
 // FOTOGRAF API'LERI
 // ========================================
 
-// Fotograf yukle (Supabase Storage)
+// Fotograf yukle
 app.post('/api/barber/:id/photos', upload.single('photo'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'Dosya yuklenemedi' });
     }
 
     const barberId = parseInt(req.params.id);
-    const ext = path.extname(req.file.originalname).toLowerCase();
-    const storageFilename = `barber-${barberId}-${Date.now()}${ext}`;
-
-    // Supabase Storage'a yukle
-    const { error: storageError } = await supabase.storage
-        .from(STORAGE_BUCKET)
-        .upload(storageFilename, req.file.buffer, {
-            contentType: req.file.mimetype,
-            upsert: false
-        });
-
-    if (storageError) {
-        console.error('[FOTOGRAF] Storage hatasi:', storageError);
-        return res.status(500).json({ error: 'Fotograf yuklenemedi: ' + storageError.message });
-    }
 
     // Berberi getir
     const { data: barber, error: fetchError } = await supabase
@@ -344,21 +338,25 @@ app.post('/api/barber/:id/photos', upload.single('photo'), async (req, res) => {
         .single();
 
     if (fetchError || !barber) {
+        fs.unlinkSync(req.file.path);
         return res.status(404).json({ error: 'Berber bulunamadi' });
     }
 
     const photos = barber.photos || [];
-    photos.push(storageFilename);
+    photos.push(req.file.filename);
 
     const { error: updateError } = await supabase
         .from('barbers')
         .update({ photos })
         .eq('id', barberId);
 
-    if (updateError) return res.status(500).json({ error: updateError.message });
+    if (updateError) {
+        fs.unlinkSync(req.file.path);
+        return res.status(500).json({ error: updateError.message });
+    }
 
-    console.log('[FOTOGRAF] Yuklendi:', storageFilename);
-    res.status(201).json({ filename: storageFilename, photos });
+    console.log('[FOTOGRAF] Yuklendi:', req.file.filename);
+    res.status(201).json({ filename: req.file.filename, photos });
 });
 
 // Fotograf sil
@@ -376,15 +374,9 @@ app.delete('/api/barber/:id/photos/:filename', async (req, res) => {
         return res.status(404).json({ error: 'Berber bulunamadi' });
     }
 
-    // Supabase Storage'dan sil (yerel sabit fotograflar haric)
-    const localPhotos = ['muhammed.jpeg', 'cengo.jpg', 'rio.jpg', 'ahmet.jpg'];
-    if (!localPhotos.includes(filename)) {
-        await supabase.storage.from(STORAGE_BUCKET).remove([filename]);
-        // Eski yerel dosya varsa onu da sil
-        const filePath = path.join(uploadsDir, filename);
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        }
+    const filePath = path.join(uploadsDir, filename);
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
     }
 
     const photos = (barber.photos || []).filter(p => p !== filename);
