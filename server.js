@@ -314,7 +314,9 @@ app.get('/api/admin/stats', async (req, res) => {
 
 // Fotograf yukle (Supabase Storage)
 app.post('/api/barber/:id/photos', upload.single('photo'), async (req, res) => {
+    console.log('[FOTOGRAF] Upload istegi geldi, barberId:', req.params.id, 'file:', req.file ? req.file.originalname : 'YOK');
     if (!req.file) {
+        console.error('[FOTOGRAF] Dosya yok!');
         return res.status(400).json({ error: 'Dosya yuklenemedi' });
     }
 
