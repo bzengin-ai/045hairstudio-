@@ -110,7 +110,6 @@ app.post('/api/appointments', async (req, res) => {
     const { data, error } = await supabase
         .from('appointments')
         .insert([{
-            id: Date.now(),
             barber_id: parseInt(barberId),
             barber_name: barberName,
             date,
