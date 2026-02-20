@@ -2,6 +2,15 @@
 // GLOBAL DEGISKENLER
 // ========================================
 const API_URL = window.location.origin + '/api';
+const SUPABASE_STORAGE_URL = 'https://pbwwiihlkqsjebgzlddq.supabase.co/storage/v1/object/public/barber-photos';
+const LOCAL_PHOTOS = ['muhammed.jpeg', 'cengo.jpg', 'rio.jpg', 'ahmet.jpg'];
+
+function getPhotoUrl(photo) {
+    if (!photo) return '/logo.png';
+    if (photo.startsWith('http')) return photo;
+    if (LOCAL_PHOTOS.includes(photo)) return `/uploads/${photo}`;
+    return `${SUPABASE_STORAGE_URL}/${photo}`;
+}
 
 let selectedBarber = null;
 let selectedDate = null;
@@ -78,7 +87,7 @@ async function openGaleri() {
     hideAllMainViews();
     await loadBarbers(); // En guncel verileri cek (yeni yuklenen fotograflar dahil)
     document.getElementById('portalScreen').classList.add('hidden');
-    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('mainHeader').style.display = 'none';
     document.getElementById('mainGaleri').style.display = 'block';
     renderGlobalGallery();
 }
@@ -140,7 +149,7 @@ function renderGlobalGallery() {
 
     grid.innerHTML = barbersData.map(barber => {
         const hasPhoto = barber.photos && barber.photos.length > 0;
-        const avatarUrl = hasPhoto ? `/uploads/${barber.photos[0]}` : '/logo.png';
+        const avatarUrl = hasPhoto ? getPhotoUrl(barber.photos[0]) : '/logo.png';
         const workCount = (barber.photos ? barber.photos.length : 0);
 
         return `
@@ -178,7 +187,7 @@ function openBarberPortfolio(barberId) {
 
     grid.innerHTML = barber.photos.map((photo, idx) => `
         <div class="gallery-photo reveal-init" onclick="openFullscreenBarber(${barberId}, ${idx})">
-            <img src="/uploads/${photo}" alt="${barber.name} - ${idx}">
+            <img src="${getPhotoUrl(photo)}" alt="${barber.name} - ${idx}">
             <div class="photo-info">${barber.name}</div>
         </div>
     `).join('');
@@ -252,7 +261,7 @@ function renderBarberCards() {
         const roleClass = barber.role === 'patron' ? 'patron' : 'usta';
         const hasPhoto = barber.photos && barber.photos.length > 0;
         const avatarContent = hasPhoto
-            ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+            ? `<img src="${getPhotoUrl(barber.photos[0])}" alt="${barber.name}">`
             : `<span style="font-size: 1.5rem; color: #6e6e6e;">&#9986;</span>`;
 
         return `
@@ -317,7 +326,7 @@ function showBarberGallery(barber) {
     if (barber.photos && barber.photos.length > 0) {
         gallery.innerHTML = barber.photos.map((photo, index) => `
             <div class="gallery-photo" data-index="${index}">
-                <img src="/uploads/${photo}" alt="${barber.name} - ${index + 1}">
+                <img src="${getPhotoUrl(photo)}" alt="${barber.name} - ${index + 1}">
             </div>
         `).join('');
 
@@ -385,7 +394,7 @@ function openFullscreen(photos, index) {
     fullscreenIndex = index;
 
     const viewer = document.getElementById('fullscreenViewer');
-    document.getElementById('fullscreenImg').src = `/uploads/${photos[index]}`;
+    document.getElementById('fullscreenImg').src = getPhotoUrl(photos[index]);
     viewer.classList.add('active');
     document.body.style.overflow = 'hidden';
 
@@ -403,7 +412,7 @@ function navigateFullscreen(direction) {
     fullscreenIndex += direction;
     if (fullscreenIndex < 0) fullscreenIndex = fullscreenPhotos.length - 1;
     if (fullscreenIndex >= fullscreenPhotos.length) fullscreenIndex = 0;
-    document.getElementById('fullscreenImg').src = `/uploads/${fullscreenPhotos[fullscreenIndex]}`;
+    document.getElementById('fullscreenImg').src = getPhotoUrl(fullscreenPhotos[fullscreenIndex]);
 }
 
 // ========================================
@@ -687,7 +696,7 @@ function showSuggestions(time, date) {
         suggestionList.innerHTML = availableBarbers.map(barber => {
             const hasPhoto = barber.photos && barber.photos.length > 0;
             const avatarContent = hasPhoto
-                ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+                ? `<img src="${getPhotoUrl(barber.photos[0])}" alt="${barber.name}">`
                 : (barber.role === 'patron' ? '&#9986;' : '&#9986;');
 
             return `

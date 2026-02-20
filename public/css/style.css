@@ -272,6 +272,17 @@ body {
     transition: var(--transition-smooth);
 }
 
+.studio-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 10px;
+    color: #ffffff;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0;
+}
+
 .tagline {
     color: var(--accent-secondary);
     font-size: 0.7rem;
@@ -1533,6 +1544,11 @@ select {
 
     .logo-img {
         height: 65px;
+    }
+
+    .studio-title {
+        font-size: 1.4rem;
+        letter-spacing: 6px;
     }
 
     .tagline {

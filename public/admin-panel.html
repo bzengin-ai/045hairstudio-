@@ -1167,6 +1167,15 @@
         // ========================================
         // GALERI YONETIMI
         // ========================================
+        const SUPABASE_STORAGE_URL = 'https://pbwwiihlkqsjebgzlddq.supabase.co/storage/v1/object/public/barber-photos';
+        const LOCAL_PHOTOS = ['muhammed.jpeg', 'cengo.jpg', 'rio.jpg', 'ahmet.jpg'];
+        function getPhotoUrl(photo) {
+            if (!photo) return '/logo.png';
+            if (photo.startsWith('http')) return photo;
+            if (LOCAL_PHOTOS.includes(photo)) return `/uploads/${photo}`;
+            return `${SUPABASE_STORAGE_URL}/${photo}`;
+        }
+
         async function loadGallery() {
             const container = document.getElementById('galleryContainer');
 
@@ -1188,14 +1197,14 @@
             container.innerHTML = barbersWithPhotos.map(barber => {
                 const hasPhoto = barber.photos && barber.photos.length > 0;
                 const avatarContent = hasPhoto
-                    ? `<img src="/uploads/${barber.photos[0]}" alt="${barber.name}">`
+                    ? `<img src="${getPhotoUrl(barber.photos[0])}" alt="${barber.name}">`
                     : `<span style="color: #6e6e6e;">&#9986;</span>`;
 
                 const photosHtml = (barber.photos && barber.photos.length > 0)
                     ? `<div class="gallery-photos-grid">
                         ${barber.photos.map(photo => `
                             <div class="gallery-photo-item reveal-init">
-                                <img src="/uploads/${photo}" alt="">
+                                <img src="${getPhotoUrl(photo)}" alt="">
                                 <button class="gallery-photo-delete" onclick="deletePhoto(${barber.id}, '${photo}')">&times;</button>
                             </div>
                         `).join('')}
