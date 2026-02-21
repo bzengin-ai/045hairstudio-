@@ -337,11 +337,13 @@
             display: flex;
             gap: 8px;
             margin-bottom: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 14px 8px;
+            flex: 0 0 auto;
+            padding: 14px 16px;
             border: 1px solid var(--border);
             border-radius: 14px;
             background: transparent;
@@ -748,6 +750,43 @@
             margin-bottom: 30px;
         }
 
+        /* Saat Bloklama */
+        .block-slot {
+            padding: 12px 8px;
+            text-align: center;
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #d0d0d0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .block-slot:hover {
+            border-color: #6e6e6e;
+        }
+        .block-slot.blocked {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.5);
+        }
+        .block-slot.booked {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .block-label {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #dc2626;
+            letter-spacing: 1px;
+        }
+
         /* Gallery Styles Refined */
         .gallery-barber-card {
             background: var(--glass);
@@ -1028,7 +1067,7 @@
                         <span>&#9986;</span>
                         <div>
                             <h2 id="adminName">MUHAMMED</h2>
-                            <p id="panelSubtitle">Patron Paneli</p>
+                            <p id="panelSubtitle">Admin Paneli</p>
                         </div>
                     </div>
                     <button class="btn-logout" id="btnLogout">CIKIS</button>
@@ -1059,6 +1098,7 @@
                 <button class="tab-btn active" data-tab="randevular">Randevular</button>
                 <button class="tab-btn patron-only" data-tab="market">Market</button>
                 <button class="tab-btn" data-tab="galeri">GALERI</button>
+                <button class="tab-btn" data-tab="saatler">SAATLER</button>
             </div>
 
             <!-- Randevular Tab -->
@@ -1091,6 +1131,19 @@
             <div class="tab-content" id="tabGaleri">
                 <div id="galleryContainer">
                     <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+
+            <!-- Tab: Saatler -->
+            <div class="tab-content" id="tabSaatler">
+                <div style="padding: 10px 0;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                        <button class="date-nav" id="blockPrevDay">&lt;</button>
+                        <span id="blockDateLabel" style="font-weight:800; letter-spacing:2px; font-size:1rem; color:#fff;"></span>
+                        <button class="date-nav" id="blockNextDay">&gt;</button>
+                    </div>
+                    <p style="color:var(--accent-secondary); font-size:0.75rem; letter-spacing:2px; margin-bottom:15px;">KAPALI TUTMAK İSTEDİĞİN SAATLERİ SEÇ</p>
+                    <div id="blockSlotsGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;"></div>
                 </div>
             </div>
         </div>
@@ -1370,7 +1423,7 @@
             document.getElementById('adminName').textContent = currentUser.name.toUpperCase();
 
             const isAdmin = currentUser.role === 'patron';
-            document.getElementById('panelSubtitle').textContent = isAdmin ? 'Patron Paneli' : 'Berber Paneli';
+            document.getElementById('panelSubtitle').textContent = isAdmin ? 'Admin Paneli' : 'Berber Paneli';
 
             // Role Based UI
             const marketTab = document.querySelector('.tab-btn[data-tab="market"]');
@@ -1683,10 +1736,123 @@
                     if (tabName === 'market') loadProducts();
                     if (tabName === 'randevular') loadAppointments();
                     if (tabName === 'galeri') loadGallery();
+                    if (tabName === 'saatler') initBlockSlots();
                 });
             });
         }
 
+
+        // ========================================
+        // SAAT BLOKLAMA
+        // ========================================
+        const workingHours = (() => {
+            const slots = [];
+            const startMin = 10 * 60;
+            const endMin = 25 * 60;
+            for (let m = startMin; m <= endMin; m += 45) {
+                const h = Math.floor(m / 60) % 24;
+                const min = m % 60;
+                slots.push(`${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`);
+            }
+            return slots;
+        })();
+
+        let blockDate = new Date();
+        let blockedTimes = [];
+        let blockSlotsInited = false;
+
+        function formatBlockDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function updateBlockDateLabel() {
+            const days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+            const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+            document.getElementById('blockDateLabel').textContent =
+                `${blockDate.getDate()} ${months[blockDate.getMonth()]} - ${days[blockDate.getDay()]}`;
+        }
+
+        async function initBlockSlots() {
+            blockDate = new Date(); // Her açılışta bugün
+            updateBlockDateLabel();
+            await loadBlockedSlots();
+            renderBlockSlots();
+
+            if (!blockSlotsInited) {
+                blockSlotsInited = true;
+                document.getElementById('blockPrevDay').addEventListener('click', async () => {
+                    blockDate.setDate(blockDate.getDate() - 1);
+                    updateBlockDateLabel();
+                    await loadBlockedSlots();
+                    renderBlockSlots();
+                });
+                document.getElementById('blockNextDay').addEventListener('click', async () => {
+                    blockDate.setDate(blockDate.getDate() + 1);
+                    updateBlockDateLabel();
+                    await loadBlockedSlots();
+                    renderBlockSlots();
+                });
+            }
+        }
+
+        let bookedTimes = [];
+
+        async function loadBlockedSlots() {
+            try {
+                const dateStr = formatBlockDate(blockDate);
+                const [blockedRes, bookedRes] = await Promise.all([
+                    fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots?date=${dateStr}`),
+                    fetch(`${API_URL}/appointments?barberId=${currentUser.id}&date=${dateStr}`)
+                ]);
+                if (blockedRes.ok) blockedTimes = (await blockedRes.json()).map(b => b.time);
+                if (bookedRes.ok) bookedTimes = (await bookedRes.json()).map(a => a.time);
+            } catch(e) { blockedTimes = []; bookedTimes = []; }
+        }
+
+        function renderBlockSlots() {
+            const grid = document.getElementById('blockSlotsGrid');
+            grid.innerHTML = workingHours.map(time => {
+                const isBlocked = blockedTimes.includes(time);
+                const isBooked = bookedTimes.includes(time);
+                if (isBooked) {
+                    return `
+                        <div class="block-slot booked">
+                            <span>${time}</span>
+                            <span class="block-label" style="color:#f59e0b;">DOLU</span>
+                        </div>`;
+                }
+                return `
+                    <div class="block-slot ${isBlocked ? 'blocked' : ''}" onclick="toggleBlockSlot('${time}')">
+                        <span>${time}</span>
+                        ${isBlocked ? '<span class="block-label">KAPALI</span>' : ''}
+                    </div>`;
+            }).join('');
+        }
+
+        async function toggleBlockSlot(time) {
+            const dateStr = formatBlockDate(blockDate);
+            const isBlocked = blockedTimes.includes(time);
+
+            if (isBlocked) {
+                await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: dateStr, time })
+                });
+                blockedTimes = blockedTimes.filter(t => t !== time);
+            } else {
+                await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: dateStr, time })
+                });
+                blockedTimes.push(time);
+            }
+            renderBlockSlots();
+        }
 
         // ========================================
         // MARKET MANAGEMENT

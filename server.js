@@ -362,6 +362,64 @@ app.post('/api/barber/:id/photos', upload.single('photo'), async (req, res) => {
     res.status(201).json({ filename, photos });
 });
 
+// ========================================
+// BLOKLU SAATLER API
+// ========================================
+
+// Bloklu saatleri getir
+app.get('/api/barber/:id/blocked-slots', async (req, res) => {
+    const barberId = parseInt(req.params.id);
+    const { date } = req.query;
+
+    let query = supabase.from('blocked_slots').select('*').eq('barber_id', barberId);
+    if (date) query = query.eq('date', date);
+
+    const { data, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
+// Saat blokla
+app.post('/api/barber/:id/blocked-slots', async (req, res) => {
+    const barberId = parseInt(req.params.id);
+    const { date, time } = req.body;
+
+    // Zaten bloklu mu kontrol et
+    const { data: existing } = await supabase
+        .from('blocked_slots')
+        .select('id')
+        .eq('barber_id', barberId)
+        .eq('date', date)
+        .eq('time', time)
+        .single();
+
+    if (existing) return res.json({ message: 'Zaten bloklu' });
+
+    const { data, error } = await supabase
+        .from('blocked_slots')
+        .insert([{ barber_id: barberId, date, time }])
+        .select();
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data[0]);
+});
+
+// Saat blok kaldır
+app.delete('/api/barber/:id/blocked-slots', async (req, res) => {
+    const barberId = parseInt(req.params.id);
+    const { date, time } = req.body;
+
+    const { error } = await supabase
+        .from('blocked_slots')
+        .delete()
+        .eq('barber_id', barberId)
+        .eq('date', date)
+        .eq('time', time);
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Blok kaldirildi' });
+});
+
 // Fotograf sil
 app.delete('/api/barber/:id/photos/:filename', async (req, res) => {
     const barberId = parseInt(req.params.id);

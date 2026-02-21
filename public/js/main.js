@@ -20,13 +20,18 @@ let currentMonth = new Date();
 let barbersData = [];
 let currentStep = 1; // Track the current step in Randevu flow
 
-// Calisma saatleri (09:00 - 21:00)
-const workingHours = [
-    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
-    '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
-];
+// Calisma saatleri (10:00 - 01:00, 45dk aralik)
+const workingHours = (() => {
+    const slots = [];
+    const startMin = 10 * 60;      // 10:00
+    const endMin = 25 * 60;        // 01:00 ertesi gun (24+1=25)
+    for (let m = startMin; m <= endMin; m += 45) {
+        const h = Math.floor(m / 60) % 24;
+        const min = m % 60;
+        slots.push(`${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`);
+    }
+    return slots;
+})();
 
 // Gun isimleri
 const dayNames = ['Paz', 'Pzt', 'Sal', 'Car', 'Per', 'Cum', 'Cmt'];
@@ -188,7 +193,6 @@ function openBarberPortfolio(barberId) {
     grid.innerHTML = barber.photos.map((photo, idx) => `
         <div class="gallery-photo reveal-init" onclick="openFullscreenBarber(${barberId}, ${idx})">
             <img src="${getPhotoUrl(photo)}" alt="${barber.name} - ${idx}">
-            <div class="photo-info">${barber.name}</div>
         </div>
     `).join('');
 }
@@ -257,8 +261,6 @@ async function loadBarbers() {
 function renderBarberCards() {
     const grid = document.getElementById('barberGrid');
     grid.innerHTML = barbersData.map(barber => {
-        const roleLabel = barber.role === 'patron' ? 'Patron' : 'Usta Berber';
-        const roleClass = barber.role === 'patron' ? 'patron' : 'usta';
         const hasPhoto = barber.photos && barber.photos.length > 0;
         const avatarContent = hasPhoto
             ? `<img src="${getPhotoUrl(barber.photos[0])}" alt="${barber.name}">`
@@ -270,7 +272,6 @@ function renderBarberCards() {
                     ${avatarContent}
                 </div>
                 <h3>${barber.name}</h3>
-                <span class="barber-role ${roleClass}">${roleLabel}</span>
                 <p class="barber-exp"></p>
             </div>
         `;
@@ -298,7 +299,7 @@ function initBarberSelection() {
             selectedBarber = {
                 id: barberId,
                 name: this.querySelector('h3').textContent,
-                role: this.querySelector('.barber-role').textContent
+                role: barberData ? barberData.role : ''
             };
 
             // Fotograflari olan berber icin galeri goster
@@ -565,8 +566,14 @@ function selectDate(dayCard, date) {
     // Onceki secimi kaldir
     document.querySelectorAll('.day-card').forEach(c => c.classList.remove('selected'));
 
-    // Yeni secimi ekle
-    dayCard.classList.add('selected');
+    // Yeni secimi ekle (otomatik cagrildiginda dayCard null olabilir)
+    if (dayCard) dayCard.classList.add('selected');
+
+    // Takvimde ilgili gun kartini bul ve sec
+    const dateStr = formatDate(date);
+    const matchingCard = document.querySelector(`.day-card[data-date="${dateStr}"]`);
+    if (matchingCard) matchingCard.classList.add('selected');
+
     selectedDate = date;
 
     // Saat secimini goster
@@ -601,25 +608,36 @@ async function showTimeSlots(date) {
 
     // Secilen berberin dolu randevularini al
     let bookedSlots = [];
+    let blockedSlots = [];
     allBookedSlots = {}; // Sifirla
 
     try {
+        const dateStr = formatDate(date);
+
         // Secilen berberin randevulari
         const response = await fetch(
-            `${API_URL}/appointments?barberId=${selectedBarber.id}&date=${formatDate(date)}`
+            `${API_URL}/appointments?barberId=${selectedBarber.id}&date=${dateStr}`
         );
         if (response.ok) {
             const data = await response.json();
             bookedSlots = data.map(a => a.time);
         }
 
+        // Secilen berberin bloklu saatleri
+        const blockedResponse = await fetch(
+            `${API_URL}/barber/${selectedBarber.id}/blocked-slots?date=${dateStr}`
+        );
+        if (blockedResponse.ok) {
+            const blockedData = await blockedResponse.json();
+            blockedSlots = blockedData.map(b => b.time);
+        }
+
         // Tum berberlerin randevularini al (oneriler icin)
         const allResponse = await fetch(
-            `${API_URL}/appointments?date=${formatDate(date)}`
+            `${API_URL}/appointments?date=${dateStr}`
         );
         if (allResponse.ok) {
             const allData = await allResponse.json();
-            // Berber bazinda grupla
             allData.forEach(apt => {
                 if (!allBookedSlots[apt.barber_id]) {
                     allBookedSlots[apt.barber_id] = [];
@@ -649,13 +667,16 @@ async function showTimeSlots(date) {
 
         const isPast = isToday && slotTime < now;
         const isBooked = bookedSlots.includes(time);
+        const isBlocked = blockedSlots.includes(time);
 
         if (isPast) {
             slot.classList.add('disabled');
+        } else if (isBlocked) {
+            slot.classList.add('disabled', 'dolu');
+            slot.innerHTML = `<span class="slot-time">${time}</span><span class="slot-dolu">DOLU</span>`;
         } else if (isBooked) {
-            slot.classList.add('disabled');
-            slot.title = 'Bu saat dolu - tikla alternatif gor';
-            // Dolu saate tiklaninca oneri goster
+            slot.classList.add('disabled', 'dolu');
+            slot.innerHTML = `<span class="slot-time">${time}</span><span class="slot-dolu">DOLU</span>`;
             slot.addEventListener('click', () => showSuggestions(time, date));
         } else {
             slot.addEventListener('click', () => selectTime(slot, time));
@@ -706,7 +727,7 @@ function showSuggestions(time, date) {
                     </div>
                     <div class="suggestion-info">
                         <h4>${barber.name}</h4>
-                        <p>${barber.role === 'patron' ? 'Patron' : 'Usta Berber'} - ${time} musait</p>
+                        <p>${time} musait</p>
                     </div>
                     <span class="suggestion-select">&rarr;</span>
                 </div>
@@ -852,6 +873,12 @@ function goToStep(step) {
     // Step 1 ise galeriyi gizle
     if (step === 1) {
         hideBarberGallery();
+    }
+
+    // Step 2 ise bugunun saatlerini otomatik ac
+    if (step === 2) {
+        const today = new Date();
+        selectDate(null, today);
     }
 
     // Step indicator'u guncelle
