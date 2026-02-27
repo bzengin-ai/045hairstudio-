@@ -1,10 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 
 const { createClient } = require('@supabase/supabase-js');
+
+// Email dogrulama kodlarini bellekte tut (email -> { code, expiry, verified })
+const verificationCodes = new Map();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -89,13 +94,26 @@ app.get('/api/appointments', async (req, res) => {
 
 // Yeni randevu olustur
 app.post('/api/appointments', async (req, res) => {
-    const { barberId, barberName, date, time, customerName, customerPhone, note } = req.body;
+    const { barberId, barberName, date, time, customerName, customerPhone, note, customerEmail } = req.body;
 
     console.log('[RANDEVU] Yeni randevu istegi:', { barberId, barberName, date, time, customerName, customerPhone });
 
     if (!barberId || !date || !time || !customerName || !customerPhone) {
         console.error('[RANDEVU] Eksik alan:', { barberId, date, time, customerName, customerPhone });
         return res.status(400).json({ error: 'Eksik alanlar: barberId, date, time, customerName, customerPhone zorunludur.' });
+    }
+
+    // Email dogrulama kontrolu (sadece GMAIL_USER yapılandırılmıssa zorunlu)
+    if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
+        if (!customerEmail) {
+            return res.status(400).json({ error: 'E-posta dogrulamasi zorunludur.' });
+        }
+        const entry = verificationCodes.get(customerEmail.toLowerCase());
+        if (!entry || !entry.verified) {
+            return res.status(400).json({ error: 'E-posta dogrulanmamis. Lutfen once e-postanizi dogrulayın.' });
+        }
+        // Dogrulama kullanildiktan sonra sil
+        verificationCodes.delete(customerEmail.toLowerCase());
     }
 
     const { data, error } = await supabase
@@ -226,6 +244,87 @@ app.post('/api/login', async (req, res) => {
         role: barber.role,
         username: barber.username
     });
+});
+
+// ========================================
+// EMAIL DOGRULAMA
+// ========================================
+
+// Gmail transporter
+function createTransporter() {
+    return nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
+        }
+    });
+}
+
+// Dogrulama kodu gonder
+app.post('/api/send-verification', async (req, res) => {
+    const { email } = req.body;
+    if (!email || !email.includes('@')) {
+        return res.status(400).json({ error: 'Gecersiz e-posta adresi' });
+    }
+
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+        return res.status(500).json({ error: 'E-posta servisi yapilandirilmamis' });
+    }
+
+    // 6 haneli kod olustur
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const expiry = Date.now() + 10 * 60 * 1000; // 10 dakika
+
+    verificationCodes.set(email.toLowerCase(), { code, expiry, verified: false });
+
+    try {
+        const transporter = createTransporter();
+        await transporter.sendMail({
+            from: `"045 Hair Studio" <${process.env.GMAIL_USER}>`,
+            to: email,
+            subject: '045 Hair Studio - Randevu Dogrulama Kodu',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; background: #0a0a0a; color: #fff; border-radius: 12px; overflow: hidden;">
+                    <div style="background: #c9a84c; padding: 24px; text-align: center;">
+                        <h1 style="margin:0; font-size: 1.8rem; letter-spacing: 4px; color: #0a0a0a;">045 HAİR STUDIO</h1>
+                    </div>
+                    <div style="padding: 32px; text-align: center;">
+                        <p style="color: #aaa; margin-bottom: 8px;">Randevu dogrulama kodunuz:</p>
+                        <div style="font-size: 3rem; font-weight: 900; letter-spacing: 12px; color: #c9a84c; margin: 16px 0;">${code}</div>
+                        <p style="color: #666; font-size: 0.85rem;">Bu kod 10 dakika gecerlidir.<br>Bu islemi siz baslatmadiyseniz dikkate almayiniz.</p>
+                    </div>
+                </div>
+            `
+        });
+        console.log('[EMAIL] Dogrulama kodu gonderildi:', email);
+        res.json({ success: true, message: 'Dogrulama kodu gonderildi' });
+    } catch (err) {
+        console.error('[EMAIL] Gonderim hatasi:', err.message);
+        verificationCodes.delete(email.toLowerCase());
+        res.status(500).json({ error: 'E-posta gonderilemedi: ' + err.message });
+    }
+});
+
+// Kodu dogrula
+app.post('/api/verify-code', (req, res) => {
+    const { email, code } = req.body;
+    if (!email || !code) return res.status(400).json({ error: 'Email ve kod gerekli' });
+
+    const entry = verificationCodes.get(email.toLowerCase());
+    if (!entry) return res.status(400).json({ error: 'Bu email icin kod bulunamadi. Tekrar gonderin.' });
+    if (Date.now() > entry.expiry) {
+        verificationCodes.delete(email.toLowerCase());
+        return res.status(400).json({ error: 'Kodun suresi dolmus. Tekrar gonderin.' });
+    }
+    if (entry.code !== code.trim()) {
+        return res.status(400).json({ error: 'Yanlis kod. Tekrar deneyin.' });
+    }
+
+    // Dogrulanmis olarak isaretle
+    entry.verified = true;
+    console.log('[EMAIL] Dogrulama basarili:', email);
+    res.json({ success: true });
 });
 
 // Sifre degistir

@@ -19,6 +19,8 @@ let currentWeekStart = new Date();
 let currentMonth = new Date();
 let barbersData = [];
 let currentStep = 1; // Track the current step in Randevu flow
+let verifiedEmail = null; // Dogrulanmis email
+let verifyTimerInterval = null; // Timer interval
 
 // Calisma saatleri (10:00 - 01:00, 45dk aralik)
 const workingHours = (() => {
@@ -227,8 +229,7 @@ async function loadBarbers() {
             const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
             barbersData = data.sort((a, b) => (sortOrder[a.name] || 99) - (sortOrder[b.name] || 99));
 
-            // TUM BERBERLER ICIN GORSEL DUZELTME
-            // uploads klasorundeki dosyalara gore zorla
+            // Profil fotograflari (sadece Supabase'de hic fotograf yoksa fallback olarak kullan)
             const photoMap = {
                 'Muhammed': 'muhammed.jpeg',
                 'Cengo': 'cengo.jpg',
@@ -236,9 +237,12 @@ async function loadBarbers() {
                 'Ahmet': 'ahmet.jpg'
             };
             barbersData.forEach(barber => {
-                if (photoMap[barber.name]) {
-                    if (!barber.photos) barber.photos = [];
-                    barber.photos = [photoMap[barber.name], ...barber.photos.filter(p => p !== photoMap[barber.name])];
+                if (!barber.photos) barber.photos = [];
+                // Tekrarlari temizle
+                barber.photos = [...new Set(barber.photos)];
+                // Supabase'de hic fotograf yoksa profil fotografini ekle
+                if (barber.photos.length === 0 && photoMap[barber.name]) {
+                    barber.photos = [photoMap[barber.name]];
                 }
             });
         }
@@ -253,6 +257,7 @@ async function loadBarbers() {
             const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
             return sortOrder[a.name] - sortOrder[b.name];
         });
+        return; // Offline modda asagidaki fotograf temizlemesini atla
     }
 
     renderBarberCards();
@@ -847,10 +852,9 @@ function initFormNavigation() {
     document.getElementById('backToStep3').addEventListener('click', () => goToStep(3));
 
     // Ileri butonlari
-    document.getElementById('goToStep4').addEventListener('click', () => {
+    document.getElementById('goToStep4').addEventListener('click', async () => {
         if (validateStep3()) {
-            updateSummary();
-            goToStep(4);
+            await startEmailVerification();
         }
     });
 
@@ -898,6 +902,7 @@ function goToStep(step) {
 function validateStep3() {
     const name = document.getElementById('customerName').value.trim();
     const phone = document.getElementById('customerPhone').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
 
     if (!name) {
         showToast('Lutfen adinizi ve soyadinizi girin', 'error');
@@ -909,7 +914,167 @@ function validateStep3() {
         return false;
     }
 
+    if (!email || !email.includes('@') || !email.includes('.')) {
+        showToast('Lutfen gecerli bir e-posta adresi girin', 'error');
+        return false;
+    }
+
     return true;
+}
+
+// ========================================
+// EMAIL DOGRULAMA
+// ========================================
+async function startEmailVerification() {
+    const email = document.getElementById('customerEmail').value.trim();
+    const btn = document.getElementById('goToStep4');
+
+    btn.disabled = true;
+    btn.textContent = 'GÖNDERİLİYOR...';
+
+    try {
+        const res = await fetch(`${API_URL}/send-verification`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showToast(data.error || 'E-posta gonderilemedi', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Devam Et';
+            return;
+        }
+
+        // Overlay ac
+        openVerifyOverlay(email);
+    } catch (err) {
+        showToast('Baglanti hatasi: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Devam Et';
+    }
+}
+
+function openVerifyOverlay(email) {
+    verifiedEmail = null;
+    document.getElementById('verifyEmailText').textContent = email;
+    document.getElementById('verifyCode').value = '';
+    document.getElementById('verifyOverlay').classList.add('active');
+    document.getElementById('verifyCode').focus();
+    startVerifyTimer(600); // 10 dakika
+
+    document.getElementById('btnVerifyCode').onclick = () => submitVerifyCode(email);
+    document.getElementById('btnResendCode').onclick = () => resendVerifyCode(email);
+    document.getElementById('verifyClose').onclick = closeVerifyOverlay;
+
+    // Enter ile dogrula
+    document.getElementById('verifyCode').onkeydown = (e) => {
+        if (e.key === 'Enter') submitVerifyCode(email);
+    };
+}
+
+function closeVerifyOverlay() {
+    document.getElementById('verifyOverlay').classList.remove('active');
+    clearInterval(verifyTimerInterval);
+}
+
+function startVerifyTimer(seconds) {
+    clearInterval(verifyTimerInterval);
+    let remaining = seconds;
+    updateTimerDisplay(remaining);
+
+    verifyTimerInterval = setInterval(() => {
+        remaining--;
+        updateTimerDisplay(remaining);
+        if (remaining <= 0) {
+            clearInterval(verifyTimerInterval);
+            document.getElementById('btnVerifyCode').disabled = true;
+            showToast('Kodun suresi doldu. Tekrar gonderin.', 'error');
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay(seconds) {
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    const el = document.getElementById('verifyTimerVal');
+    if (el) el.textContent = `${m}:${s}`;
+}
+
+async function submitVerifyCode(email) {
+    const code = document.getElementById('verifyCode').value.trim();
+    if (!code || code.length < 6) {
+        showToast('6 haneli kodu girin', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('btnVerifyCode');
+    btn.disabled = true;
+    btn.textContent = 'KONTROL EDİLİYOR...';
+
+    try {
+        const res = await fetch(`${API_URL}/verify-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, code })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showToast(data.error || 'Yanlis kod', 'error');
+            btn.disabled = false;
+            btn.textContent = 'DOĞRULA';
+            return;
+        }
+
+        // Dogrulama basarili
+        verifiedEmail = email;
+        clearInterval(verifyTimerInterval);
+        closeVerifyOverlay();
+        showToast('E-posta dogrulandi!', 'success');
+
+        // Ozete gec
+        updateSummary();
+        goToStep(4);
+    } catch (err) {
+        showToast('Baglanti hatasi', 'error');
+        btn.disabled = false;
+        btn.textContent = 'DOĞRULA';
+    }
+}
+
+async function resendVerifyCode(email) {
+    const btn = document.getElementById('btnResendCode');
+    btn.disabled = true;
+    btn.textContent = 'GÖNDERİLİYOR...';
+
+    try {
+        const res = await fetch(`${API_URL}/send-verification`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            showToast('Yeni kod gonderildi', 'success');
+            startVerifyTimer(600);
+            document.getElementById('btnVerifyCode').disabled = false;
+            document.getElementById('btnVerifyCode').textContent = 'DOĞRULA';
+            document.getElementById('verifyCode').value = '';
+        } else {
+            showToast(data.error || 'Hata', 'error');
+        }
+    } catch (err) {
+        showToast('Baglanti hatasi', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Tekrar Gönder';
+    }
 }
 
 function updateSummary() {
@@ -947,7 +1112,8 @@ async function confirmBooking() {
         time: selectedTime,
         customerName: document.getElementById('customerName').value.trim(),
         customerPhone: document.getElementById('customerPhone').value.trim(),
-        note: document.getElementById('customerNote').value.trim()
+        note: document.getElementById('customerNote').value.trim(),
+        customerEmail: verifiedEmail || document.getElementById('customerEmail').value.trim()
     };
 
     try {
@@ -990,10 +1156,12 @@ function resetForm() {
     selectedBarber = null;
     selectedDate = null;
     selectedTime = null;
+    verifiedEmail = null;
 
     // Formu temizle
     document.getElementById('customerName').value = '';
     document.getElementById('customerPhone').value = '';
+    document.getElementById('customerEmail').value = '';
     document.getElementById('customerNote').value = '';
 
     // Berber secimini kaldir
