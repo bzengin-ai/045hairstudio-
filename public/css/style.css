@@ -3,6 +3,29 @@
    Monochrome Steel/Silver
 ======================================== */
 
+/* PWA / Mobile App Optimizasyonu */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+}
+
+html {
+    height: -webkit-fill-available;
+    overscroll-behavior: none;
+}
+
+body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overscroll-behavior: none;
+}
+
+input, textarea, select, button {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
 :root {
     --accent-primary: #ffffff;
     --accent-secondary: #a8a9ad;
