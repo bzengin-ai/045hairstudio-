@@ -228,6 +228,30 @@ app.post('/api/login', async (req, res) => {
     });
 });
 
+// Sifre degistir
+app.post('/api/barber/:id/change-password', async (req, res) => {
+    const barberId = parseInt(req.params.id);
+    const { currentPassword, newPassword } = req.body;
+
+    const { data: barber, error } = await supabase
+        .from('barbers')
+        .select('password')
+        .eq('id', barberId)
+        .single();
+
+    if (error || !barber) return res.status(404).json({ error: 'Berber bulunamadi' });
+    if (barber.password !== currentPassword) return res.status(401).json({ error: 'Mevcut sifre yanlis' });
+    if (!newPassword || newPassword.length < 4) return res.status(400).json({ error: 'Yeni sifre en az 4 karakter olmali' });
+
+    const { error: updateError } = await supabase
+        .from('barbers')
+        .update({ password: newPassword })
+        .eq('id', barberId);
+
+    if (updateError) return res.status(500).json({ error: updateError.message });
+    res.json({ message: 'Sifre guncellendi' });
+});
+
 // Berber kendi randevularini getir
 app.get('/api/barber/:id/appointments', async (req, res) => {
     const barberId = parseInt(req.params.id);

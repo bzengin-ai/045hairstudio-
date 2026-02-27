@@ -1035,8 +1035,28 @@
     <!-- Background Glow -->
     <div class="bg-glow"></div>
 
-    <div class="container reveal-init">
-        <div class="login-screen" id="loginScreen">
+    <!-- Kapi Sifresi Ekrani -->
+    <div class="container reveal-init" id="doorScreen">
+        <div class="login-screen">
+            <div class="login-logo reveal-init reveal-delay-1">
+                <span>&#9986;</span>
+                <h1>045 HAIR STUDIO</h1>
+                <p>YÖNETİM PANELİ</p>
+            </div>
+            <div class="login-form reveal-init reveal-delay-2">
+                <div class="form-group">
+                    <label>GİRİŞ KODU</label>
+                    <input type="password" id="doorPin" placeholder="••••" maxlength="10" style="text-align:center; font-size:1.5rem; letter-spacing:8px;">
+                </div>
+                <button class="btn-login" onclick="checkDoorPin()">GİRİŞ</button>
+                <p class="error-message" id="doorError">Hatalı kod!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Berber Giris Ekrani -->
+    <div class="container reveal-init" id="loginScreen" style="display:none;">
+        <div class="login-screen">
             <div class="login-logo reveal-init reveal-delay-1">
                 <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
@@ -1045,11 +1065,11 @@
             <form class="login-form reveal-init reveal-delay-2" id="loginForm">
                 <div class="form-group">
                     <label>Kullanici Adi</label>
-                    <input type="text" id="username" placeholder="muhammed" required>
+                    <input type="text" id="username" placeholder="" required>
                 </div>
                 <div class="form-group">
                     <label>Sifre</label>
-                    <input type="password" id="password" placeholder="****" required>
+                    <input type="password" id="password" placeholder="" required>
                 </div>
                 <button type="submit" class="btn-login">GIRIS YAP</button>
                 <p class="error-message" id="errorMessage">Gecersiz kullanici adi veya sifre!</p>
@@ -1070,6 +1090,7 @@
                             <p id="panelSubtitle">Admin Paneli</p>
                         </div>
                     </div>
+                    <button class="btn-logout" id="btnChangePass" style="margin-right:8px; background:transparent; border:1px solid rgba(255,255,255,0.2); color:#aaa; font-size:0.7rem; padding:10px 14px; border-radius:12px; cursor:pointer; letter-spacing:1px;">ŞİFRE</button>
                     <button class="btn-logout" id="btnLogout">CIKIS</button>
                 </div>
 
@@ -1163,17 +1184,39 @@
         const monthNames = ['Ocak', 'Subat', 'Mart', 'Nisan', 'Mayis', 'Haziran',
             'Temmuz', 'Agustos', 'Eylul', 'Ekim', 'Kasim', 'Aralik'];
 
+        const DOOR_PIN = '1959';
+
+        function checkDoorPin() {
+            const val = document.getElementById('doorPin').value;
+            if (val === DOOR_PIN) {
+                document.getElementById('doorScreen').style.display = 'none';
+                // Oturum zaten aciksa direkt panele git, degilse login ekrani goster
+                if (currentUser) {
+                    showPanel();
+                } else {
+                    document.getElementById('loginScreen').style.display = 'block';
+                }
+            } else {
+                document.getElementById('doorError').style.display = 'block';
+                document.getElementById('doorPin').value = '';
+            }
+        }
+
+        document.getElementById('doorPin').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkDoorPin();
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             const saved = localStorage.getItem('adminUser');
             if (saved) {
                 currentUser = JSON.parse(saved);
-                showPanel();
             }
 
             initLoginForm();
             initDateNavigation();
             initFilter();
             initLogout();
+            initChangePassword();
             initTabNav();
             initProductForm();
             loadBarbersData(); // Fetch barbers with photos
@@ -2025,7 +2068,86 @@
 
             setTimeout(() => toast.remove(), 3000);
         }
+
+        // ========================================
+        // ŞİFRE DEĞİŞTİR
+        // ========================================
+        function initChangePassword() {
+            document.getElementById('btnChangePass').addEventListener('click', () => {
+                document.getElementById('changePassModal').style.display = 'flex';
+                document.getElementById('cpCurrent').value = '';
+                document.getElementById('cpNew').value = '';
+                document.getElementById('cpConfirm').value = '';
+                document.getElementById('cpError').textContent = '';
+            });
+        }
+
+        window.toggleCpVis = function(id, btn) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.style.opacity = '1';
+            } else {
+                input.type = 'password';
+                btn.style.opacity = '0.5';
+            }
+        }
+
+        window.submitChangePassword = async function() {
+            const current = document.getElementById('cpCurrent').value;
+            const newPass = document.getElementById('cpNew').value;
+            const confirm = document.getElementById('cpConfirm').value;
+            const errEl = document.getElementById('cpError');
+
+            if (!current || !newPass || !confirm) { errEl.textContent = 'Tüm alanları doldur!'; return; }
+            if (newPass !== confirm) { errEl.textContent = 'Yeni şifreler eşleşmiyor!'; return; }
+            if (newPass.length < 4) { errEl.textContent = 'En az 4 karakter olmalı!'; return; }
+
+            const res = await fetch(`${API_URL}/barber/${currentUser.id}/change-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+            });
+            const data = await res.json();
+            if (!res.ok) { errEl.textContent = data.error; return; }
+
+            document.getElementById('changePassModal').style.display = 'none';
+            showToast('Şifre güncellendi!', 'success');
+        }
     </script>
+
+    <!-- Şifre Değiştir Modal -->
+    <div id="changePassModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#111; border:1px solid #2a2a2a; border-radius:20px; padding:30px; width:90%; max-width:360px;">
+            <h3 style="color:#fff; font-weight:800; letter-spacing:3px; margin-bottom:20px; text-align:center;">ŞİFRE DEĞİŞTİR</h3>
+            <div class="form-group">
+                <label>Mevcut Şifre</label>
+                <div style="position:relative;">
+                    <input type="password" id="cpCurrent" placeholder="" style="width:100%; padding-right:45px;">
+                    <button type="button" onclick="toggleCpVis('cpCurrent',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Yeni Şifre</label>
+                <div style="position:relative;">
+                    <input type="password" id="cpNew" placeholder="" style="width:100%; padding-right:45px;">
+                    <button type="button" onclick="toggleCpVis('cpNew',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Yeni Şifre (Tekrar)</label>
+                <div style="position:relative;">
+                    <input type="password" id="cpConfirm" placeholder="" style="width:100%; padding-right:45px;">
+                    <button type="button" onclick="toggleCpVis('cpConfirm',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                </div>
+            </div>
+            <p id="cpError" style="color:#dc2626; font-size:0.8rem; margin-bottom:10px; min-height:20px;"></p>
+            <div style="display:flex; gap:10px;">
+                <button type="button" onclick="document.getElementById('changePassModal').style.display='none'" style="flex:1; padding:14px; border:1px solid #333; background:transparent; color:#aaa; border-radius:12px; cursor:pointer; font-weight:700;">İPTAL</button>
+                <button type="button" onclick="submitChangePassword()" style="flex:1; padding:14px; background:#fff; color:#000; border:none; border-radius:12px; cursor:pointer; font-weight:800; letter-spacing:2px;">GÜNCELLE</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
