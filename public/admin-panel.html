@@ -774,6 +774,15 @@
             background: rgba(220, 38, 38, 0.15);
             border-color: rgba(220, 38, 38, 0.5);
         }
+        .block-slot.approved-slot {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.7);
+            cursor: not-allowed;
+        }
+        .block-slot.past-slot {
+            opacity: 0.25;
+            cursor: default;
+        }
         .block-slot.booked {
             background: rgba(245, 158, 11, 0.15);
             border-color: rgba(245, 158, 11, 0.4);
@@ -1883,6 +1892,7 @@
         }
 
         let bookedTimes = [];
+        let approvedTimes = [];
 
         async function loadBlockedSlots() {
             try {
@@ -1892,15 +1902,34 @@
                     fetch(`${API_URL}/appointments?barberId=${currentUser.id}&date=${dateStr}`)
                 ]);
                 if (blockedRes.ok) blockedTimes = (await blockedRes.json()).map(b => b.time);
-                if (bookedRes.ok) bookedTimes = (await bookedRes.json()).map(a => a.time);
-            } catch(e) { blockedTimes = []; bookedTimes = []; }
+                if (bookedRes.ok) {
+                    const apts = await bookedRes.json();
+                    bookedTimes = apts.map(a => a.time);
+                    approvedTimes = apts.filter(a => a.status === 'onaylandi').map(a => a.time);
+                }
+            } catch(e) { blockedTimes = []; bookedTimes = []; approvedTimes = []; }
         }
 
         function renderBlockSlots() {
             const grid = document.getElementById('blockSlotsGrid');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const isPastDay = blockDate < today;
+
             grid.innerHTML = workingHours.map(time => {
                 const isBlocked = blockedTimes.includes(time);
                 const isBooked = bookedTimes.includes(time);
+                const isApproved = approvedTimes.includes(time);
+
+                // Onaylı randevu → turuncu RANDEVU, bloke edilemez
+                if (isApproved) {
+                    return `
+                        <div class="block-slot approved-slot">
+                            <span>${time}</span>
+                            <span class="block-label" style="color:#f59e0b;">RANDEVU</span>
+                        </div>`;
+                }
+                // Bekleyen randevu → sarı DOLU, bloke edilemez
                 if (isBooked) {
                     return `
                         <div class="block-slot booked">
@@ -1908,6 +1937,15 @@
                             <span class="block-label" style="color:#f59e0b;">DOLU</span>
                         </div>`;
                 }
+                // Geçmiş gün → buton yok, sadece göster
+                if (isPastDay) {
+                    return `
+                        <div class="block-slot ${isBlocked ? 'blocked' : 'past-slot'}">
+                            <span>${time}</span>
+                            ${isBlocked ? '<span class="block-label">KAPALI</span>' : ''}
+                        </div>`;
+                }
+                // Normal saat → tıklanabilir
                 return `
                     <div class="block-slot ${isBlocked ? 'blocked' : ''}" onclick="toggleBlockSlot('${time}')">
                         <span>${time}</span>
