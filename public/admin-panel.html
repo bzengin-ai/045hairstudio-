@@ -1060,20 +1060,62 @@
             <div class="login-logo reveal-init reveal-delay-1">
                 <span>&#9986;</span>
                 <h1>045 HAIR STUDIO</h1>
-                <p id="loginTitle">YONETIM PANELI</p>
             </div>
-            <form class="login-form reveal-init reveal-delay-2" id="loginForm">
-                <div class="form-group">
-                    <label>Kullanici Adi</label>
-                    <input type="text" id="username" placeholder="" required>
+
+            <!-- Sekme Butonları -->
+            <div style="display:flex; gap:8px; margin-bottom:20px;">
+                <button type="button" onclick="switchLoginTab('giris')" id="tabGirisBtn" style="flex:1; padding:12px; border-radius:12px; font-weight:800; font-size:0.75rem; letter-spacing:2px; cursor:pointer; background:#fff; color:#000; border:none;">GİRİŞ</button>
+                <button type="button" onclick="switchLoginTab('sifre')" id="tabSifreBtn" style="flex:1; padding:12px; border-radius:12px; font-weight:800; font-size:0.75rem; letter-spacing:2px; cursor:pointer; background:transparent; color:#aaa; border:1px solid #333;">ŞİFRE DEĞİŞTİR</button>
+            </div>
+
+            <!-- Giriş Formu -->
+            <div id="tabGiris">
+                <form class="login-form reveal-init reveal-delay-2" id="loginForm">
+                    <div class="form-group">
+                        <label>Kullanici Adi</label>
+                        <input type="text" id="username" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sifre</label>
+                        <input type="password" id="password" placeholder="" required>
+                    </div>
+                    <button type="submit" class="btn-login">GIRIS YAP</button>
+                    <p class="error-message" id="errorMessage">Gecersiz kullanici adi veya sifre!</p>
+                </form>
+            </div>
+
+            <!-- Şifre Değiştir Formu -->
+            <div id="tabSifre" style="display:none;">
+                <div class="login-form">
+                    <div class="form-group">
+                        <label>Kullanici Adi</label>
+                        <input type="text" id="cpUsername" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Mevcut Şifre</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cpCurrentLogin" placeholder="" style="width:100%; padding-right:45px;">
+                            <button type="button" onclick="toggleCpVis('cpCurrentLogin',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Yeni Şifre</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cpNewLogin" placeholder="" style="width:100%; padding-right:45px;">
+                            <button type="button" onclick="toggleCpVis('cpNewLogin',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Yeni Şifre (Tekrar)</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cpConfirmLogin" placeholder="" style="width:100%; padding-right:45px;">
+                            <button type="button" onclick="toggleCpVis('cpConfirmLogin',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">👁</button>
+                        </div>
+                    </div>
+                    <p id="cpLoginError" style="color:#dc2626; font-size:0.8rem; margin-bottom:10px; min-height:20px;"></p>
+                    <button type="button" class="btn-login" onclick="submitLoginChangePassword()">GÜNCELLE</button>
                 </div>
-                <div class="form-group">
-                    <label>Sifre</label>
-                    <input type="password" id="password" placeholder="" required>
-                </div>
-                <button type="submit" class="btn-login">GIRIS YAP</button>
-                <p class="error-message" id="errorMessage">Gecersiz kullanici adi veya sifre!</p>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -1090,7 +1132,6 @@
                             <p id="panelSubtitle">Admin Paneli</p>
                         </div>
                     </div>
-                    <button class="btn-logout" id="btnChangePass" style="margin-right:8px; background:transparent; border:1px solid rgba(255,255,255,0.2); color:#aaa; font-size:0.7rem; padding:10px 14px; border-radius:12px; cursor:pointer; letter-spacing:1px;">ŞİFRE</button>
                     <button class="btn-logout" id="btnLogout">CIKIS</button>
                 </div>
 
@@ -1461,7 +1502,7 @@
         }
 
         async function showPanel() {
-            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('panelScreen').classList.add('active');
             document.getElementById('adminName').textContent = currentUser.name.toUpperCase();
 
@@ -2038,7 +2079,9 @@
                 localStorage.removeItem('adminUser');
                 currentUser = null;
                 document.getElementById('panelScreen').classList.remove('active');
-                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('doorScreen').style.display = 'block';
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('doorPin').value = '';
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 document.getElementById('errorMessage').style.display = 'none';
@@ -2072,14 +2115,60 @@
         // ========================================
         // ŞİFRE DEĞİŞTİR
         // ========================================
-        function initChangePassword() {
-            document.getElementById('btnChangePass').addEventListener('click', () => {
-                document.getElementById('changePassModal').style.display = 'flex';
-                document.getElementById('cpCurrent').value = '';
-                document.getElementById('cpNew').value = '';
-                document.getElementById('cpConfirm').value = '';
-                document.getElementById('cpError').textContent = '';
-            });
+        function initChangePassword() {}
+
+        window.switchLoginTab = function(tab) {
+            document.getElementById('tabGiris').style.display = tab === 'giris' ? 'block' : 'none';
+            document.getElementById('tabSifre').style.display = tab === 'sifre' ? 'block' : 'none';
+            document.getElementById('tabGirisBtn').style.background = tab === 'giris' ? '#fff' : 'transparent';
+            document.getElementById('tabGirisBtn').style.color = tab === 'giris' ? '#000' : '#aaa';
+            document.getElementById('tabSifreBtn').style.background = tab === 'sifre' ? '#fff' : 'transparent';
+            document.getElementById('tabSifreBtn').style.color = tab === 'sifre' ? '#000' : '#aaa';
+        }
+
+        window.submitLoginChangePassword = async function() {
+            const username = document.getElementById('cpUsername').value;
+            const current = document.getElementById('cpCurrentLogin').value;
+            const newPass = document.getElementById('cpNewLogin').value;
+            const confirm = document.getElementById('cpConfirmLogin').value;
+            const errEl = document.getElementById('cpLoginError');
+
+            if (!username || !current || !newPass || !confirm) { errEl.textContent = 'Tüm alanları doldur!'; return; }
+            if (newPass !== confirm) { errEl.textContent = 'Yeni şifreler eşleşmiyor!'; return; }
+            if (newPass.length < 4) { errEl.textContent = 'En az 4 karakter olmalı!'; return; }
+
+            // Önce kullanıcıyı bul
+            try {
+                const loginRes = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password: current })
+                });
+                if (!loginRes.ok) { errEl.textContent = 'Kullanıcı adı veya mevcut şifre yanlış!'; return; }
+                const user = await loginRes.json();
+
+                const res = await fetch(`${API_URL}/barber/${user.id}/change-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+                });
+                const data = await res.json();
+                if (!res.ok) { errEl.textContent = data.error; return; }
+
+                errEl.style.color = '#22c55e';
+                errEl.textContent = 'Şifre güncellendi! Giriş yapabilirsiniz.';
+                setTimeout(() => switchLoginTab('giris'), 2000);
+            } catch(e) {
+                errEl.textContent = 'Bağlantı hatası!';
+            }
+        }
+
+        window.openChangePassModal = function() {
+            document.getElementById('changePassModal').style.display = 'flex';
+            document.getElementById('cpCurrent').value = '';
+            document.getElementById('cpNew').value = '';
+            document.getElementById('cpConfirm').value = '';
+            document.getElementById('cpError').textContent = '';
         }
 
         window.toggleCpVis = function(id, btn) {
