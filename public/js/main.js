@@ -237,16 +237,14 @@ async function loadBarbers() {
                 'Rio': 'rio.jpg',
                 'Ahmet': 'ahmet.jpg'
             };
+            const profilePhotoValues = Object.values(photoMap);
             barbersData.forEach(barber => {
                 if (!barber.photos) barber.photos = [];
-                // Tekrarlari temizle
                 barber.photos = [...new Set(barber.photos)];
-                // Kart avatari icin: ilk yuklu foto varsa onu kullan, yoksa profil fotografi
-                barber.avatarPhoto = barber.photos.length > 0
-                    ? barber.photos[0]
-                    : (photoMap[barber.name] || null);
-                // Galeriden profil fotografini cikar (sadece admin'den yuklenenler gorunsun)
-                barber.galleryPhotos = barber.photos.filter(p => !Object.values(photoMap).includes(p));
+                // Kart avatari: HER ZAMAN profil fotografi (photoMap'ten)
+                barber.avatarPhoto = photoMap[barber.name] || null;
+                // Galeri: SADECE admin'den yuklenen fotograflar (profil fotograflari haric)
+                barber.galleryPhotos = barber.photos.filter(p => !profilePhotoValues.includes(p));
             });
         }
     } catch (error) {
