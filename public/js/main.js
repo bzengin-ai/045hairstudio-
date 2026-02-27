@@ -155,9 +155,8 @@ function renderGlobalGallery() {
     desc.textContent = 'Berberlerimizin Seçkin Çalışmaları';
 
     grid.innerHTML = barbersData.map(barber => {
-        const hasPhoto = barber.photos && barber.photos.length > 0;
-        const avatarUrl = hasPhoto ? getPhotoUrl(barber.photos[0]) : '/logo.png';
-        const workCount = (barber.photos ? barber.photos.length : 0);
+        const avatarUrl = barber.avatarPhoto ? getPhotoUrl(barber.avatarPhoto) : '/logo.png';
+        const workCount = (barber.galleryPhotos ? barber.galleryPhotos.length : 0);
 
         return `
             <div class="barber-gal-card reveal-init" onclick="openBarberPortfolio(${barber.id})">
@@ -187,12 +186,13 @@ function openBarberPortfolio(barberId) {
     desc.textContent = `${barber.name} Portfolyosu`;
     backBtn.style.display = 'inline-block';
 
-    if (!barber.photos || barber.photos.length === 0) {
+    const photos = barber.galleryPhotos || [];
+    if (photos.length === 0) {
         grid.innerHTML = '<div class="gallery-empty">Bu berber için henüz fotoğraf eklenmemiş.</div>';
         return;
     }
 
-    grid.innerHTML = barber.photos.map((photo, idx) => `
+    grid.innerHTML = photos.map((photo, idx) => `
         <div class="gallery-photo reveal-init" onclick="openFullscreenBarber(${barberId}, ${idx})">
             <img src="${getPhotoUrl(photo)}" alt="${barber.name} - ${idx}">
         </div>
@@ -205,8 +205,8 @@ function showGlobalBarbers() {
 
 function openFullscreenBarber(barberId, idx) {
     const barber = barbersData.find(b => b.id === barberId);
-    if (barber && barber.photos) {
-        openFullscreen(barber.photos, idx);
+    if (barber && barber.galleryPhotos && barber.galleryPhotos.length > 0) {
+        openFullscreen(barber.galleryPhotos, idx);
     }
 }
 
@@ -226,24 +226,27 @@ async function loadBarbers() {
             const data = await response.json();
 
             // Berber Siralamasi: Muhammed, Cengo, Rio, Ahmet
-            const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Rio': 3, 'Ahmet': 4 };
+            const sortOrder = { 'Muhammed': 1, 'Cengo': 2, 'Cengizhan': 2, 'Rio': 3, 'Ahmet': 4 };
             barbersData = data.sort((a, b) => (sortOrder[a.name] || 99) - (sortOrder[b.name] || 99));
 
             // Profil fotograflari (sadece Supabase'de hic fotograf yoksa fallback olarak kullan)
             const photoMap = {
                 'Muhammed': 'muhammed.jpeg',
                 'Cengo': 'cengo.jpg',
+                'Cengizhan': 'cengo.jpg',
                 'Rio': 'rio.jpg',
                 'Ahmet': 'ahmet.jpg'
             };
             barbersData.forEach(barber => {
                 if (!barber.photos) barber.photos = [];
-                // Profil fotografini her zaman 1. siraya koy, duplikat olmasın
-                if (photoMap[barber.name]) {
-                    barber.photos = [photoMap[barber.name], ...barber.photos.filter(p => p !== photoMap[barber.name])];
-                }
-                // Ayni dosya adi tekrar ediyorsa temizle
+                // Tekrarlari temizle
                 barber.photos = [...new Set(barber.photos)];
+                // Kart avatari icin: ilk yuklu foto varsa onu kullan, yoksa profil fotografi
+                barber.avatarPhoto = barber.photos.length > 0
+                    ? barber.photos[0]
+                    : (photoMap[barber.name] || null);
+                // Galeriden profil fotografini cikar (sadece admin'den yuklenenler gorunsun)
+                barber.galleryPhotos = barber.photos.filter(p => !Object.values(photoMap).includes(p));
             });
         }
     } catch (error) {
@@ -266,9 +269,8 @@ async function loadBarbers() {
 function renderBarberCards() {
     const grid = document.getElementById('barberGrid');
     grid.innerHTML = barbersData.map(barber => {
-        const hasPhoto = barber.photos && barber.photos.length > 0;
-        const avatarContent = hasPhoto
-            ? `<img src="${getPhotoUrl(barber.photos[0])}" alt="${barber.name}">`
+        const avatarContent = barber.avatarPhoto
+            ? `<img src="${getPhotoUrl(barber.avatarPhoto)}" alt="${barber.name}">`
             : `<span style="font-size: 1.5rem; color: #6e6e6e;">&#9986;</span>`;
 
         return `
@@ -308,7 +310,7 @@ function initBarberSelection() {
             };
 
             // Fotograflari olan berber icin galeri goster
-            if (barberData && barberData.photos && barberData.photos.length > 0) {
+            if (barberData && barberData.galleryPhotos && barberData.galleryPhotos.length > 0) {
                 showBarberGallery(barberData);
             } else {
                 // Fotografi yoksa direkt sonraki adima gec
@@ -329,8 +331,9 @@ function showBarberGallery(barber) {
 
     title.textContent = `${barber.name} - Galeri`;
 
-    if (barber.photos && barber.photos.length > 0) {
-        gallery.innerHTML = barber.photos.map((photo, index) => `
+    const gPhotos = barber.galleryPhotos || [];
+    if (gPhotos.length > 0) {
+        gallery.innerHTML = gPhotos.map((photo, index) => `
             <div class="gallery-photo" data-index="${index}">
                 <img src="${getPhotoUrl(photo)}" alt="${barber.name} - ${index + 1}">
             </div>
@@ -340,7 +343,7 @@ function showBarberGallery(barber) {
         gallery.querySelectorAll('.gallery-photo').forEach(photoEl => {
             photoEl.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
-                openFullscreen(barber.photos, idx);
+                openFullscreen(gPhotos, idx);
             });
         });
     } else {
