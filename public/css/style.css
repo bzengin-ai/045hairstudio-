@@ -2220,3 +2220,16 @@ select {
 
 .btn-resend:hover { border-color: #666; color: #aaa; }
 .btn-resend:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Pazar Kapali */
+.day-card.sunday-closed {
+    opacity: 0.3;
+}
+
+.day-closed {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    color: #8b3a3a;
+    font-weight: 700;
+    margin-top: 2px;
+}

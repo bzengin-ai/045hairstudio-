@@ -484,11 +484,13 @@ function renderWeeklyCalendar() {
         if (isPast || isSunday) {
             dayCard.classList.add('disabled');
         }
+        if (isSunday) {
+            dayCard.classList.add('sunday-closed');
+        }
 
-        dayCard.innerHTML = `
-            <div class="day-name">${dayNames[date.getDay()]}</div>
-            <div class="day-num">${date.getDate()}</div>
-        `;
+        dayCard.innerHTML = isSunday
+            ? `<div class="day-name">Paz</div><div class="day-num">${date.getDate()}</div><div class="day-closed">KAPALI</div>`
+            : `<div class="day-name">${dayNames[date.getDay()]}</div><div class="day-num">${date.getDate()}</div>`;
 
         dayCard.dataset.date = formatDate(date);
 
@@ -880,9 +882,12 @@ function goToStep(step) {
         hideBarberGallery();
     }
 
-    // Step 2 ise bugunun saatlerini otomatik ac
+    // Step 2 ise bugunun saatlerini otomatik ac (Pazar ise Pazartesi sec)
     if (step === 2) {
         const today = new Date();
+        if (today.getDay() === 0) {
+            today.setDate(today.getDate() + 1);
+        }
         selectDate(null, today);
     }
 
