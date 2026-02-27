@@ -852,9 +852,10 @@ function initFormNavigation() {
     document.getElementById('backToStep3').addEventListener('click', () => goToStep(3));
 
     // Ileri butonlari
-    document.getElementById('goToStep4').addEventListener('click', async () => {
+    document.getElementById('goToStep4').addEventListener('click', () => {
         if (validateStep3()) {
-            await startEmailVerification();
+            updateSummary();
+            goToStep(4);
         }
     });
 
@@ -902,7 +903,6 @@ function goToStep(step) {
 function validateStep3() {
     const name = document.getElementById('customerName').value.trim();
     const phone = document.getElementById('customerPhone').value.trim();
-    const email = document.getElementById('customerEmail').value.trim();
 
     if (!name) {
         showToast('Lutfen adinizi ve soyadinizi girin', 'error');
@@ -911,11 +911,6 @@ function validateStep3() {
 
     if (!phone || phone.length < 10) {
         showToast('Lutfen gecerli bir telefon numarasi girin', 'error');
-        return false;
-    }
-
-    if (!email || !email.includes('@') || !email.includes('.')) {
-        showToast('Lutfen gecerli bir e-posta adresi girin', 'error');
         return false;
     }
 
@@ -1112,8 +1107,7 @@ async function confirmBooking() {
         time: selectedTime,
         customerName: document.getElementById('customerName').value.trim(),
         customerPhone: document.getElementById('customerPhone').value.trim(),
-        note: document.getElementById('customerNote').value.trim(),
-        customerEmail: verifiedEmail || document.getElementById('customerEmail').value.trim()
+        note: document.getElementById('customerNote').value.trim()
     };
 
     try {
@@ -1161,7 +1155,6 @@ function resetForm() {
     // Formu temizle
     document.getElementById('customerName').value = '';
     document.getElementById('customerPhone').value = '';
-    document.getElementById('customerEmail').value = '';
     document.getElementById('customerNote').value = '';
 
     // Berber secimini kaldir
