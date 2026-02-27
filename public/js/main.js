@@ -238,12 +238,12 @@ async function loadBarbers() {
             };
             barbersData.forEach(barber => {
                 if (!barber.photos) barber.photos = [];
-                // Tekrarlari temizle
-                barber.photos = [...new Set(barber.photos)];
-                // Supabase'de hic fotograf yoksa profil fotografini ekle
-                if (barber.photos.length === 0 && photoMap[barber.name]) {
-                    barber.photos = [photoMap[barber.name]];
+                // Profil fotografini her zaman 1. siraya koy, duplikat olmasın
+                if (photoMap[barber.name]) {
+                    barber.photos = [photoMap[barber.name], ...barber.photos.filter(p => p !== photoMap[barber.name])];
                 }
+                // Ayni dosya adi tekrar ediyorsa temizle
+                barber.photos = [...new Set(barber.photos)];
             });
         }
     } catch (error) {
