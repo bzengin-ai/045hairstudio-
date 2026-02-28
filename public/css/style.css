@@ -1296,8 +1296,8 @@ body {
 
 .time-slot.dolu {
     opacity: 1;
-    background: rgba(220, 38, 38, 0.1);
-    border-color: rgba(220, 38, 38, 0.4);
+    background: rgba(201, 168, 76, 0.12);
+    border-color: rgba(201, 168, 76, 0.45);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1313,7 +1313,7 @@ body {
 .slot-dolu {
     font-size: 0.65em;
     font-weight: 800;
-    color: #dc2626;
+    color: #c9a84c;
     letter-spacing: 1px;
 }
 
