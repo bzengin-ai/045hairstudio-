@@ -1950,18 +1950,18 @@
                 const isBooked = bookedTimes.includes(time);
                 const isApproved = approvedTimes.includes(time);
 
-                // Onaylı randevu → turuncu RANDEVU, bloke edilemez
+                // Onaylı randevu → turuncu RANDEVU, tıklanabilir
                 if (isApproved) {
                     return `
-                        <div class="block-slot approved-slot">
+                        <div class="block-slot approved-slot" onclick="slotBookedClick('${time}')" style="cursor:pointer;">
                             <span>${time}</span>
                             <span class="block-label" style="color:#f59e0b;">RANDEVU</span>
                         </div>`;
                 }
-                // Bekleyen randevu → sarı DOLU, bloke edilemez
+                // Bekleyen randevu → sarı DOLU, tıklanabilir
                 if (isBooked) {
                     return `
-                        <div class="block-slot booked">
+                        <div class="block-slot booked" onclick="slotBookedClick('${time}')" style="cursor:pointer;">
                             <span>${time}</span>
                             <span class="block-label" style="color:#f59e0b;">DOLU</span>
                         </div>`;
@@ -2038,6 +2038,13 @@
 
         function closeManualAppt() {
             document.getElementById('manualApptModal').style.display = 'none';
+        }
+
+        function slotBookedClick(time) {
+            slotChoiceSelectedTime = time;
+            document.getElementById('slotChoiceTime').textContent = time;
+            // Sadece KAPALI YAP ve İPTAL göster
+            document.getElementById('slotChoiceModal').style.display = 'flex';
         }
 
         async function saveManualAppt() {
