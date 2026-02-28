@@ -1933,7 +1933,7 @@
                 if (blockedRes.ok) blockedTimes = (await blockedRes.json()).map(b => b.time);
                 if (bookedRes.ok) {
                     const apts = await bookedRes.json();
-                    bookedTimes = apts.map(a => a.time);
+                    bookedTimes = apts.filter(a => a.status !== 'iptal').map(a => a.time);
                     approvedTimes = apts.filter(a => a.status === 'onaylandi').map(a => a.time);
                 }
             } catch(e) { blockedTimes = []; bookedTimes = []; approvedTimes = []; }
