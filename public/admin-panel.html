@@ -1205,6 +1205,35 @@
                 </div>
             </div>
 
+            <!-- Saat Secim Modali -->
+            <div id="slotChoiceModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:3000; align-items:center; justify-content:center;">
+                <div style="background:#111; border:1px solid #2a2a2a; border-radius:16px; padding:28px 24px; width:90%; max-width:320px; text-align:center;">
+                    <p style="color:#aaa; font-size:0.8rem; letter-spacing:2px; margin-bottom:6px;">SEÇİLEN SAAT</p>
+                    <h3 id="slotChoiceTime" style="color:#fff; font-size:1.8rem; font-weight:900; letter-spacing:4px; margin-bottom:20px;"></h3>
+                    <button onclick="slotChoiceAction('kapali')" style="width:100%; background:#1a1a1a; border:1px solid #444; color:#fff; padding:14px; border-radius:8px; font-size:0.85rem; font-weight:700; letter-spacing:3px; cursor:pointer; margin-bottom:10px;">🔒 KAPALI YAP</button>
+                    <button onclick="slotChoiceAction('randevu')" style="width:100%; background:#c9a84c; border:none; color:#000; padding:14px; border-radius:8px; font-size:0.85rem; font-weight:700; letter-spacing:3px; cursor:pointer; margin-bottom:10px;">✂ RANDEVU AL</button>
+                    <button onclick="closeSlotChoice()" style="width:100%; background:none; border:1px solid #222; color:#555; padding:10px; border-radius:8px; font-size:0.8rem; cursor:pointer;">İPTAL</button>
+                </div>
+            </div>
+
+            <!-- Manuel Randevu Modali -->
+            <div id="manualApptModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; align-items:center; justify-content:center;">
+                <div style="background:#111; border:1px solid #2a2a2a; border-radius:16px; padding:28px 24px; width:90%; max-width:340px;">
+                    <h3 style="color:#fff; font-size:1rem; letter-spacing:3px; margin-bottom:4px; text-align:center;">RANDEVU EKLE</h3>
+                    <p id="manualApptInfo" style="color:#c9a84c; font-size:0.8rem; letter-spacing:2px; text-align:center; margin-bottom:20px;"></p>
+                    <div style="margin-bottom:12px;">
+                        <label style="color:#888; font-size:0.75rem; letter-spacing:2px; display:block; margin-bottom:6px;">MÜŞTERİ ADI</label>
+                        <input type="text" id="manualName" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-size:0.95rem; box-sizing:border-box;">
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="color:#888; font-size:0.75rem; letter-spacing:2px; display:block; margin-bottom:6px;">TELEFON</label>
+                        <input type="tel" id="manualPhone" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-size:0.95rem; box-sizing:border-box;">
+                    </div>
+                    <button onclick="saveManualAppt()" style="width:100%; background:#fff; border:none; color:#000; padding:14px; border-radius:8px; font-size:0.85rem; font-weight:700; letter-spacing:3px; cursor:pointer; margin-bottom:10px;">KAYDET</button>
+                    <button onclick="closeManualAppt()" style="width:100%; background:none; border:1px solid #222; color:#555; padding:10px; border-radius:8px; font-size:0.8rem; cursor:pointer;">İPTAL</button>
+                </div>
+            </div>
+
             <!-- Tab: Saatler -->
             <div class="tab-content" id="tabSaatler">
                 <div style="padding: 10px 0;">
@@ -1954,26 +1983,89 @@
             }).join('');
         }
 
-        async function toggleBlockSlot(time) {
-            const dateStr = formatBlockDate(blockDate);
-            const isBlocked = blockedTimes.includes(time);
+        let slotChoiceSelectedTime = null;
 
+        function toggleBlockSlot(time) {
+            const isBlocked = blockedTimes.includes(time);
             if (isBlocked) {
-                await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: dateStr, time })
-                });
-                blockedTimes = blockedTimes.filter(t => t !== time);
+                // Zaten kapaliysa direkt ac
+                unblockSlot(time);
             } else {
+                // Bos slot - secim modali goster
+                slotChoiceSelectedTime = time;
+                document.getElementById('slotChoiceTime').textContent = time;
+                document.getElementById('slotChoiceModal').style.display = 'flex';
+            }
+        }
+
+        async function unblockSlot(time) {
+            const dateStr = formatBlockDate(blockDate);
+            await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: dateStr, time })
+            });
+            blockedTimes = blockedTimes.filter(t => t !== time);
+            renderBlockSlots();
+        }
+
+        function closeSlotChoice() {
+            document.getElementById('slotChoiceModal').style.display = 'none';
+            slotChoiceSelectedTime = null;
+        }
+
+        async function slotChoiceAction(action) {
+            const time = slotChoiceSelectedTime;
+            closeSlotChoice();
+            if (action === 'kapali') {
+                const dateStr = formatBlockDate(blockDate);
                 await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date: dateStr, time })
                 });
                 blockedTimes.push(time);
+                renderBlockSlots();
+            } else if (action === 'randevu') {
+                const dateStr = formatBlockDate(blockDate);
+                document.getElementById('manualApptInfo').textContent = `${dateStr} - ${time}`;
+                document.getElementById('manualName').value = '';
+                document.getElementById('manualPhone').value = '';
+                document.getElementById('manualApptModal').style.display = 'flex';
+                setTimeout(() => document.getElementById('manualName').focus(), 100);
             }
-            renderBlockSlots();
+        }
+
+        function closeManualAppt() {
+            document.getElementById('manualApptModal').style.display = 'none';
+        }
+
+        async function saveManualAppt() {
+            const name = document.getElementById('manualName').value.trim();
+            const phone = document.getElementById('manualPhone').value.trim();
+            if (!name) { alert('Müşteri adı gerekli'); return; }
+
+            const dateStr = formatBlockDate(blockDate);
+            const res = await fetch(`${API_URL}/appointments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    barberId: currentUser.id,
+                    barberName: currentUser.name,
+                    date: dateStr,
+                    time: slotChoiceSelectedTime || document.getElementById('manualApptInfo').textContent.split(' - ')[1],
+                    customerName: name,
+                    customerPhone: phone || '-',
+                    note: 'Manuel randevu'
+                })
+            });
+            if (res.ok) {
+                closeManualAppt();
+                await loadBlockedSlots();
+                renderBlockSlots();
+            } else {
+                alert('Randevu eklenemedi');
+            }
         }
 
         // ========================================
