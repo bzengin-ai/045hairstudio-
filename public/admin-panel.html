@@ -2019,12 +2019,32 @@
             closeSlotChoice();
             if (action === 'kapali') {
                 const dateStr = formatBlockDate(blockDate);
+
+                // Bu saatte randevu varsa iptal et
+                if (bookedTimes.includes(time) || approvedTimes.includes(time)) {
+                    const res = await fetch(`${API_URL}/appointments?barberId=${currentUser.id}&date=${dateStr}`);
+                    if (res.ok) {
+                        const apts = await res.json();
+                        const apt = apts.find(a => a.time === time);
+                        if (apt) {
+                            await fetch(`${API_URL}/appointments/${apt.id}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 'iptal' })
+                            });
+                        }
+                    }
+                }
+
+                // Slotu blokla
                 await fetch(`${API_URL}/barber/${currentUser.id}/blocked-slots`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date: dateStr, time })
                 });
-                blockedTimes.push(time);
+
+                // Yenile
+                await loadBlockedSlots();
                 renderBlockSlots();
             } else if (action === 'randevu') {
                 const dateStr = formatBlockDate(blockDate);
