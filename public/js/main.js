@@ -122,26 +122,29 @@ function hideAllMainViews() {
 // ========================================
 // MARKET VE GLOBAL GALERI RENDER
 // ========================================
-function renderMarket() {
+async function renderMarket() {
     const grid = document.getElementById('marketGrid');
-    // Simdilik statik, sonra API'dan gelecek
-    const products = [
-        { name: 'Özel Sakal Yağı', price: '250 TL', icon: '🧴' },
-        { name: '045 Oversize T-Shirt', price: '750 TL', icon: '👕' },
-        { name: 'Mat Wax (Seri 045)', price: '320 TL', icon: '💆‍♂️' },
-        { name: '045 Premium Parfüm', price: '1200 TL', icon: '💨' }
-    ];
-
-    grid.innerHTML = products.map(p => `
-        <div class="product-card reveal-init">
-            <div class="product-img">${p.icon}</div>
-            <div class="product-info">
-                <h3>${p.name}</h3>
-                <div class="product-price">${p.price}</div>
-                <button class="btn-order-whatsapp" onclick="orderProduct('${p.name}')">WP Sipariş</button>
+    grid.innerHTML = '<div style="color:#555;text-align:center;padding:40px;letter-spacing:2px;font-size:0.8rem;">YÜKLENİYOR...</div>';
+    try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        if (!products.length) {
+            grid.innerHTML = '<div style="color:#555;text-align:center;padding:40px;letter-spacing:2px;font-size:0.8rem;">Henüz ürün eklenmemiş</div>';
+            return;
+        }
+        grid.innerHTML = products.map(p => `
+            <div class="product-card reveal-init">
+                <div class="product-img">${p.emoji || '🛍'}</div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <div class="product-price">${p.price} TL</div>
+                    <button class="btn-order-whatsapp" onclick="orderProduct('${p.name}')">WP İletişim</button>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (e) {
+        grid.innerHTML = '<div style="color:#555;text-align:center;padding:40px;">Ürünler yüklenemedi</div>';
+    }
 }
 
 let globalGalleryPhotos = [];

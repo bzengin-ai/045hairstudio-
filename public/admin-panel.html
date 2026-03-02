@@ -1198,10 +1198,44 @@
                 <button class="btn-today" id="btnToday">BUGUNE DON</button>
             </div>
 
+            <!-- Tab: Market -->
+            <div class="tab-content" id="tabMarket">
+                <div style="padding:10px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <p style="color:var(--accent-secondary); font-size:0.75rem; letter-spacing:2px; margin:0;">ÜRÜN LİSTESİ</p>
+                        <button onclick="showAddProductModal()" style="background:#c9a84c; border:none; color:#000; padding:10px 18px; border-radius:8px; font-size:0.8rem; font-weight:700; letter-spacing:2px; cursor:pointer;">+ ÜRÜN EKLE</button>
+                    </div>
+                    <div id="productList"></div>
+                </div>
+            </div>
+
             <!-- Tab: Galeri -->
             <div class="tab-content" id="tabGaleri">
                 <div id="galleryContainer">
                     <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+
+            <!-- Ürün Ekle Modali -->
+            <div id="productModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; align-items:center; justify-content:center;">
+                <div style="background:#111; border:1px solid #2a2a2a; border-radius:16px; padding:28px 24px; width:90%; max-width:340px;">
+                    <h3 style="color:#fff; font-size:1rem; letter-spacing:3px; margin-bottom:20px; text-align:center;">YENİ ÜRÜN EKLE</h3>
+                    <form id="productForm">
+                        <div style="margin-bottom:14px;">
+                            <label style="color:#888; font-size:0.75rem; letter-spacing:2px; display:block; margin-bottom:6px;">EMOJİ</label>
+                            <input type="text" id="prodEmoji" placeholder="🛍" maxlength="4" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-size:1.5rem; box-sizing:border-box; text-align:center;">
+                        </div>
+                        <div style="margin-bottom:14px;">
+                            <label style="color:#888; font-size:0.75rem; letter-spacing:2px; display:block; margin-bottom:6px;">ÜRÜN ADI</label>
+                            <input type="text" id="prodName" placeholder="Ürün adı" required style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-size:0.95rem; box-sizing:border-box;">
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <label style="color:#888; font-size:0.75rem; letter-spacing:2px; display:block; margin-bottom:6px;">FİYAT (TL)</label>
+                            <input type="number" id="prodPrice" placeholder="0" required min="0" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-size:0.95rem; box-sizing:border-box;">
+                        </div>
+                        <button type="submit" style="width:100%; background:#fff; border:none; color:#000; padding:14px; border-radius:8px; font-size:0.85rem; font-weight:700; letter-spacing:3px; cursor:pointer; margin-bottom:10px;">KAYDET</button>
+                        <button type="button" onclick="closeProductModal()" style="width:100%; background:none; border:1px solid #222; color:#555; padding:10px; border-radius:8px; font-size:0.8rem; cursor:pointer;">İPTAL</button>
+                    </form>
                 </div>
             </div>
 
@@ -2118,7 +2152,7 @@
         function renderProducts() {
             const container = document.getElementById('productList');
             if (allProducts.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>Henuz urun eklenmemis</p></div>';
+                container.innerHTML = '<div class="empty-state"><p>Henüz ürün eklenmemiş</p></div>';
                 return;
             }
 
@@ -2126,8 +2160,8 @@
                 <table class="market-table">
                     <thead>
                         <tr>
-                            <th>Ürün</th>
-                            <th>Kategori</th>
+                            <th></th>
+                            <th>Ürün Adı</th>
                             <th>Fiyat</th>
                             <th>İşlem</th>
                         </tr>
@@ -2135,8 +2169,8 @@
                     <tbody>
                         ${allProducts.map(p => `
                             <tr>
+                                <td style="font-size:1.5rem; text-align:center;">${p.emoji || '🛍'}</td>
                                 <td><strong>${p.name}</strong></td>
-                                <td>${p.category}</td>
                                 <td>${p.price} TL</td>
                                 <td>
                                     <button class="btn-action btn-delete" onclick="deleteProduct(${p.id})">🗑 Sil</button>
@@ -2149,11 +2183,11 @@
         }
 
         function showAddProductModal() {
-            document.getElementById('productModal').classList.add('active');
+            document.getElementById('productModal').style.display = 'flex';
         }
 
         function closeProductModal() {
-            document.getElementById('productModal').classList.remove('active');
+            document.getElementById('productModal').style.display = 'none';
             document.getElementById('productForm').reset();
         }
 
@@ -2162,22 +2196,24 @@
                 e.preventDefault();
                 const name = document.getElementById('prodName').value;
                 const price = document.getElementById('prodPrice').value;
-                const category = document.getElementById('prodCategory').value;
+                const emoji = document.getElementById('prodEmoji').value || '🛍';
 
                 try {
                     const response = await fetch(`${API_URL}/products`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, price, category, description: '' })
+                        body: JSON.stringify({ name, price, emoji })
                     });
 
                     if (response.ok) {
-                        showToast('Urun eklendi', 'success');
+                        showToast('Ürün eklendi', 'success');
                         closeProductModal();
                         loadProducts();
+                    } else {
+                        showToast('Hata oluştu', 'error');
                     }
                 } catch (error) {
-                    showToast('Hata olustu', 'error');
+                    showToast('Hata oluştu', 'error');
                 }
             });
         }

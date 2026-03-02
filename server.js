@@ -156,19 +156,12 @@ app.get('/api/products', async (req, res) => {
 });
 
 // Yeni urun ekle (Admin)
-app.post('/api/products', upload.single('image'), async (req, res) => {
-    const { name, price, description, category } = req.body;
-    const imageUrl = req.file ? req.file.filename : null;
+app.post('/api/products', async (req, res) => {
+    const { name, price, emoji } = req.body;
 
     const { data, error } = await supabase
         .from('products')
-        .insert([{
-            name,
-            price,
-            description,
-            category,
-            image_url: imageUrl
-        }])
+        .insert([{ name, price, emoji: emoji || '🛍' }])
         .select();
 
     if (error) return res.status(500).json({ error: error.message });
