@@ -631,7 +631,7 @@ async function showTimeSlots(date) {
         );
         if (response.ok) {
             const data = await response.json();
-            bookedSlots = data.map(a => a.time);
+            bookedSlots = data.filter(a => a.status !== 'iptal').map(a => (a.time || '').slice(0, 5));
         }
 
         // Secilen berberin bloklu saatleri
@@ -649,11 +649,11 @@ async function showTimeSlots(date) {
         );
         if (allResponse.ok) {
             const allData = await allResponse.json();
-            allData.forEach(apt => {
+            allData.filter(a => a.status !== 'iptal').forEach(apt => {
                 if (!allBookedSlots[apt.barber_id]) {
                     allBookedSlots[apt.barber_id] = [];
                 }
-                allBookedSlots[apt.barber_id].push(apt.time);
+                allBookedSlots[apt.barber_id].push((apt.time || '').slice(0, 5));
             });
         }
     } catch (error) {
