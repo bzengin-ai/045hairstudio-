@@ -116,6 +116,31 @@ app.post('/api/appointments', async (req, res) => {
         verificationCodes.delete(customerEmail.toLowerCase());
     }
 
+    // Ayni saat dolu mu kontrol et
+    const { data: existing } = await supabase
+        .from('appointments')
+        .select('id')
+        .eq('barber_id', parseInt(barberId))
+        .eq('date', date)
+        .eq('time', time)
+        .neq('status', 'iptal');
+
+    if (existing && existing.length > 0) {
+        return res.status(409).json({ error: 'Bu saat zaten dolu.' });
+    }
+
+    // Saat bloklu mu kontrol et
+    const { data: blocked } = await supabase
+        .from('blocked_slots')
+        .select('id')
+        .eq('barber_id', parseInt(barberId))
+        .eq('date', date)
+        .eq('time', time);
+
+    if (blocked && blocked.length > 0) {
+        return res.status(409).json({ error: 'Bu saat kapalı.' });
+    }
+
     const { data, error } = await supabase
         .from('appointments')
         .insert([{
