@@ -633,6 +633,13 @@
             text-decoration: none;
         }
 
+        .apt-note {
+            font-size: 0.78rem;
+            color: #c9a84c;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
         .apt-status {
             padding: 5px 12px;
             border-radius: 15px;
@@ -1786,6 +1793,7 @@
                         <div class="phone">
                             <a href="tel:${apt.customer_phone || ''}">${apt.customer_phone || '-'}</a>
                         </div>
+                        ${apt.note && apt.note !== 'Manuel randevu' ? `<div class="apt-note">${apt.note}</div>` : ''}
                     </div>
                     <div class="apt-right">
                         <div class="apt-actions">
