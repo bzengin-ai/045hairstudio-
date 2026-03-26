@@ -1911,8 +1911,8 @@
         // ========================================
         const workingHours = (() => {
             const slots = [];
-            const startMin = 10 * 60;
-            const endMin = 25 * 60;
+            const startMin = 11 * 60;      // 11:00
+            const endMin = 21 * 60 + 45;   // 21:45 (son slot 21:30)
             for (let m = startMin; m <= endMin; m += 45) {
                 const h = Math.floor(m / 60) % 24;
                 const min = m % 60;
