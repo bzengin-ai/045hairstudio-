@@ -22,11 +22,11 @@ let currentStep = 1; // Track the current step in Randevu flow
 let verifiedEmail = null; // Dogrulanmis email
 let verifyTimerInterval = null; // Timer interval
 
-// Calisma saatleri (10:00 - 01:00, 45dk aralik)
+// Calisma saatleri (11:00 - 21:30, 45dk aralik)
 const workingHours = (() => {
     const slots = [];
-    const startMin = 10 * 60;      // 10:00
-    const endMin = 25 * 60;        // 01:00 ertesi gun (24+1=25)
+    const startMin = 11 * 60;      // 11:00
+    const endMin = 21 * 60 + 45;   // 21:45 (son slot 21:30)
     for (let m = startMin; m <= endMin; m += 45) {
         const h = Math.floor(m / 60) % 24;
         const min = m % 60;
